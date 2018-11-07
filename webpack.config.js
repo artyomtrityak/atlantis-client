@@ -4,7 +4,7 @@ const mode = process.env.NODE_ENV;
 
 module.exports = {
   entry: {
-    app: ["./static/javascript/index.js"]
+    app: ["./static/javascript/index.tsx"]
   },
   module: {
     rules: [
@@ -20,7 +20,16 @@ module.exports = {
       },
       {
         test: /\.js$/,
+        use: ["source-map-loader"],
+        enforce: "pre"
+      },
+      {
+        test: /\.js$/,
         exclude: /node_modules/,
+        loader: "babel-loader"
+      },
+      {
+        test: /\.tsx?$/,
         loader: "babel-loader"
       },
       {
@@ -39,8 +48,13 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/i,
+        test: /\.(jpe?g|png|gif)$/i,
         loader: "file-loader?hash=sha512&digest=hex&name=[hash].[ext]"
+      },
+      {
+        test: /\.svg$/,
+        loader: "svg-sprite-loader"
+        //options: { ... }
       }
     ]
   },
