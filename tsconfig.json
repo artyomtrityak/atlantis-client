@@ -3,9 +3,16 @@
       "outDir": "./dist/",
       "sourceMap": true,
       "noImplicitAny": true,
+      "strictNullChecks": true,
       "module": "commonjs",
-      "target": "es5",
-      "jsx": "preserve"
+      "target": "esnext",
+      "jsx": "react",
+      "moduleResolution": "node",
+      "allowJs": true,
+      "noEmit": true,
+      "strict": true,
+      "isolatedModules": true,
+      "esModuleInterop": true
   },
   "include": [
       "./static/**/*",

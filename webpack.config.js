@@ -9,10 +9,10 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
         exclude: /node_modules/,
         enforce: "pre",
-        loader: "eslint-loader",
+        loader: "tslint-loader",
         options: {
           failOnWarning: false,
           failOnError: true
@@ -22,11 +22,6 @@ module.exports = {
         test: /\.js$/,
         use: ["source-map-loader"],
         enforce: "pre"
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: "babel-loader"
       },
       {
         test: /\.tsx?$/,
@@ -77,8 +72,7 @@ module.exports = {
 
   resolve: {
     modules: [path.join(__dirname, "static/javascript/"), path.join(__dirname, "node_modules")],
-
-    extensions: [".js"]
+    extensions: [".js", ".ts", ".tsx"]
   },
-  devtool: process.env.NODE_ENV === "production" ? false : "eval-cheap-module-source-map"
+  devtool: process.env.NODE_ENV === "production" ? false : "source-map"
 };

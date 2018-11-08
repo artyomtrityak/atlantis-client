@@ -1,0 +1,17 @@
+{
+	"defaultSeverity": "error",
+	"extends": [
+		"tslint:latest",
+		"tslint-react"
+	],
+	"jsRules": {},
+	"rules": {
+		"no-console": false,
+		"ordered-imports": false,
+		"no-consecutive-blank-lines": false
+	},
+	"rulesDirectory": [],
+	"linterOptions": {
+		"exclude": ["**/node_modules/**"]
+	}
+}

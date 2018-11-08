@@ -8,3 +8,9 @@ const rendered: string = `
 
 console.log(rendered);
 console.log("hello");
+
+// function A(b: boolean) {
+//   return b;
+// }
+
+// A("ddd");
