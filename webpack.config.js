@@ -8,21 +8,21 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        enforce: "pre",
-        loader: "tslint-loader",
-        options: {
-          failOnWarning: false,
-          failOnError: true
-        }
-      },
-      {
-        test: /\.js$/,
-        use: ["source-map-loader"],
-        enforce: "pre"
-      },
+      // {
+      //   test: /\.tsx?$/,
+      //   exclude: /node_modules/,
+      //   enforce: "pre",
+      //   loader: "tslint-loader",
+      //   options: {
+      //     failOnWarning: false,
+      //     failOnError: true
+      //   }
+      // },
+      // {
+      //   test: /\.js$/,
+      //   use: ["source-map-loader"],
+      //   enforce: "pre"
+      // },
       {
         test: /\.tsx?$/,
         loader: "babel-loader"
