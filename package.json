@@ -47,7 +47,7 @@
     "@types/classnames": "^2.2.6",
     "@types/gsap": "^1.20.0",
     "@types/lodash": "^4.14.118",
-    "@types/react": "^16.4.18",
+    "@types/react": "^16.7.1",
     "@types/react-data-grid": "^4.0.0",
     "@types/react-dom": "^16.0.9",
     "@types/react-redux": "^6.0.9",

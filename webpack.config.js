@@ -60,7 +60,14 @@ module.exports = {
     publicPath: "http://localhost:9000/static/build/"
   },
 
-  plugins: [],
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+      "window.$": "jquery"
+    })
+  ],
 
   stats: true,
   mode: mode,

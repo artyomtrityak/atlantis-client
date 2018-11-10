@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 
 const Map = () => {
   return (
-    <div>
-      <div className="row" style={{ marginTop: "5px" }}>
+    <div style={{ marginTop: "5px", height: "100%" }}>
+      <div className="row">
         <div className="col-12">
           <ul className="nav nav-tabs">
             <li className="nav-item">
@@ -35,35 +35,35 @@ const Map = () => {
           <div className="card" style={{ borderTop: 0, height: "100%", overflow: "auto" }}>
             <div className="card-body" style={{ fontSize: "12px" }}>
               <h5 className="card-title" style={{ fontSize: "16px", marginBottom: "0" }}>
-                wasteland (3,21) in Stilye, 88 peasants (orcs), $88.
+                hills (43,21) in Zarka, 88 peasants (dwarfs), $88.
               </h5>
               <div className="dropdown-divider" />
               <div className="card-text">Wages: $6 (Max: $105).</div>
               <div className="card-text">Wanted: none.</div>
-              <div className="card-text">For Sale: 17 orcs [ORC] at $48.</div>
+              <div className="card-text">For Sale: 17 dwarfs [DWA] at $48.</div>
               <div className="card-text">Entertainment available: $4.</div>
               <div className="card-text">Products: 14 iron [IRON], 14 livestock [LIVE].</div>
               <div className="dropdown-divider" />
-              <div className="card-text">There is a Gate here (Gate 4 of 21).</div>
+              <div className="card-text">There is a Gate here (Gate 14 of 211).</div>
               <div className="dropdown-divider" />
               <div className="card-text">Exits:</div>
               <div className="card-text" style={{ marginLeft: "20px" }}>
-                North: wasteland (3,19) in Stilye.
+                North: wasteland (13,19) in Zarka.
               </div>
               <div className="card-text" style={{ marginLeft: "20px" }}>
-                Northeast: wasteland (4,20) in Stilye.
+                Northeast: wasteland (14,20) in Zarka.
               </div>
               <div className="card-text" style={{ marginLeft: "20px" }}>
-                Southeast: swamp (4,22) in Conator.
+                Southeast: swamp (14,22) in Zarka.
               </div>
               <div className="card-text" style={{ marginLeft: "20px" }}>
-                South: swamp (3,23) in Conator.
+                South: swamp (13,23) in Zarka.
               </div>
               <div className="card-text" style={{ marginLeft: "20px" }}>
-                Southwest: wasteland (2,22) in Stilye.
+                Southwest: wasteland (12,22) in Zarka.
               </div>
               <div className="card-text" style={{ marginLeft: "20px" }}>
-                Northwest: ocean (2,20) in Cykranosh Ocean.
+                Northwest: ocean (22,20) in Zarka Ocean.
               </div>
             </div>
           </div>
