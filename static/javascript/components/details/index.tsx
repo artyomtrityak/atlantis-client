@@ -1,29 +1,83 @@
 import React from "react";
+import cn from "classnames";
 import { connect } from "react-redux";
+import { activateTab } from "../../actions/details-actions";
+import Region from "./region";
+import Unit from "./unit";
+import Events from "./events";
+import Battles from "./battles";
+import Advanced from "./advanced";
 
-const Map = () => {
+const renderDetails = activeTab => {
+  switch (activeTab) {
+    case "region":
+      return <Region />;
+    case "unit":
+      return <Unit />;
+    case "events":
+      return <Events />;
+    case "battles":
+      return <Battles />;
+    case "advanced":
+      return <Advanced />;
+  }
+};
+
+const Map = props => {
+  const { onActivateTab, activeTab } = props;
+
   return (
     <div style={{ marginTop: "5px", height: "100%" }}>
       <div className="row">
         <div className="col-12">
           <ul className="nav nav-tabs">
             <li className="nav-item">
-              <a className="nav-link active" style={{ fontSize: "14px" }} href="#">
+              <a
+                className={cn("nav-link", { active: activeTab === "region" })}
+                onClick={onActivateTab.bind(null, "region")}
+                style={{ fontSize: "14px" }}
+                href="#"
+              >
                 Region
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" style={{ fontSize: "14px" }} href="#">
+              <a
+                className={cn("nav-link", { active: activeTab === "unit" })}
+                onClick={onActivateTab.bind(null, "unit")}
+                style={{ fontSize: "14px" }}
+                href="#"
+              >
                 Unit
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" style={{ fontSize: "14px" }} href="#">
+              <a
+                className={cn("nav-link", { active: activeTab === "events" })}
+                onClick={onActivateTab.bind(null, "events")}
+                style={{ fontSize: "14px" }}
+                href="#"
+              >
+                Events
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={cn("nav-link", { active: activeTab === "battles" })}
+                onClick={onActivateTab.bind(null, "battles")}
+                style={{ fontSize: "14px" }}
+                href="#"
+              >
                 Battles
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" style={{ fontSize: "14px" }} href="#">
+              <a
+                className={cn("nav-link", { active: activeTab === "advanced" })}
+                onClick={onActivateTab.bind(null, "advanced")}
+                style={{ fontSize: "14px" }}
+                href="#"
+              >
                 Advanced
               </a>
             </li>
@@ -33,39 +87,7 @@ const Map = () => {
       <div className="row" style={{ height: "calc(100% - 50px)" }}>
         <div className="col-12" style={{ height: "100%" }}>
           <div className="card" style={{ borderTop: 0, height: "100%", overflow: "auto" }}>
-            <div className="card-body" style={{ fontSize: "12px" }}>
-              <h5 className="card-title" style={{ fontSize: "16px", marginBottom: "0" }}>
-                hills (43,21) in Zarka, 88 peasants (dwarfs), $88.
-              </h5>
-              <div className="dropdown-divider" />
-              <div className="card-text">Wages: $6 (Max: $105).</div>
-              <div className="card-text">Wanted: none.</div>
-              <div className="card-text">For Sale: 17 dwarfs [DWA] at $48.</div>
-              <div className="card-text">Entertainment available: $4.</div>
-              <div className="card-text">Products: 14 iron [IRON], 14 livestock [LIVE].</div>
-              <div className="dropdown-divider" />
-              <div className="card-text">There is a Gate here (Gate 14 of 211).</div>
-              <div className="dropdown-divider" />
-              <div className="card-text">Exits:</div>
-              <div className="card-text" style={{ marginLeft: "20px" }}>
-                North: wasteland (13,19) in Zarka.
-              </div>
-              <div className="card-text" style={{ marginLeft: "20px" }}>
-                Northeast: wasteland (14,20) in Zarka.
-              </div>
-              <div className="card-text" style={{ marginLeft: "20px" }}>
-                Southeast: swamp (14,22) in Zarka.
-              </div>
-              <div className="card-text" style={{ marginLeft: "20px" }}>
-                South: swamp (13,23) in Zarka.
-              </div>
-              <div className="card-text" style={{ marginLeft: "20px" }}>
-                Southwest: wasteland (12,22) in Zarka.
-              </div>
-              <div className="card-text" style={{ marginLeft: "20px" }}>
-                Northwest: ocean (22,20) in Zarka Ocean.
-              </div>
-            </div>
+            {renderDetails(activeTab)}
           </div>
         </div>
       </div>
@@ -73,19 +95,19 @@ const Map = () => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = state => {
   return {
-    a: 2
+    activeTab: state.details.activeTab
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onClick: () => dispatch("")
+    onActivateTab: tabName => dispatch(activateTab(tabName))
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Map);
+)(React.memo(Map));

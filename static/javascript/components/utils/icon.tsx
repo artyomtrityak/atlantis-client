@@ -1,5 +1,9 @@
 import React from "react";
 
-export default props => {
-  return <div>[Icon]</div>;
+export default (props: any) => {
+  return (
+    <svg viewBox={props.viewBox}>
+      <use xlinkHref={props.id} />
+    </svg>
+  );
 };

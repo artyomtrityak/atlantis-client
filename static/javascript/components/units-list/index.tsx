@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import ReactDataGrid from "react-data-grid";
+import { selectUnit } from "../../actions/units-actions";
 import { withSize } from "../utils";
+import Toolbar from "./toolbar";
 
 const getColumns = width => {
   const dynamicWidth = width - 50 - 70 - 60;
@@ -82,11 +84,6 @@ function onRowClick() {
 
 const rowGetter = (i: any) => rows[i];
 
-const Toolbar = props => {
-  console.log(props);
-  return <div>Click me</div>;
-};
-
 const UnitsList = React.memo(props => {
   return (
     <div style={{ fontSize: 12 }}>
@@ -100,7 +97,7 @@ const UnitsList = React.memo(props => {
         rowsCount={rows.length}
         minHeight={props.height}
         headerRowHeight={30}
-        onFilter={onRowClick}
+        // onFilter={onRowClick}
         toolbar={<Toolbar />}
         rowHeight={25}
         rowSelection={{
@@ -114,15 +111,16 @@ const UnitsList = React.memo(props => {
   );
 });
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = state => {
   return {
     a: 2
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
+  console.log(dispatch);
   return {
-    onClick: () => dispatch("")
+    onRowClick: unitId => dispatch(selectUnit(unitId))
   };
 };
 
