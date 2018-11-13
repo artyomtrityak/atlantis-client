@@ -5,11 +5,13 @@ import Header from "./components/header";
 import Map from "./components/map";
 import Details from "./components/details";
 import UnitsList from "./components/units-list";
+import GameMenu from "./components/game-menu";
 
 const App = () => {
   return (
     <div>
       <Header />
+      <GameMenu />
       <div className="container-fluid" style={{ height: "calc(100vh - 60px)" }}>
         <div className="row" style={{ height: "60%" }}>
           <div className="col-5">

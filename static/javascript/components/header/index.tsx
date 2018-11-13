@@ -56,9 +56,20 @@ const Header = () => {
       </ul>
 
       <ul className="navbar-nav flex-row ml-auto d-flex">
+        <form className="form-inline">
+          <a
+            href="https://github.com/artyomtrityak/atlantis-client/issues/new"
+            target="_blank"
+            className="btn btn-sm btn-info"
+            role="button"
+            style={{ marginRight: 30 }}
+          >
+            Report a bug
+          </a>
+        </form>
         <li className="nav-item">
           <a className="nav-link">
-            <span className="badge badge-light">4</span>
+            <span className="badge badge-light">Turn 14</span>
           </a>
         </li>
 
@@ -88,18 +99,14 @@ const Header = () => {
 };
 
 const mapStateToProps = (state: any) => {
-  return {
-    a: 2
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-  return {
-    onClick: () => dispatch("")
-  };
+  return {};
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Header);
+)(React.memo(Header));
