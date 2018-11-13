@@ -1,6 +1,8 @@
+import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
 import ReactDataGrid from "react-data-grid";
+import { activateTab } from "../../actions/details-actions";
 import { selectUnit } from "../../actions/units-actions";
 import { withSize } from "../utils";
 import Toolbar from "./toolbar";
@@ -60,11 +62,12 @@ const getColumns = width => {
   ];
 };
 
-const rows: any = [];
+const rows = [];
 const numberOfRows = 500;
 for (let i = 1; i < numberOfRows; i++) {
   rows.push({
-    unit_id: i * 1000,
+    id: i * 1000,
+    unitId: i * 1000,
     faction: "#12112 Faction " + i,
     unit: "My name",
     men: "5 orc",
@@ -75,23 +78,25 @@ for (let i = 1; i < numberOfRows; i++) {
 }
 
 function onGridSort() {
-  console.log("XX", arguments);
+  console.log("SORT", arguments);
 }
 
-function onRowClick() {
-  console.log("TYYY", arguments);
-}
+const rowGetter = i => rows[i];
 
-const rowGetter = (i: any) => rows[i];
+const UnitsList = props => {
+  const { onRowClick, selectedUnitId } = props;
+  let selectedIndex;
+  if (selectedUnitId) {
+    selectedIndex = _.findIndex(rows, d => d.unitId === selectedUnitId);
+  }
 
-const UnitsList = React.memo(props => {
   return (
     <div style={{ fontSize: 12 }}>
       <ReactDataGrid
         rowKey="id"
         onGridSort={onGridSort}
         enableCellSelect={false}
-        onRowClick={onRowClick}
+        onRowClick={(i, d) => onRowClick(d.unitId)}
         columns={getColumns(props.width)}
         rowGetter={rowGetter}
         rowsCount={rows.length}
@@ -103,24 +108,27 @@ const UnitsList = React.memo(props => {
         rowSelection={{
           showCheckbox: false,
           selectBy: {
-            indexes: [1]
+            indexes: [selectedIndex]
           }
         }}
       />
     </div>
   );
-});
+};
 
 const mapStateToProps = state => {
   return {
-    a: 2
+    selectedUnitId: state.units.selectedUnitId
   };
 };
 
 const mapDispatchToProps = dispatch => {
   console.log(dispatch);
   return {
-    onRowClick: unitId => dispatch(selectUnit(unitId))
+    onRowClick: unitId => {
+      dispatch(selectUnit(unitId));
+      dispatch(activateTab("unit"));
+    }
   };
 };
 
@@ -128,5 +136,5 @@ export default withSize(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(UnitsList)
+  )(React.memo(UnitsList))
 );

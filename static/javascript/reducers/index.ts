@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import faction from "./faction";
 import details from "./details";
+import units from "./units";
 
 export default combineReducers({
-  faction,
-  details
+  details,
+  units
 });
