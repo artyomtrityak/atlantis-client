@@ -12,6 +12,7 @@ import factionIcon from "../../../assets/svg/emblem.svg";
 import cityIcon from "../../../assets/svg/city.svg";
 import gateIcon from "../../../assets/svg/gate.svg";
 import unitIcon from "../../../assets/svg/troll.svg";
+import crownIcon from "../../../assets/svg/crown.svg";
 import { Icon } from "../utils";
 
 const GameMenu = props => {
@@ -37,6 +38,9 @@ const GameMenu = props => {
         </a>
         <div className="dropdown-divider" />
         <div className="game-menu__header">Faction</div>
+        <a className="nav-link game-menu__item" href="#">
+          <Icon {...crownIcon} className="game-menu__item-icon" /> Faction Points
+        </a>
         <a className="nav-link game-menu__item" href="#">
           <Icon {...magicIcon} className="game-menu__item-icon" /> Magic
         </a>

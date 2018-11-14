@@ -27,22 +27,6 @@ const Header = () => {
             </a>
           </div>
         </li>
-        <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" style={{ color: "#e2dfdf" }} href="#" role="button">
-            Faction
-          </a>
-          <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a className="dropdown-item" href="#">
-              Faction Points ((war icon)4, (trade icon)3, (magic icon)0)
-            </a>
-            <a className="dropdown-item" href="#">
-              Another Factions & Relationships
-            </a>
-            <a className="dropdown-item" href="#">
-              Something else here
-            </a>
-          </div>
-        </li>
         <li className="nav-item">
           <a href="#" className="nav-link" style={{ color: "#e2dfdf" }}>
             Atlantis Times

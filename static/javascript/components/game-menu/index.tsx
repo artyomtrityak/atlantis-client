@@ -8,19 +8,42 @@ import { openGameMenu, closeGameMenu } from "../../actions/navigation-actions";
 import "./game-menu-styles.scss";
 import GameMenu from "./game-menu";
 
-const GameMenuIcon = props => {
-  const { open, close, isOpen } = props;
-  return (
-    <React.Fragment>
-      <Icon
-        {...menuIcon}
-        className={cn("game-menu-icon", { "game-menu-icon--expanded": isOpen })}
-        onClick={() => (isOpen ? close() : open())}
-      />
-      <GameMenu isOpen={isOpen} />
-    </React.Fragment>
-  );
-};
+class GameMenuIcon extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.onGlobalClick = this.onGlobalClick.bind(this);
+    this.elRef = React.createRef();
+  }
+
+  componentDidMount() {
+    window.addEventListener("click", this.onGlobalClick);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("click", this.onGlobalClick);
+  }
+
+  onGlobalClick(e) {
+    if (!this.props.isOpen || this.elRef.current.contains(e.target)) {
+      return;
+    }
+    this.props.close();
+  }
+
+  render() {
+    const { isOpen, close, open } = this.props;
+    return (
+      <div ref={this.elRef}>
+        <Icon
+          {...menuIcon}
+          className={cn("game-menu-icon", { "game-menu-icon--expanded": isOpen })}
+          onClick={() => (isOpen ? close() : open())}
+        />
+        <GameMenu isOpen={isOpen} />
+      </div>
+    );
+  }
+}
 
 const mapStateToProps = (state: any) => {
   return {

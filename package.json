@@ -8,8 +8,12 @@
     "build": "NODE_ENV=production webpack --production",
     "check-types": "tsc",
     "lint": "tslint static/**/*.{ts,tsx}",
-    "start": "NODE_ENV=development webpack-dev-server --colors --progress --inline --hot",
-    "precommit": "lint-staged"
+    "start": "NODE_ENV=development webpack-dev-server --colors --progress --inline --hot"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.{js,scss,ts,tsx}": [
