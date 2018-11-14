@@ -44,15 +44,19 @@ const Header = () => {
           </div>
         </li>
         <li className="nav-item">
-          <a className="nav-link" style={{ color: "#e2dfdf" }}>
+          <a href="#" className="nav-link" style={{ color: "#e2dfdf" }}>
             Atlantis Times
           </a>
         </li>
         <li className="nav-item">
-          <a className="nav-link" style={{ color: "#e2dfdf" }}>
+          <a href="#" className="nav-link" style={{ color: "#e2dfdf" }}>
             Rules
           </a>
         </li>
+        {/* <svg  x="0px" y="0px" style={{"enableBackground": "new 0 0 512.43 512.43;", width: 100, height: 100, pointerEvents: "visible"}}>
+          <polygon onClick={() => console.log("AAAA")} id="SvgjsPolygon1008" points="51.96152422706631,15,51.96152422706631,45 25.980762113533157,60,0,45 0,15,25.980762113533157,0" fill="none" stroke="#999999" strokeWidth="1" transform="matrix(1,0,0,1,0,0)"></polygon>
+          <polygon onClick={() => console.log("VVVV")} id="SvgjsPolygon1009" points="51.96152422706631,15,51.96152422706631,45 25.980762113533157,60,0,45 0,15,25.980762113533157,0" fill="none" stroke="#999999" strokeWidth="1" transform="matrix(1,0,0,1,51.96152422706631,0)"></polygon>
+        </svg> */}
       </ul>
 
       <ul className="navbar-nav flex-row ml-auto d-flex">

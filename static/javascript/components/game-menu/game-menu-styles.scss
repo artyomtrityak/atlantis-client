@@ -1,0 +1,76 @@
+$gameMenuBackgroundColor: #38454f;
+$gameMenuFontColor: #e2dfdf;
+$disabledColor: #6c757d;
+
+.game-menu {
+  position: absolute;
+  min-width: 200px;
+  height: calc(100vh - 56px);
+  background-color: $gameMenuBackgroundColor;
+  top: 56px;
+  z-index: 1;
+  left: -200px;
+  transition: 0.5s;
+
+  &.game-menu--expanded {
+    transform: translateX(200px);
+    transition: 0.5s;
+  }
+
+  .game-menu__header {
+    color: $gameMenuFontColor;
+    font-weight: bold;
+    margin-left: 5px;
+  }
+
+  .game-menu__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    color: $gameMenuFontColor;
+    font-size: 14px;
+
+    &:hover {
+      background-color: lighten($gameMenuBackgroundColor, 10%);
+    }
+  }
+
+  .game-menu__item--disabled {
+    color: $disabledColor;
+    cursor: auto;
+    &:hover {
+      background-color: initial;
+    }
+    .game-menu__item-icon {
+      fill: $disabledColor;
+    }
+  }
+
+  .game-menu__badge {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+  }
+
+  .game-menu__item-icon {
+    fill: white;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+  }
+}
+
+.game-menu-icon {
+  position: absolute;
+  top: 60px;
+  width: 38px;
+  left: 4px;
+  z-index: 2;
+  cursor: pointer;
+  transition: 0.5s;
+
+  &.game-menu-icon--expanded {
+    transform: translateX(156px);
+    transition: 0.5s;
+  }
+}

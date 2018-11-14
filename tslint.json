@@ -12,7 +12,8 @@
 		"trailing-comma": false,
 		"object-literal-sort-keys": false,
 		"jsx-no-multiline-js": false,
-		"member-access": false
+		"member-access": false,
+		"max-line-length": 140
 	},
 	"rulesDirectory": [],
 	"linterOptions": {

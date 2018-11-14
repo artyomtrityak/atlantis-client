@@ -1,4 +1,9 @@
 @import "bootstrap/scss/bootstrap.scss";
 
 body {
+  overflow: hidden;
+}
+
+.rdg-selected {
+  border: 0 !important;
 }
