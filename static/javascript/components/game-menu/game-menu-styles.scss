@@ -64,13 +64,13 @@ $disabledColor: #6c757d;
   position: absolute;
   top: 60px;
   width: 38px;
-  left: 4px;
+  left: 0;
   z-index: 2;
   cursor: pointer;
   transition: 0.5s;
 
   &.game-menu-icon--expanded {
-    transform: translateX(156px);
+    transform: translateX(198px);
     transition: 0.5s;
   }
 }
