@@ -2,9 +2,8 @@ import React from "react";
 import cn from "classnames";
 import { connect } from "react-redux";
 import menuIcon from "../../../assets/svg/menu.svg";
-import { Icon } from "../utils";
 import { openGameMenu, closeGameMenu } from "../../actions/navigation-actions";
-
+import { Icon } from "../utils";
 import "./game-menu-styles.scss";
 import GameMenu from "./game-menu";
 

@@ -13,7 +13,7 @@
 		"object-literal-sort-keys": false,
 		"jsx-no-multiline-js": false,
 		"member-access": false,
-		"max-line-length": 140
+		"max-line-length": [true, 140]
 	},
 	"rulesDirectory": [],
 	"linterOptions": {

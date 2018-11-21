@@ -1,96 +1,153 @@
+import cn from "classnames";
 import React from "react";
 import { connect } from "react-redux";
+import "./header-styles.scss";
 
-const Header = () => {
-  return (
-    <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "#25476a" }}>
-      <a className="navbar-brand" href="#" style={{ color: "#e2dfdf" }}>
-        Atlantis Client
-      </a>
-      <ul className="navbar-nav">
-        <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" style={{ color: "#e2dfdf" }} href="#" role="button">
-            Reports & Orders
-          </a>
-          <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a className="dropdown-item" href="#">
-              Load Turn Report
-            </a>
-            <a className="dropdown-item" href="#">
-              Download Turn Orders
-            </a>
-            <a className="dropdown-item" href="#">
-              Reset Turn Orders
-            </a>
-            <a className="dropdown-item" href="#">
-              Game Reports & Orders
-            </a>
-          </div>
-        </li>
-        <li className="nav-item">
-          <a href="#" className="nav-link" style={{ color: "#e2dfdf" }}>
-            Atlantis Times
-          </a>
-        </li>
-        <li className="nav-item">
-          <a href="#" className="nav-link" style={{ color: "#e2dfdf" }}>
-            Rules
-          </a>
-        </li>
-        {/* <svg  x="0px" y="0px" style={{"enableBackground": "new 0 0 512.43 512.43;", width: 100, height: 100, pointerEvents: "visible"}}>
-          <polygon onClick={() => console.log("AAAA")} id="SvgjsPolygon1008" points="51.96152422706631,15,51.96152422706631,45 25.980762113533157,60,0,45 0,15,25.980762113533157,0" fill="none" stroke="#999999" strokeWidth="1" transform="matrix(1,0,0,1,0,0)"></polygon>
-          <polygon onClick={() => console.log("VVVV")} id="SvgjsPolygon1009" points="51.96152422706631,15,51.96152422706631,45 25.980762113533157,60,0,45 0,15,25.980762113533157,0" fill="none" stroke="#999999" strokeWidth="1" transform="matrix(1,0,0,1,51.96152422706631,0)"></polygon>
-        </svg> */}
-      </ul>
+class Header extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      reportsDropdownOpen: false,
+      userDropdownOpen: false
+    };
+    this.elRef = React.createRef();
+    this.onGlobalClick = this.onGlobalClick.bind(this);
+    this.onReportsDropdownToggle = this.onReportsDropdownToggle.bind(this);
+    this.onUserDropdownToggle = this.onUserDropdownToggle.bind(this);
+    this.onActionClick = this.onActionClick.bind(this);
+  }
 
-      <ul className="navbar-nav flex-row ml-auto d-flex">
-        <form className="form-inline">
-          <a
-            href="https://github.com/artyomtrityak/atlantis-client/issues/new"
-            target="_blank"
-            className="btn btn-sm btn-info"
-            role="button"
-            style={{ marginRight: 30 }}
-          >
-            Report a bug
-          </a>
-        </form>
-        <li className="nav-item">
-          <a className="nav-link">
-            <span className="badge badge-light">Turn 14</span>
-          </a>
-        </li>
+  componentDidMount() {
+    window.addEventListener("click", this.onGlobalClick);
+  }
 
-        <li className="nav-item dropdown">
-          <a className="nav-item nav-link dropdown-toggle mr-md-2" style={{ color: "#e2dfdf" }} href="#">
-            Artem Trytiak
-          </a>
-          <div className="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
-            <a className="dropdown-item" href="#">
-              Account Settings
-            </a>
-            <a className="dropdown-item" href="#">
-              Game Settings ([Game Name])
-            </a>
-            <a className="dropdown-item disabled" href="#">
-              Messages
-            </a>
-            <div className="dropdown-divider" />
-            <a className="dropdown-item" href="#">
-              Log Out
-            </a>
-          </div>
-        </li>
-      </ul>
-    </nav>
-  );
-};
+  componentWillUnmount() {
+    window.removeEventListener("click", this.onGlobalClick);
+  }
 
-const mapStateToProps = (state: any) => {
+  onGlobalClick(e) {
+    if (!this.state.reportsDropdownOpen && !this.state.userDropdownOpen) {
+      return;
+    }
+    if (this.elRef.current.contains(e.target)) {
+      return;
+    }
+    this.setState({
+      reportsDropdownOpen: false,
+      userDropdownOpen: false
+    });
+  }
+
+  onReportsDropdownToggle() {
+    this.setState({
+      reportsDropdownOpen: !this.state.reportsDropdownOpen,
+      userDropdownOpen: false
+    });
+  }
+
+  onUserDropdownToggle() {
+    this.setState({
+      userDropdownOpen: !this.state.userDropdownOpen,
+      reportsDropdownOpen: false
+    });
+  }
+
+  onActionClick(actionName) {
+    // switch
+    this.setState({
+      userDropdownOpen: false,
+      reportsDropdownOpen: false
+    });
+  }
+
+  render() {
+    return (
+      <nav className="navbar navbar-expand-lg header" ref={this.elRef}>
+        <a className="navbar-brand">Atlantis Client</a>
+        <ul className="navbar-nav">
+          <li className="nav-item dropdown">
+            <a className="nav-link dropdown-toggle header__link" href="#" role="button" onClick={this.onReportsDropdownToggle}>
+              Reports & Orders
+            </a>
+            <div className={cn("dropdown-menu", { show: this.state.reportsDropdownOpen })}>
+              <a className="dropdown-item" href="#">
+                Load Turn Report
+              </a>
+              <a className="dropdown-item" href="#">
+                Download Turn Orders
+              </a>
+              <a className="dropdown-item" href="#">
+                Reset Turn Orders
+              </a>
+              <a className="dropdown-item" href="#">
+                Game Reports & Orders
+              </a>
+            </div>
+          </li>
+          <li className="nav-item">
+            <a href="#" className="nav-link header__link">
+              Atlantis Times
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#" className="nav-link header__link">
+              Rules
+            </a>
+          </li>
+        </ul>
+
+        <ul className="navbar-nav flex-row ml-auto d-flex">
+          <form className="form-inline">
+            <a
+              href="https://github.com/artyomtrityak/atlantis-client/issues/new"
+              target="_blank"
+              className="btn btn-sm btn-info mr-5"
+              role="button"
+            >
+              Report a bug
+            </a>
+          </form>
+          <li className="nav-item">
+            <a className="nav-link">
+              <span className="badge badge-light">Turn 14</span>
+            </a>
+          </li>
+
+          <li className="nav-item dropdown">
+            <a className="nav-item nav-link dropdown-toggle mr-2 header__link" href="#" onClick={this.onUserDropdownToggle}>
+              Artem Trytiak
+            </a>
+            <div className={cn("dropdown-menu", "dropdown-menu-right", { show: this.state.userDropdownOpen })}>
+              <a className="dropdown-item" href="#">
+                Account Settings
+              </a>
+              <a className="dropdown-item" href="#">
+                Game Settings ([Game Name])
+              </a>
+              <a className="dropdown-item disabled" href="#">
+                Messages
+              </a>
+              <div className="dropdown-divider" />
+              <a className="dropdown-item" href="#">
+                Log Out
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
+}
+
+// const Header = () => {
+
+// };
+
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 
