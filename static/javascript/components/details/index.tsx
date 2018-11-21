@@ -2,6 +2,7 @@ import React from "react";
 import cn from "classnames";
 import { connect } from "react-redux";
 import { activateTab } from "../../actions/details-actions";
+import "./details-styles.scss";
 import Region from "./region";
 import Unit from "./unit";
 import Events from "./events";
@@ -27,7 +28,7 @@ const Map = props => {
   const { onActivateTab, activeTab } = props;
 
   return (
-    <div style={{ marginTop: "5px", height: "100%" }}>
+    <div className="details-block" style={{ marginTop: "5px", height: "100%" }}>
       <div className="row">
         <div className="col-12">
           <ul className="nav nav-tabs">
