@@ -12,10 +12,8 @@ import bridgeIcon from "../../../assets/svg/bridge.svg";
 
 const Unit = props => {
   return (
-    <div className="card-body" style={{ fontSize: "12px" }}>
-      <h5 className="card-title" style={{ fontSize: "16px", marginBottom: "0" }}>
-        Magic Rider (502), School of Witchcraft and Wizardry (17)
-      </h5>
+    <div className="card-body">
+      <h5 className="card-title unit-header">Magic Rider (502), School of Witchcraft and Wizardry (17)</h5>
       <div className="dropdown-divider" />
       <div className="row">
         <div className="col-7">
@@ -46,7 +44,7 @@ const Unit = props => {
             </button>
           </div>
           <div className="dropdown-divider" />
-          <div className="card-text">Inventory: 18 silver [SILV], 3 orcs [ORC].</div>
+          <div className="card-text">18 silver [SILV], 3 orcs [ORC].</div>
           <div className="dropdown-divider" />
           <div className="card-text">Skills: horse training [HORS] 1 (30).</div>
           <div className="dropdown-divider" />

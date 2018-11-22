@@ -3,10 +3,8 @@ import { connect } from "react-redux";
 
 const Events = props => {
   return (
-    <div className="card-body" style={{ fontSize: "12px" }}>
-      <h5 className="card-title" style={{ fontSize: "16px", marginBottom: "0" }}>
-        Magic Rider (502), School of Witchcraft and Wizardry (17)
-      </h5>
+    <div className="card-body">
+      <h5 className="card-title region-events__header">Magic Rider (502), School of Witchcraft and Wizardry (17)</h5>
       <div className="dropdown-divider" />
       <div className="card-text">Magic Wood (425): Gives 3 wood [WOOD] to Magic Weaponry (419).</div>
       <div className="dropdown-divider" />

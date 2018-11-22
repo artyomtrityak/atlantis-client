@@ -6,13 +6,12 @@ import downArrowIcon from "../../../assets/svg/down-arrow.svg";
 
 const Battles = props => {
   return (
-    <div className="card-body" style={{ fontSize: "12px" }}>
-      <h5 className="card-title" style={{ fontSize: "16px", marginBottom: "0", position: "relative" }}>
+    <div className="card-body">
+      <h5 className="card-title region-battles__header">
         Pirates (260) attacks Muggle (382) in wasteland (4,20) in Stilye!
-        <Icon {...downArrowIcon} style={{ width: 16, height: 16, position: "absolute", right: 2, top: 2 }} />
+        <Icon {...downArrowIcon} className="region-battles__expand-collapse-icon" />
       </h5>
       <div className="">
-        <div className="dropdown-divider" />
         <div className="card-text">
           <div>Attackers:</div>
           <div>Pirates (260), 14 pirates [PIRA] (Combat 3/3, Attacks 1, Hits 1, Tactics 1).</div>
@@ -44,9 +43,9 @@ const Battles = props => {
         </div>
       </div>
       <div className="dropdown-divider" />
-      <h5 className="card-title" style={{ fontSize: "16px", marginBottom: "0", position: "relative" }}>
+      <h5 className="card-title region-battles__header">
         Pirates (260) attacks Muggle (382) in wasteland (4,20) in Stilye!
-        <Icon {...rightArrowIcon} style={{ width: 16, height: 16, position: "absolute", right: 2, top: 2 }} />
+        <Icon {...rightArrowIcon} className="region-battles__expand-collapse-icon" />
       </h5>
       <div className="dropdown-divider" />
     </div>

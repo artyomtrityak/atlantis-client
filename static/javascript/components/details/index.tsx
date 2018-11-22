@@ -2,7 +2,7 @@ import React from "react";
 import cn from "classnames";
 import { connect } from "react-redux";
 import { activateTab } from "../../actions/details-actions";
-import "./details-styles.scss";
+import "./styles/index.scss";
 import Region from "./region";
 import Unit from "./unit";
 import Events from "./events";
