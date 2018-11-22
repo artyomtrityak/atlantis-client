@@ -53,7 +53,7 @@ const Unit = props => {
           <div className="card-text">Upkeep: $30.</div>
         </div>
         <div className="col-5">
-          <textarea style={{ width: "100%", height: "100%" }} />
+          <textarea className="w-100per h-100per" />
         </div>
       </div>
     </div>

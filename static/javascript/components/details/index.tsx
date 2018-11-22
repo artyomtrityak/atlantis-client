@@ -25,15 +25,14 @@ const Map = props => {
   const { onActivateTab, activeTab } = props;
 
   return (
-    <div className="details-block" style={{ marginTop: "5px", height: "100%" }}>
+    <div className="details-block">
       <div className="row">
         <div className="col-12">
           <ul className="nav nav-tabs">
             <li className="nav-item">
               <a
-                className={cn("nav-link", { active: activeTab === "region" })}
+                className={cn("nav-link", "details-block__link", { active: activeTab === "region" })}
                 onClick={onActivateTab.bind(null, "region")}
-                style={{ fontSize: "14px" }}
                 href="#"
               >
                 Region
@@ -41,9 +40,8 @@ const Map = props => {
             </li>
             <li className="nav-item">
               <a
-                className={cn("nav-link", { active: activeTab === "unit" })}
+                className={cn("nav-link", "details-block__link", { active: activeTab === "unit" })}
                 onClick={onActivateTab.bind(null, "unit")}
-                style={{ fontSize: "14px" }}
                 href="#"
               >
                 Unit
@@ -51,9 +49,8 @@ const Map = props => {
             </li>
             <li className="nav-item">
               <a
-                className={cn("nav-link", { active: activeTab === "events" })}
+                className={cn("nav-link", "details-block__link", { active: activeTab === "events" })}
                 onClick={onActivateTab.bind(null, "events")}
-                style={{ fontSize: "14px" }}
                 href="#"
               >
                 Events
@@ -61,9 +58,8 @@ const Map = props => {
             </li>
             <li className="nav-item">
               <a
-                className={cn("nav-link", { active: activeTab === "battles" })}
+                className={cn("nav-link", "details-block__link", { active: activeTab === "battles" })}
                 onClick={onActivateTab.bind(null, "battles")}
-                style={{ fontSize: "14px" }}
                 href="#"
               >
                 Battles
@@ -72,11 +68,9 @@ const Map = props => {
           </ul>
         </div>
       </div>
-      <div className="row" style={{ height: "calc(100% - 50px)" }}>
-        <div className="col-12" style={{ height: "100%" }}>
-          <div className="card" style={{ borderTop: 0, height: "100%", overflow: "auto" }}>
-            {renderDetails(activeTab)}
-          </div>
+      <div className="row details-block__details">
+        <div className="col-12 h-100per">
+          <div className="card details-block__details-subcontainer">{renderDetails(activeTab)}</div>
         </div>
       </div>
     </div>

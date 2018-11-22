@@ -1,5 +1,21 @@
 .details-block {
   font-size: 12px;
+  margin-top: 5px;
+  height: 100%;
+
+  .details-block__link {
+    font-size: 14px;
+  }
+
+  .details-block__details {
+    height: calc(100% - 50px);
+  }
+
+  .details-block__details-subcontainer {
+    border-top: 0;
+    height: 100%;
+    overflow: auto;
+  }
 
   @import "./region-styles.scss";
   @import "./unit-styles.scss";
