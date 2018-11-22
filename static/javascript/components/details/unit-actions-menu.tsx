@@ -11,6 +11,81 @@ import teachIcon from "../../../assets/svg/behind.svg";
 import advanceIcon from "../../../assets/svg/sword.svg";
 import produceIcon from "../../../assets/svg/wrench_hammer.svg";
 
+const TURN_ACTIONS = [
+  {
+    name: "ADVANCE",
+    icon: advanceIcon
+  },
+  {
+    name: "ENTERTAIN",
+    icon: entertainIcon
+  },
+  {
+    name: "MOVE",
+    icon: undefined
+  },
+  {
+    name: "PRODUCE",
+    icon: produceIcon
+  },
+  {
+    name: "STUDY",
+    icon: studyIcon
+  },
+  {
+    name: "TAX",
+    icon: moneyIcon
+  },
+  {
+    name: "TEACH",
+    icon: teachIcon
+  },
+  {
+    name: "WORK",
+    icon: undefined
+  }
+];
+
+const FAST_ACTIONS = [
+  {
+    name: "ATTACK",
+    icon: attackIcon
+  },
+  {
+    name: "BUY",
+    icon: moneyIcon
+  },
+  {
+    name: "CAST",
+    icon: castIcon
+  },
+  {
+    name: "COMBAT",
+    icon: castIcon
+  },
+  {
+    name: "FORM",
+    icon: formIcon
+  },
+  {
+    name: "GIVE",
+    icon: undefined
+  },
+  {
+    name: "NAME",
+    icon: formIcon
+  }
+];
+
+const renderAction = (d, i) => {
+  return (
+    <button key={i} className="dropdown-item actions-menu__menu-item" type="button">
+      {d.icon && <Icon {...d.icon} className="actions-menu__icon" />}
+      {d.name}
+    </button>
+  );
+};
+
 const UnitActionsMenu = props => {
   return (
     <div className="btn-group dropleft actions-menu">
@@ -22,33 +97,7 @@ const UnitActionsMenu = props => {
           <div className="col-6">
             <span className="dropdown-item-text">Fast Actions</span>
             <div className="dropdown-divider" />
-            <button className="dropdown-item actions-menu__menu-item" type="button" title="[attack title]">
-              <Icon {...attackIcon} className="actions-menu__icon" />
-              ATTACK
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...moneyIcon} className="actions-menu__icon" />
-              BUY
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...castIcon} className="actions-menu__icon" />
-              CAST
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...castIcon} className="actions-menu__icon" />
-              COMBAT
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...formIcon} className="actions-menu__icon" />
-              FORM
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              GIVE
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...formIcon} className="actions-menu__icon" />
-              NAME
-            </button>
+            {FAST_ACTIONS.map(renderAction)}
             <button className="dropdown-item dropdown-toggle" type="button">
               Other
             </button>
@@ -56,36 +105,7 @@ const UnitActionsMenu = props => {
           <div className="col-6">
             <span className="dropdown-item-text">Month Actions</span>
             <div className="dropdown-divider" />
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...advanceIcon} className="actions-menu__icon" />
-              ADVANCE
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...entertainIcon} className="actions-menu__icon" />
-              ENTERTAIN
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              MOVE
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...produceIcon} className="actions-menu__icon" />
-              PRODUCE
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...studyIcon} className="actions-menu__icon" />
-              STUDY
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...moneyIcon} className="actions-menu__icon" />
-              TAX
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              <Icon {...teachIcon} className="actions-menu__icon" />
-              TEACH
-            </button>
-            <button className="dropdown-item actions-menu__menu-item" type="button">
-              WORK
-            </button>
+            {TURN_ACTIONS.map(renderAction)}
           </div>
         </div>
       </div>
