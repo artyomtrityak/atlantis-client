@@ -13,7 +13,7 @@ const App = () => {
       <Header />
       <GameMenu />
       <div className="container-fluid" style={{ height: "calc(100vh - 60px)" }}>
-        <div className="row" style={{ height: "60%" }}>
+        <div className="row" style={{ height: "70%" }}>
           <div className="col-5">
             <Map />
           </div>
@@ -21,7 +21,7 @@ const App = () => {
             <Details />
           </div>
         </div>
-        <div className="row" style={{ height: "40%", overflow: "auto" }}>
+        <div className="row" style={{ height: "30%", overflow: "auto" }}>
           <div className="col-12">
             <UnitsList />
           </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Icon } from "../utils";
+// Icons
 import shieldIcon from "../../../assets/svg/shield.svg";
 import moneyIcon from "../../../assets/svg/money_bag.svg";
 import behindIcon from "../../../assets/svg/behind.svg";
@@ -10,10 +11,13 @@ import noAidIcon from "../../../assets/svg/stop.svg";
 import consumeIcon from "../../../assets/svg/consume.svg";
 import bridgeIcon from "../../../assets/svg/bridge.svg";
 
+import UnitActionsMenu from "./unit-actions-menu";
+
 const Unit = props => {
   return (
-    <div className="card-body">
+    <div className="card-body" style={{ position: "relative" }}>
       <h5 className="card-title unit-header">Magic Rider (502), School of Witchcraft and Wizardry (17)</h5>
+      <UnitActionsMenu />
       <div className="dropdown-divider" />
       <div className="row">
         <div className="col-7">
