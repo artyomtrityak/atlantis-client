@@ -12,7 +12,7 @@ const App = () => {
     <div>
       <Header />
       <GameMenu />
-      <div className="container-fluid" style={{ height: "calc(100vh - 60px)" }}>
+      <div className="container-fluid application" style={{ height: "calc(100vh - 60px)" }}>
         <div className="row" style={{ height: "70%" }}>
           <div className="col-5">
             <Map />
@@ -32,15 +32,11 @@ const App = () => {
 };
 
 const mapStateToProps = (state: any) => {
-  return {
-    a: 2
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-  return {
-    onClick: () => dispatch("")
-  };
+  return {};
 };
 
 export default connect(

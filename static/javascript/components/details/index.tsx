@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { activateTab } from "../../actions/details-actions";
 import "./styles/index.scss";
 import Region from "./region";
-import Unit from "./unit";
+import Unit from "../details-unit";
 import Events from "./events";
 import Battles from "./battles";
 

@@ -79,7 +79,7 @@ const FAST_ACTIONS = [
 
 const renderAction = (d, i) => {
   return (
-    <button key={i} className="dropdown-item actions-menu__menu-item" type="button">
+    <button key={`unit_action_${i}`} className="dropdown-item actions-menu__menu-item" type="button">
       {d.icon && <Icon {...d.icon} className="actions-menu__icon" />}
       {d.name}
     </button>
