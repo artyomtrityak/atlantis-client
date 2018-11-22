@@ -7,7 +7,6 @@ import Region from "./region";
 import Unit from "./unit";
 import Events from "./events";
 import Battles from "./battles";
-import Advanced from "./advanced";
 
 const renderDetails = activeTab => {
   switch (activeTab) {
@@ -19,8 +18,6 @@ const renderDetails = activeTab => {
       return <Events />;
     case "battles":
       return <Battles />;
-    case "advanced":
-      return <Advanced />;
   }
 };
 
@@ -70,16 +67,6 @@ const Map = props => {
                 href="#"
               >
                 Battles
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className={cn("nav-link", { active: activeTab === "advanced" })}
-                onClick={onActivateTab.bind(null, "advanced")}
-                style={{ fontSize: "14px" }}
-                href="#"
-              >
-                Advanced
               </a>
             </li>
           </ul>

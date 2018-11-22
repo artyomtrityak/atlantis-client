@@ -4,14 +4,17 @@
 
   .unit-flags__flag-icon {
     padding: 0;
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
   }
 
   .unit-flags__btn {
+    display: inline-flex;
+    align-items: center;
     border: 1px solid black;
-    padding: 0;
+    padding: 2px;
     box-shadow: 1px 1px 5px black;
+    font-size: 12px;
 
     &:hover {
       background-color: darken(white, 20%);
