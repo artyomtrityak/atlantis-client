@@ -35,6 +35,11 @@
 
 .actions-menu__menu {
   width: 400px;
+  top: -10px !important; //overriding bootstrap position
+}
+
+.actions-menu__menu--extended {
+  width: 614px;
 }
 
 .actions-menu__menu-item {

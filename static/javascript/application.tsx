@@ -12,7 +12,7 @@ const App = () => {
     <div>
       <Header />
       <GameMenu />
-      <div className="container-fluid application" style={{ height: "calc(100vh - 60px)" }}>
+      <div className="container-fluid application" style={{ height: "calc(100vh - 42px)" }}>
         <div className="row" style={{ height: "70%" }}>
           <div className="col-5">
             <Map />

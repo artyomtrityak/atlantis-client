@@ -7,7 +7,7 @@ import "./unit-styles.scss";
 
 const Unit = props => {
   return (
-    <div className="card-body" style={{ position: "relative" }}>
+    <div className="card-body">
       <h5 className="card-title unit-header">Magic Rider (502), School of Witchcraft and Wizardry (17)</h5>
       <UnitActionsMenu />
       <div className="dropdown-divider" />
