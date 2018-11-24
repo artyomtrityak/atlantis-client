@@ -12,6 +12,15 @@ import teachIcon from "../../../assets/svg/behind.svg";
 import advanceIcon from "../../../assets/svg/sword.svg";
 import produceIcon from "../../../assets/svg/wrench_hammer.svg";
 import assasinateIcon from "../../../assets/svg/assasinate.svg";
+import moveIcon from "../../../assets/svg/move.svg";
+import sailIcon from "../../../assets/svg/boat.svg";
+import sellIcon from "../../../assets/svg/pay.svg";
+import giveIcon from "../../../assets/svg/give.svg";
+import enterIcon from "../../../assets/svg/enter.svg";
+import exitIcon from "../../../assets/svg/exit.svg";
+import stealIcon from "../../../assets/svg/steal.svg";
+import revealIcon from "../../../assets/svg/eye.svg";
+import promoteIcon from "../../../assets/svg/promote.svg";
 
 const TURN_ACTIONS = [
   {
@@ -24,7 +33,7 @@ const TURN_ACTIONS = [
   },
   {
     name: "MOVE",
-    icon: undefined
+    icon: moveIcon
   },
   {
     name: "PRODUCE",
@@ -32,11 +41,11 @@ const TURN_ACTIONS = [
   },
   {
     name: "PILLAGE",
-    icon: undefined
+    icon: assasinateIcon
   },
   {
     name: "SAIL",
-    icon: undefined
+    icon: sailIcon
   },
   {
     name: "STUDY",
@@ -52,7 +61,7 @@ const TURN_ACTIONS = [
   },
   {
     name: "WORK",
-    icon: undefined
+    icon: moneyIcon
   }
 ];
 
@@ -79,7 +88,7 @@ const FAST_ACTIONS = [
   },
   {
     name: "GIVE",
-    icon: undefined
+    icon: giveIcon
   },
   {
     name: "NAME",
@@ -87,7 +96,7 @@ const FAST_ACTIONS = [
   },
   {
     name: "SELL",
-    icon: undefined
+    icon: sellIcon
   }
 ];
 
@@ -102,7 +111,7 @@ const OTHER_FAST_ACTIONS = [
   },
   {
     name: "ENTER",
-    icon: undefined
+    icon: enterIcon
   },
   {
     name: "FORGET",
@@ -110,23 +119,23 @@ const OTHER_FAST_ACTIONS = [
   },
   {
     name: "LEAVE",
-    icon: undefined
+    icon: exitIcon
   },
   {
     name: "PROMOTE",
-    icon: undefined
+    icon: promoteIcon
   },
   {
     name: "REVEAL",
-    icon: undefined
+    icon: revealIcon
   },
   {
     name: "SHOW",
-    icon: undefined
+    icon: studyIcon
   },
   {
     name: "STEAL",
-    icon: undefined
+    icon: stealIcon
   }
 ];
 
