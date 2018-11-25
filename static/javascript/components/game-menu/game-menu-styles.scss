@@ -5,9 +5,9 @@ $disabledColor: #6c757d;
 .game-menu {
   position: absolute;
   min-width: 200px;
-  height: calc(100vh - 56px);
+  height: calc(100vh - 40px);
   background-color: $gameMenuBackgroundColor;
-  top: 56px;
+  top: 40px;
   z-index: 1;
   left: -200px;
   transition: 0.5s;
@@ -62,7 +62,7 @@ $disabledColor: #6c757d;
 
 .game-menu-icon {
   position: absolute;
-  top: 60px;
+  top: 50px;
   width: 38px;
   left: 0;
   z-index: 2;
