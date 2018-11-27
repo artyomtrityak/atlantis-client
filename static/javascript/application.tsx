@@ -7,6 +7,9 @@ import Details from "./components/details";
 import UnitsList from "./components/units-list";
 import GameMenu from "./components/game-menu";
 
+// Modal dialogs
+import LoadReport from "./components/modals/load-report";
+
 const App = () => {
   return (
     <div>
@@ -27,6 +30,8 @@ const App = () => {
           </div>
         </div>
       </div>
+
+      <LoadReport />
     </div>
   );
 };
