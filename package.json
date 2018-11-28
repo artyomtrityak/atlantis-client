@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run lint && npm run check-types",
-    "build": "NODE_ENV=production webpack --production",
+    "grammar": "nearleyc grammar/index.ne -o static/javascript/parser/grammar.js",
+    "test": "npm run grammar && npm run lint && npm run check-types",
+    "build": "npm run grammar && NODE_ENV=production webpack --production",
     "check-types": "tsc",
     "lint": "tslint static/**/*.{ts,tsx}",
     "start": "NODE_ENV=development webpack-dev-server --colors --progress --inline --hot"
@@ -33,6 +34,7 @@
     "classnames": "^2.2.6",
     "gsap": "^2.0.2",
     "lodash": "^4.17.11",
+    "nearley": "^2.15.1",
     "popper.js": "^1.14.4",
     "react": "^16.6.1",
     "react-data-grid": "^5.0.4-2",
