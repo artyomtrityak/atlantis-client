@@ -4,7 +4,7 @@ const mode = process.env.NODE_ENV;
 
 module.exports = {
   entry: {
-    app: ["./static/javascript/index.tsx"]
+    app: ["@babel/polyfill", "./static/javascript/index.tsx"]
   },
   module: {
     rules: [

@@ -8,7 +8,7 @@ import UnitsList from "./components/units-list";
 import GameMenu from "./components/game-menu";
 
 // Modal dialogs
-import LoadReport from "./components/modals/load-report";
+import Modals from "./components/modals";
 
 const App = () => {
   return (
@@ -31,7 +31,7 @@ const App = () => {
         </div>
       </div>
 
-      <LoadReport />
+      <Modals />
     </div>
   );
 };
