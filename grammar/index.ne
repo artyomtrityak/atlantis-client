@@ -31,7 +31,7 @@
 
   const factionProcessor = (d, i, reject) => {
     const faction = {
-      type: "FACTION",
+      type: "FACTION_INFO",
       factionName: d[0],
       factionNumber: d[3],
       points: {
@@ -66,122 +66,133 @@
   };
 
   const factionStatusProcessor = (d) => {
+    if (!Array.isArray(d[2])) {
+      return null;
+    }
+
+    return d[2].reduce((result, val) => {
+      if (val == null) {
+        return result;
+      }
+      return Object.assign({}, result, val[0]);
+    }, {type: "FACTION_STATUS"});
   };
+
+  const errorsProcessor = (d) => {
+    if (!Array.isArray(d[2])) {
+      return null;
+    }
+    return {
+      type: "ERRORS",
+      errors: d[2]
+    };
+  }
 %}
 
 REPORT_PARSER ->
   START
-  _NL
   REPORT_FACTION
-  _NL
   REPORT_DATE
-  _NL
   ATL_VERSION
-  _NL
   FACTION_STATUS
-  [\n]:*
+  FACTION_ERRORS:?
+  #FACTION_BATTLES
+  FACTION_EVENTS:?
+  # SENTENCE_
   {% filterEmpty %}
 
-START ->
-  "Atlantis Report For:" {% noop %}
+# ------------------------------------------------------------
+# HEADER INFO
+# ------------------------------------------------------------
 
-# ------------------------------------------------------------
-# FACTION NAME AND POINTS
-# ------------------------------------------------------------
+START ->
+  "Atlantis Report For:" NL_ {% noop %}
 
 REPORT_FACTION ->
-  WORDS _ "(" INT ")" __ REPORT_FACTION_POINTS:? {% factionProcessor %}
-
-REPORT_FACTION_POINTS ->
-  "(" REPORT_FACTION_WAR:? REPORT_FACTION_TRADE:? REPORT_FACTION_MAGIC:? ")" {% (d) => ({war: d[1], trade: d[2], magic: d[3]}) %}
-  
-REPORT_FACTION_WAR ->
-  __ "War" _ INT ",":? {% (d) => d[3] %}
-  
-REPORT_FACTION_TRADE ->
-  __ "Trade" _ INT ",":? {% (d) => d[3] %}
-  
-REPORT_FACTION_MAGIC ->
-  __ "Magic" _ INT {% (d) => d[3] %}
-
-# ------------------------------------------------------------
-# WORLD DATE
-# ------------------------------------------------------------
+  TEXT _ "(" INT ")" _ "(" TEXT ")" NL_
 
 REPORT_DATE ->
-  WORDS "," _ "Year" _ INT {% dateProcessor %}
-
-# ------------------------------------------------------------
-# SERVER VERSIONS
-# ------------------------------------------------------------
+  TEXT "," _ "Year" _ INT NL_
 
 ATL_VERSION ->
-  "Atlantis Engine Version:" _ ATL_VERSION _NL WORDS "," _ "Version:" _ ATL_VERSION {% versionProcessor %}
-  
-ATL_VERSION ->
-  INT
-  | INT "." VERSION {% array2String %}
+  "Atlantis Engine Version:" _ VERSION NL
+  TEXT ", Version:" _ VERSION NL_
 
-# ------------------------------------------------------------
-# FACTION STAUS
-# ------------------------------------------------------------
+VERSION ->
+  INT | INT "." VERSION
+
 FACTION_STATUS ->
-  "Faction Status:" _NL FACTION_STATUS_ELEMENTS:+
+  "Faction Status:" NL
+  FACTION_STATUS_DETAILS:+
+  NL_
 
-FACTION_STATUS_ELEMENTS ->
-  FACTION_TAX
-  | FACTION_TRADE
-  | FACTION_MAGES
-  | FACTION_MAGES_APPRENTICES
+FACTION_STATUS_DETAILS ->
+  "Tax Regions:" _ INT _ "(" INT ")" NL
+  | "Trade Regions:" _ INT _ "(" INT ")" NL
+  | "Mages:" _ INT _ "(" INT ")" NL
+  | "Apprentices:" _ INT _ "(" INT ")" NL
 
-FACTION_TAX ->
-  "Tax Regions:" _ INT _ "(" INT ")" __NL
+# ------------------------------------------------------------
+# FACTION ERRORS
+# ------------------------------------------------------------
+FACTION_ERRORS ->
+  "Errors during turn:"
+  NL
+  FACTION_ERRORS_ITEMS
+  NL_
 
-FACTION_TRADE ->
-  "Trade Regions:" _ INT _ "(" INT ")" __NL
+FACTION_ERRORS_ITEMS ->
+  SENTENCE_
 
-FACTION_MAGES ->
-  "Mages:" _ INT _ "(" INT ")" __NL
-
-FACTION_MAGES_APPRENTICES ->
-  "Apprentices:" _ INT _ "(" INT ")" __NL
+# ------------------------------------------------------------
+# FACTION BATTLES
+# ------------------------------------------------------------
+#FACTION_BATTLES ->
 
 
 # ------------------------------------------------------------
-# ERRORS
+# FACTION EVENTS
 # ------------------------------------------------------------
+FACTION_EVENTS ->
+  "Events during turn:"
+  NL
+  FACTION_EVENTS_ITEMS
+  NL_
 
-
-# ------------------------------------------------------------
-# BATTLES
-# ------------------------------------------------------------
-
+FACTION_EVENTS_ITEMS ->
+  SENTENCE_
 
 # ------------------------------------------------------------
 # HELPER RULES
 # ------------------------------------------------------------
 
-_NL ->
-  [\n]:+ {% noop %}
+NL ->
+  [\n] {% noop %}
 
-__NL ->
-  [\n]:* {% noop %}
+NL_ ->
+  NL:+
 
 INT ->
   [0-9]:+ {% (d) => parseInt(d[0].join("")) %}
 
 _ ->
-  [ \t\n\v\f]:+ {% id %}
+  [ ] {% id %}
 
 __ ->
-  [ \t\n\v\f]:* {% id %}
+  _:+ {% id %}
+
+SENTENCE ->
+  WORD [.!]
+  | WORD __ SENTENCE {% array2String %}
+  | WORD NL __ SENTENCE {% array2String %}
+
+SENTENCE_ ->
+  (SENTENCE NL_):+
+
+TEXT ->
+  WORD
+  | WORD __ TEXT {% array2String %}
+  | WORD NL __ TEXT {% array2String %}
 
 WORD ->
-  [\w]:+ {% array2String %}
-
-WORDS ->
-  WORD {% array2String %}
-  | WORD " " WORDS {% array2String %}
-
-VERSION ->
-  INT | INT "." VERSION
+  [^\n\r ]:+ {% array2String %}

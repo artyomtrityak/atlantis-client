@@ -37,7 +37,7 @@
 
   const factionProcessor = (d, i, reject) => {
     const faction = {
-      type: "FACTION",
+      type: "FACTION_INFO",
       factionName: d[0],
       factionNumber: d[3],
       points: {
@@ -70,31 +70,60 @@
     };
   };
 
-  const factionStatusProcessor = d => {};
+  const factionStatusProcessor = d => {
+    if (!Array.isArray(d[2])) {
+      return null;
+    }
+
+    return d[2].reduce(
+      (result, val) => {
+        if (val == null) {
+          return result;
+        }
+        return Object.assign({}, result, val[0]);
+      },
+      { type: "FACTION_STATUS" }
+    );
+  };
+
+  const errorsProcessor = d => {
+    if (!Array.isArray(d[2])) {
+      return null;
+    }
+    return {
+      type: "ERRORS",
+      errors: d[2]
+    };
+  };
   var grammar = {
     Lexer: undefined,
     ParserRules: [
-      { name: "REPORT_PARSER$ebnf$1", symbols: [] },
+      { name: "REPORT_PARSER$ebnf$1", symbols: ["FACTION_ERRORS"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$1",
-        symbols: ["REPORT_PARSER$ebnf$1", /[\n]/],
-        postprocess: function arrpush(d) {
-          return d[0].concat([d[1]]);
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "REPORT_PARSER$ebnf$2", symbols: ["FACTION_EVENTS"], postprocess: id },
+      {
+        name: "REPORT_PARSER$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
         }
       },
       {
         name: "REPORT_PARSER",
         symbols: [
           "START",
-          "_NL",
           "REPORT_FACTION",
-          "_NL",
           "REPORT_DATE",
-          "_NL",
           "ATL_VERSION",
-          "_NL",
           "FACTION_STATUS",
-          "REPORT_PARSER$ebnf$1"
+          "REPORT_PARSER$ebnf$1",
+          "REPORT_PARSER$ebnf$2"
         ],
         postprocess: filterEmpty
       },
@@ -126,103 +155,11 @@
           return d.join("");
         }
       },
-      { name: "START", symbols: ["START$string$1"], postprocess: noop },
-      { name: "REPORT_FACTION$ebnf$1", symbols: ["REPORT_FACTION_POINTS"], postprocess: id },
-      {
-        name: "REPORT_FACTION$ebnf$1",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
-        }
-      },
+      { name: "START", symbols: ["START$string$1", "NL_"], postprocess: noop },
       {
         name: "REPORT_FACTION",
-        symbols: ["WORDS", "_", { literal: "(" }, "INT", { literal: ")" }, "__", "REPORT_FACTION$ebnf$1"],
-        postprocess: factionProcessor
+        symbols: ["TEXT", "_", { literal: "(" }, "INT", { literal: ")" }, "_", { literal: "(" }, "TEXT", { literal: ")" }, "NL_"]
       },
-      { name: "REPORT_FACTION_POINTS$ebnf$1", symbols: ["REPORT_FACTION_WAR"], postprocess: id },
-      {
-        name: "REPORT_FACTION_POINTS$ebnf$1",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
-        }
-      },
-      { name: "REPORT_FACTION_POINTS$ebnf$2", symbols: ["REPORT_FACTION_TRADE"], postprocess: id },
-      {
-        name: "REPORT_FACTION_POINTS$ebnf$2",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
-        }
-      },
-      { name: "REPORT_FACTION_POINTS$ebnf$3", symbols: ["REPORT_FACTION_MAGIC"], postprocess: id },
-      {
-        name: "REPORT_FACTION_POINTS$ebnf$3",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
-        }
-      },
-      {
-        name: "REPORT_FACTION_POINTS",
-        symbols: [
-          { literal: "(" },
-          "REPORT_FACTION_POINTS$ebnf$1",
-          "REPORT_FACTION_POINTS$ebnf$2",
-          "REPORT_FACTION_POINTS$ebnf$3",
-          { literal: ")" }
-        ],
-        postprocess: d => ({ war: d[1], trade: d[2], magic: d[3] })
-      },
-      {
-        name: "REPORT_FACTION_WAR$string$1",
-        symbols: [{ literal: "W" }, { literal: "a" }, { literal: "r" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      { name: "REPORT_FACTION_WAR$ebnf$1", symbols: [{ literal: "," }], postprocess: id },
-      {
-        name: "REPORT_FACTION_WAR$ebnf$1",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
-        }
-      },
-      {
-        name: "REPORT_FACTION_WAR",
-        symbols: ["__", "REPORT_FACTION_WAR$string$1", "_", "INT", "REPORT_FACTION_WAR$ebnf$1"],
-        postprocess: d => d[3]
-      },
-      {
-        name: "REPORT_FACTION_TRADE$string$1",
-        symbols: [{ literal: "T" }, { literal: "r" }, { literal: "a" }, { literal: "d" }, { literal: "e" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      { name: "REPORT_FACTION_TRADE$ebnf$1", symbols: [{ literal: "," }], postprocess: id },
-      {
-        name: "REPORT_FACTION_TRADE$ebnf$1",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
-        }
-      },
-      {
-        name: "REPORT_FACTION_TRADE",
-        symbols: ["__", "REPORT_FACTION_TRADE$string$1", "_", "INT", "REPORT_FACTION_TRADE$ebnf$1"],
-        postprocess: d => d[3]
-      },
-      {
-        name: "REPORT_FACTION_MAGIC$string$1",
-        symbols: [{ literal: "M" }, { literal: "a" }, { literal: "g" }, { literal: "i" }, { literal: "c" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      { name: "REPORT_FACTION_MAGIC", symbols: ["__", "REPORT_FACTION_MAGIC$string$1", "_", "INT"], postprocess: d => d[3] },
       {
         name: "REPORT_DATE$string$1",
         symbols: [{ literal: "Y" }, { literal: "e" }, { literal: "a" }, { literal: "r" }],
@@ -230,7 +167,7 @@
           return d.join("");
         }
       },
-      { name: "REPORT_DATE", symbols: ["WORDS", { literal: "," }, "_", "REPORT_DATE$string$1", "_", "INT"], postprocess: dateProcessor },
+      { name: "REPORT_DATE", symbols: ["TEXT", { literal: "," }, "_", "REPORT_DATE$string$1", "_", "INT", "NL_"] },
       {
         name: "ATL_VERSION$string$1",
         symbols: [
@@ -266,6 +203,8 @@
       {
         name: "ATL_VERSION$string$2",
         symbols: [
+          { literal: "," },
+          { literal: " " },
           { literal: "V" },
           { literal: "e" },
           { literal: "r" },
@@ -281,22 +220,10 @@
       },
       {
         name: "ATL_VERSION",
-        symbols: [
-          "ATL_VERSION$string$1",
-          "_",
-          "ATL_VERSION",
-          "_NL",
-          "WORDS",
-          { literal: "," },
-          "_",
-          "ATL_VERSION$string$2",
-          "_",
-          "ATL_VERSION"
-        ],
-        postprocess: versionProcessor
+        symbols: ["ATL_VERSION$string$1", "_", "VERSION", "NL", "TEXT", "ATL_VERSION$string$2", "_", "VERSION", "NL_"]
       },
-      { name: "ATL_VERSION", symbols: ["INT"] },
-      { name: "ATL_VERSION", symbols: ["INT", { literal: "." }, "VERSION"], postprocess: array2String },
+      { name: "VERSION", symbols: ["INT"] },
+      { name: "VERSION", symbols: ["INT", { literal: "." }, "VERSION"] },
       {
         name: "FACTION_STATUS$string$1",
         symbols: [
@@ -320,21 +247,17 @@
           return d.join("");
         }
       },
-      { name: "FACTION_STATUS$ebnf$1", symbols: ["FACTION_STATUS_ELEMENTS"] },
+      { name: "FACTION_STATUS$ebnf$1", symbols: ["FACTION_STATUS_DETAILS"] },
       {
         name: "FACTION_STATUS$ebnf$1",
-        symbols: ["FACTION_STATUS$ebnf$1", "FACTION_STATUS_ELEMENTS"],
+        symbols: ["FACTION_STATUS$ebnf$1", "FACTION_STATUS_DETAILS"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_STATUS", symbols: ["FACTION_STATUS$string$1", "_NL", "FACTION_STATUS$ebnf$1"] },
-      { name: "FACTION_STATUS_ELEMENTS", symbols: ["FACTION_TAX"] },
-      { name: "FACTION_STATUS_ELEMENTS", symbols: ["FACTION_TRADE"] },
-      { name: "FACTION_STATUS_ELEMENTS", symbols: ["FACTION_MAGES"] },
-      { name: "FACTION_STATUS_ELEMENTS", symbols: ["FACTION_MAGES_APPRENTICES"] },
+      { name: "FACTION_STATUS", symbols: ["FACTION_STATUS$string$1", "NL", "FACTION_STATUS$ebnf$1", "NL_"] },
       {
-        name: "FACTION_TAX$string$1",
+        name: "FACTION_STATUS_DETAILS$string$1",
         symbols: [
           { literal: "T" },
           { literal: "a" },
@@ -353,9 +276,12 @@
           return d.join("");
         }
       },
-      { name: "FACTION_TAX", symbols: ["FACTION_TAX$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "__NL"] },
       {
-        name: "FACTION_TRADE$string$1",
+        name: "FACTION_STATUS_DETAILS",
+        symbols: ["FACTION_STATUS_DETAILS$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+      },
+      {
+        name: "FACTION_STATUS_DETAILS$string$2",
         symbols: [
           { literal: "T" },
           { literal: "r" },
@@ -376,17 +302,23 @@
           return d.join("");
         }
       },
-      { name: "FACTION_TRADE", symbols: ["FACTION_TRADE$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "__NL"] },
       {
-        name: "FACTION_MAGES$string$1",
+        name: "FACTION_STATUS_DETAILS",
+        symbols: ["FACTION_STATUS_DETAILS$string$2", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+      },
+      {
+        name: "FACTION_STATUS_DETAILS$string$3",
         symbols: [{ literal: "M" }, { literal: "a" }, { literal: "g" }, { literal: "e" }, { literal: "s" }, { literal: ":" }],
         postprocess: function joiner(d) {
           return d.join("");
         }
       },
-      { name: "FACTION_MAGES", symbols: ["FACTION_MAGES$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "__NL"] },
       {
-        name: "FACTION_MAGES_APPRENTICES$string$1",
+        name: "FACTION_STATUS_DETAILS",
+        symbols: ["FACTION_STATUS_DETAILS$string$3", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+      },
+      {
+        name: "FACTION_STATUS_DETAILS$string$4",
         symbols: [
           { literal: "A" },
           { literal: "p" },
@@ -406,27 +338,77 @@
         }
       },
       {
-        name: "FACTION_MAGES_APPRENTICES",
-        symbols: ["FACTION_MAGES_APPRENTICES$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "__NL"]
+        name: "FACTION_STATUS_DETAILS",
+        symbols: ["FACTION_STATUS_DETAILS$string$4", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
       },
-      { name: "_NL$ebnf$1", symbols: [/[\n]/] },
       {
-        name: "_NL$ebnf$1",
-        symbols: ["_NL$ebnf$1", /[\n]/],
+        name: "FACTION_ERRORS$string$1",
+        symbols: [
+          { literal: "E" },
+          { literal: "r" },
+          { literal: "r" },
+          { literal: "o" },
+          { literal: "r" },
+          { literal: "s" },
+          { literal: " " },
+          { literal: "d" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "g" },
+          { literal: " " },
+          { literal: "t" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: "n" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ERRORS", symbols: ["FACTION_ERRORS$string$1", "NL", "FACTION_ERRORS_ITEMS", "NL_"] },
+      { name: "FACTION_ERRORS_ITEMS", symbols: ["SENTENCE_"] },
+      {
+        name: "FACTION_EVENTS$string$1",
+        symbols: [
+          { literal: "E" },
+          { literal: "v" },
+          { literal: "e" },
+          { literal: "n" },
+          { literal: "t" },
+          { literal: "s" },
+          { literal: " " },
+          { literal: "d" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "g" },
+          { literal: " " },
+          { literal: "t" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: "n" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"] },
+      { name: "FACTION_EVENTS_ITEMS", symbols: ["SENTENCE_"] },
+      { name: "NL", symbols: [/[\n]/], postprocess: noop },
+      { name: "NL_$ebnf$1", symbols: ["NL"] },
+      {
+        name: "NL_$ebnf$1",
+        symbols: ["NL_$ebnf$1", "NL"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
-      { name: "_NL", symbols: ["_NL$ebnf$1"], postprocess: noop },
-      { name: "__NL$ebnf$1", symbols: [] },
-      {
-        name: "__NL$ebnf$1",
-        symbols: ["__NL$ebnf$1", /[\n]/],
-        postprocess: function arrpush(d) {
-          return d[0].concat([d[1]]);
-        }
-      },
-      { name: "__NL", symbols: ["__NL$ebnf$1"], postprocess: noop },
+      { name: "NL_", symbols: ["NL_$ebnf$1"] },
       { name: "INT$ebnf$1", symbols: [/[0-9]/] },
       {
         name: "INT$ebnf$1",
@@ -436,37 +418,42 @@
         }
       },
       { name: "INT", symbols: ["INT$ebnf$1"], postprocess: d => parseInt(d[0].join("")) },
-      { name: "_$ebnf$1", symbols: [/[ \t\n\v\f]/] },
-      {
-        name: "_$ebnf$1",
-        symbols: ["_$ebnf$1", /[ \t\n\v\f]/],
-        postprocess: function arrpush(d) {
-          return d[0].concat([d[1]]);
-        }
-      },
-      { name: "_", symbols: ["_$ebnf$1"], postprocess: id },
-      { name: "__$ebnf$1", symbols: [] },
+      { name: "_", symbols: [/[ ]/], postprocess: id },
+      { name: "__$ebnf$1", symbols: ["_"] },
       {
         name: "__$ebnf$1",
-        symbols: ["__$ebnf$1", /[ \t\n\v\f]/],
+        symbols: ["__$ebnf$1", "_"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
       { name: "__", symbols: ["__$ebnf$1"], postprocess: id },
-      { name: "WORD$ebnf$1", symbols: [/[\w]/] },
+      { name: "SENTENCE", symbols: ["WORD", /[.!]/] },
+      { name: "SENTENCE", symbols: ["WORD", "__", "SENTENCE"], postprocess: array2String },
+      { name: "SENTENCE", symbols: ["WORD", "NL", "__", "SENTENCE"], postprocess: array2String },
+      { name: "SENTENCE_$ebnf$1$subexpression$1", symbols: ["SENTENCE", "NL_"] },
+      { name: "SENTENCE_$ebnf$1", symbols: ["SENTENCE_$ebnf$1$subexpression$1"] },
+      { name: "SENTENCE_$ebnf$1$subexpression$2", symbols: ["SENTENCE", "NL_"] },
       {
-        name: "WORD$ebnf$1",
-        symbols: ["WORD$ebnf$1", /[\w]/],
+        name: "SENTENCE_$ebnf$1",
+        symbols: ["SENTENCE_$ebnf$1", "SENTENCE_$ebnf$1$subexpression$2"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
-      { name: "WORD", symbols: ["WORD$ebnf$1"], postprocess: array2String },
-      { name: "WORDS", symbols: ["WORD"], postprocess: array2String },
-      { name: "WORDS", symbols: ["WORD", { literal: " " }, "WORDS"], postprocess: array2String },
-      { name: "VERSION", symbols: ["INT"] },
-      { name: "VERSION", symbols: ["INT", { literal: "." }, "VERSION"] }
+      { name: "SENTENCE_", symbols: ["SENTENCE_$ebnf$1"] },
+      { name: "TEXT", symbols: ["WORD"] },
+      { name: "TEXT", symbols: ["WORD", "__", "TEXT"], postprocess: array2String },
+      { name: "TEXT", symbols: ["WORD", "NL", "__", "TEXT"], postprocess: array2String },
+      { name: "WORD$ebnf$1", symbols: [/[^\n\r ]/] },
+      {
+        name: "WORD$ebnf$1",
+        symbols: ["WORD$ebnf$1", /[^\n\r ]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "WORD", symbols: ["WORD$ebnf$1"], postprocess: array2String }
     ],
     ParserStart: "REPORT_PARSER"
   };
