@@ -96,6 +96,7 @@ REPORT_PARSER ->
   ATL_VERSION
   FACTION_STATUS
   FACTION_ERRORS:?
+  FACTION_ORIENTATION:?
   FACTION_BATTLES:?
   FACTION_EVENTS:?
   FACTION_SKILLS:?
@@ -106,15 +107,19 @@ REPORT_PARSER ->
   FACTION_ORDERS_TEMPLATE
   {% filterEmpty %}
 
+
 # ------------------------------------------------------------
 # HEADER INFO
 # ------------------------------------------------------------
-
 START ->
   "Atlantis Report For:" NL_ {% noop %}
 
+#TODO: REPORT_FACTION_STATS:?
 REPORT_FACTION ->
-  TEXT _ "(" INT ")" _ "(" TEXT ")" NL_
+  TEXT REPORT_FACTION_STATS NL_
+
+REPORT_FACTION_STATS ->
+  _ "(" INT ")" _ "(" TEXT ")"
 
 REPORT_DATE ->
   TEXT "," _ "Year" _ INT NL_
@@ -137,6 +142,7 @@ FACTION_STATUS_DETAILS ->
   | "Mages:" _ INT _ "(" INT ")" NL
   | "Apprentices:" _ INT _ "(" INT ")" NL
 
+
 # ------------------------------------------------------------
 # FACTION ERRORS
 # ------------------------------------------------------------
@@ -148,6 +154,13 @@ FACTION_ERRORS ->
 
 FACTION_ERRORS_ITEMS ->
   SENTENCE_
+
+
+# ------------------------------------------------------------
+# FACTION ORIENTATION TMP
+# ------------------------------------------------------------
+FACTION_ORIENTATION ->
+  "Your faction is " WORD "." NL_
 
 
 # ------------------------------------------------------------
@@ -197,7 +210,7 @@ FACTION_SKILLS ->
 
 
 FACTION_SKILL ->
-  TEXT ":" _ TEXT NL_
+  TEXT ":" __ TEXT NL_
 
 
 FACTION_ITEMS ->
@@ -248,11 +261,11 @@ FACTION_REGION ->
 
 
 FACTION_REGION_DETAILS ->
-  _ _ REGION_SENTENCE NL
+  _ _:? REGION_SENTENCE NL
 
 
 FACTION_REGION_EXIT ->
-  _ _ REGION_SENTENCE NL
+  _ _:? REGION_SENTENCE NL
 
 
 FACTION_REGION_UNIT ->
@@ -262,7 +275,7 @@ FACTION_REGION_UNIT ->
 REGION_SENTENCE ->
   WORD [.!]
   | WORD _ REGION_SENTENCE {% array2String %}
-  | WORD NL _ _ _ _ REGION_SENTENCE {% array2String %}
+  | WORD NL _ _ _ _:? REGION_SENTENCE {% array2String %}
 
 
 # ------------------------------------------------------------

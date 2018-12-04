@@ -106,7 +106,7 @@
           return null;
         }
       },
-      { name: "REPORT_PARSER$ebnf$2", symbols: ["FACTION_BATTLES"], postprocess: id },
+      { name: "REPORT_PARSER$ebnf$2", symbols: ["FACTION_ORIENTATION"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$2",
         symbols: [],
@@ -114,7 +114,7 @@
           return null;
         }
       },
-      { name: "REPORT_PARSER$ebnf$3", symbols: ["FACTION_EVENTS"], postprocess: id },
+      { name: "REPORT_PARSER$ebnf$3", symbols: ["FACTION_BATTLES"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$3",
         symbols: [],
@@ -122,7 +122,7 @@
           return null;
         }
       },
-      { name: "REPORT_PARSER$ebnf$4", symbols: ["FACTION_SKILLS"], postprocess: id },
+      { name: "REPORT_PARSER$ebnf$4", symbols: ["FACTION_EVENTS"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$4",
         symbols: [],
@@ -130,9 +130,17 @@
           return null;
         }
       },
-      { name: "REPORT_PARSER$ebnf$5", symbols: ["FACTION_ITEMS"], postprocess: id },
+      { name: "REPORT_PARSER$ebnf$5", symbols: ["FACTION_SKILLS"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$5",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "REPORT_PARSER$ebnf$6", symbols: ["FACTION_ITEMS"], postprocess: id },
+      {
+        name: "REPORT_PARSER$ebnf$6",
         symbols: [],
         postprocess: function(d) {
           return null;
@@ -151,6 +159,7 @@
           "REPORT_PARSER$ebnf$3",
           "REPORT_PARSER$ebnf$4",
           "REPORT_PARSER$ebnf$5",
+          "REPORT_PARSER$ebnf$6",
           "FACTION_ATTITUDES",
           "FACTION_UNCLAIMED",
           "FACTION_REGIONS",
@@ -187,9 +196,10 @@
         }
       },
       { name: "START", symbols: ["START$string$1", "NL_"], postprocess: noop },
+      { name: "REPORT_FACTION", symbols: ["TEXT", "REPORT_FACTION_STATS", "NL_"] },
       {
-        name: "REPORT_FACTION",
-        symbols: ["TEXT", "_", { literal: "(" }, "INT", { literal: ")" }, "_", { literal: "(" }, "TEXT", { literal: ")" }, "NL_"]
+        name: "REPORT_FACTION_STATS",
+        symbols: ["_", { literal: "(" }, "INT", { literal: ")" }, "_", { literal: "(" }, "TEXT", { literal: ")" }]
       },
       {
         name: "REPORT_DATE$string$1",
@@ -401,6 +411,31 @@
       },
       { name: "FACTION_ERRORS", symbols: ["FACTION_ERRORS$string$1", "NL", "FACTION_ERRORS_ITEMS", "NL_"] },
       { name: "FACTION_ERRORS_ITEMS", symbols: ["SENTENCE_"] },
+      {
+        name: "FACTION_ORIENTATION$string$1",
+        symbols: [
+          { literal: "Y" },
+          { literal: "o" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: " " },
+          { literal: "f" },
+          { literal: "a" },
+          { literal: "c" },
+          { literal: "t" },
+          { literal: "i" },
+          { literal: "o" },
+          { literal: "n" },
+          { literal: " " },
+          { literal: "i" },
+          { literal: "s" },
+          { literal: " " }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ORIENTATION", symbols: ["FACTION_ORIENTATION$string$1", "WORD", { literal: "." }, "NL_"] },
       {
         name: "FACTION_BATTLES$string$1",
         symbols: [
@@ -641,7 +676,7 @@
         }
       },
       { name: "FACTION_SKILLS", symbols: ["FACTION_SKILLS$string$1", "NL_", "FACTION_SKILLS$ebnf$1"] },
-      { name: "FACTION_SKILL", symbols: ["TEXT", { literal: ":" }, "_", "TEXT", "NL_"] },
+      { name: "FACTION_SKILL", symbols: ["TEXT", { literal: ":" }, "__", "TEXT", "NL_"] },
       {
         name: "FACTION_ITEMS$string$1",
         symbols: [
@@ -884,12 +919,40 @@
           "FACTION_REGION$ebnf$3"
         ]
       },
-      { name: "FACTION_REGION_DETAILS", symbols: ["_", "_", "REGION_SENTENCE", "NL"] },
-      { name: "FACTION_REGION_EXIT", symbols: ["_", "_", "REGION_SENTENCE", "NL"] },
+      { name: "FACTION_REGION_DETAILS$ebnf$1", symbols: ["_"], postprocess: id },
+      {
+        name: "FACTION_REGION_DETAILS$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "FACTION_REGION_DETAILS", symbols: ["_", "FACTION_REGION_DETAILS$ebnf$1", "REGION_SENTENCE", "NL"] },
+      { name: "FACTION_REGION_EXIT$ebnf$1", symbols: ["_"], postprocess: id },
+      {
+        name: "FACTION_REGION_EXIT$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "FACTION_REGION_EXIT", symbols: ["_", "FACTION_REGION_EXIT$ebnf$1", "REGION_SENTENCE", "NL"] },
       { name: "FACTION_REGION_UNIT", symbols: [/[*+\-]/, "_", "TEXT", { literal: "." }, "NL_"] },
       { name: "REGION_SENTENCE", symbols: ["WORD", /[.!]/] },
       { name: "REGION_SENTENCE", symbols: ["WORD", "_", "REGION_SENTENCE"], postprocess: array2String },
-      { name: "REGION_SENTENCE", symbols: ["WORD", "NL", "_", "_", "_", "_", "REGION_SENTENCE"], postprocess: array2String },
+      { name: "REGION_SENTENCE$ebnf$1", symbols: ["_"], postprocess: id },
+      {
+        name: "REGION_SENTENCE$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REGION_SENTENCE",
+        symbols: ["WORD", "NL", "_", "_", "_", "REGION_SENTENCE$ebnf$1", "REGION_SENTENCE"],
+        postprocess: array2String
+      },
       {
         name: "FACTION_ORDERS_TEMPLATE$string$1",
         symbols: [
