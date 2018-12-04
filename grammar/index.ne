@@ -96,9 +96,14 @@ REPORT_PARSER ->
   ATL_VERSION
   FACTION_STATUS
   FACTION_ERRORS:?
-  #FACTION_BATTLES
+  FACTION_BATTLES:?
   FACTION_EVENTS:?
-  # SENTENCE_
+  FACTION_SKILLS:?
+  FACTION_ITEMS:?
+  FACTION_ATTITUDES
+  FACTION_UNCLAIMED
+  FACTION_REGIONS
+  FACTION_ORDERS_TEMPLATE
   {% filterEmpty %}
 
 # ------------------------------------------------------------
@@ -147,7 +152,24 @@ FACTION_ERRORS_ITEMS ->
 # ------------------------------------------------------------
 # FACTION BATTLES
 # ------------------------------------------------------------
-#FACTION_BATTLES ->
+FACTION_BATTLES ->
+  "Battles during turn:"
+  NL
+  FACTION_BATTLE:+
+  NL_
+  
+
+FACTION_BATTLE ->
+  TEXT __ "(" INT ")" __ "attacks" __ TEXT __ "(" INT ")" __ "in" __ TEXT __ "(" INT "," INT ")" __ TEXT "!" NL_
+  "Attackers:" NL
+  FACTION_BATTLE_DETAILS:+
+  "Defenders:" NL
+  FACTION_BATTLE_DETAILS:+
+
+FACTION_BATTLE_DETAILS ->
+  SENTENCE NL_
+  | "Total Casualties:" NL_
+  | "Round" _ INT ":" NL
 
 
 # ------------------------------------------------------------
@@ -161,6 +183,85 @@ FACTION_EVENTS ->
 
 FACTION_EVENTS_ITEMS ->
   SENTENCE_
+
+
+# ------------------------------------------------------------
+# FACTION SKILLS AND ITEMS
+# ------------------------------------------------------------
+FACTION_SKILLS ->
+  "Skill reports:" NL_
+  FACTION_SKILL:+
+
+FACTION_SKILL ->
+  TEXT ":" _ TEXT NL_
+
+FACTION_ITEMS ->
+  "Item reports:" NL_
+  FACTION_ITEM:+
+
+FACTION_ITEM ->
+  TEXT NL_
+
+
+# ------------------------------------------------------------
+# ATTITUDE RULES
+# ------------------------------------------------------------
+FACTION_ATTITUDES ->
+  "Declared Attitudes (default " WORD "):" NL
+  FACTION_ATTITUDE:+
+  NL_
+
+FACTION_ATTITUDE ->
+  SENTENCE NL
+
+
+# ------------------------------------------------------------
+# UNCLAIMED SILVER RULES
+# ------------------------------------------------------------
+
+FACTION_UNCLAIMED ->
+  "Unclaimed silver: " INT "." NL_
+
+# ------------------------------------------------------------
+# REGIONS RULES
+# ------------------------------------------------------------
+
+FACTION_REGIONS ->
+  FACTION_REGION:+
+
+#forest (74,0) in Ranshya, 346 peasants (vikings), $1384.
+
+
+FACTION_REGION ->
+  TEXT _ "(" INT "," INT ")" _ SENTENCE NL
+  "------------------------------------------------------------" NL
+  FACTION_REGION_DETAILS:+
+  NL_
+  "Exits:" NL
+  FACTION_REGION_EXIT:+
+  NL_
+  FACTION_REGION_UNIT:*
+
+FACTION_REGION_DETAILS ->
+  _ _ REGION_SENTENCE NL
+
+FACTION_REGION_EXIT ->
+  _ _ REGION_SENTENCE NL
+
+FACTION_REGION_UNIT ->
+  [*+\-] _ TEXT "." NL_
+
+REGION_SENTENCE ->
+  WORD [.!]
+  | WORD _ REGION_SENTENCE {% array2String %}
+  | WORD NL _ _ _ _ REGION_SENTENCE {% array2String %}
+
+
+# ------------------------------------------------------------
+# ORDERS TEMPLATE
+# ------------------------------------------------------------
+FACTION_ORDERS_TEMPLATE ->
+  "Orders Template (Long Format):" NL_
 
 # ------------------------------------------------------------
 # HELPER RULES

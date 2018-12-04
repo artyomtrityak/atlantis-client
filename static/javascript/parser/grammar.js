@@ -106,9 +106,33 @@
           return null;
         }
       },
-      { name: "REPORT_PARSER$ebnf$2", symbols: ["FACTION_EVENTS"], postprocess: id },
+      { name: "REPORT_PARSER$ebnf$2", symbols: ["FACTION_BATTLES"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "REPORT_PARSER$ebnf$3", symbols: ["FACTION_EVENTS"], postprocess: id },
+      {
+        name: "REPORT_PARSER$ebnf$3",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "REPORT_PARSER$ebnf$4", symbols: ["FACTION_SKILLS"], postprocess: id },
+      {
+        name: "REPORT_PARSER$ebnf$4",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "REPORT_PARSER$ebnf$5", symbols: ["FACTION_ITEMS"], postprocess: id },
+      {
+        name: "REPORT_PARSER$ebnf$5",
         symbols: [],
         postprocess: function(d) {
           return null;
@@ -123,7 +147,14 @@
           "ATL_VERSION",
           "FACTION_STATUS",
           "REPORT_PARSER$ebnf$1",
-          "REPORT_PARSER$ebnf$2"
+          "REPORT_PARSER$ebnf$2",
+          "REPORT_PARSER$ebnf$3",
+          "REPORT_PARSER$ebnf$4",
+          "REPORT_PARSER$ebnf$5",
+          "FACTION_ATTITUDES",
+          "FACTION_UNCLAIMED",
+          "FACTION_REGIONS",
+          "FACTION_ORDERS_TEMPLATE"
         ],
         postprocess: filterEmpty
       },
@@ -371,6 +402,190 @@
       { name: "FACTION_ERRORS", symbols: ["FACTION_ERRORS$string$1", "NL", "FACTION_ERRORS_ITEMS", "NL_"] },
       { name: "FACTION_ERRORS_ITEMS", symbols: ["SENTENCE_"] },
       {
+        name: "FACTION_BATTLES$string$1",
+        symbols: [
+          { literal: "B" },
+          { literal: "a" },
+          { literal: "t" },
+          { literal: "t" },
+          { literal: "l" },
+          { literal: "e" },
+          { literal: "s" },
+          { literal: " " },
+          { literal: "d" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "g" },
+          { literal: " " },
+          { literal: "t" },
+          { literal: "u" },
+          { literal: "r" },
+          { literal: "n" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_BATTLES$ebnf$1", symbols: ["FACTION_BATTLE"] },
+      {
+        name: "FACTION_BATTLES$ebnf$1",
+        symbols: ["FACTION_BATTLES$ebnf$1", "FACTION_BATTLE"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "FACTION_BATTLES", symbols: ["FACTION_BATTLES$string$1", "NL", "FACTION_BATTLES$ebnf$1", "NL_"] },
+      {
+        name: "FACTION_BATTLE$string$1",
+        symbols: [
+          { literal: "a" },
+          { literal: "t" },
+          { literal: "t" },
+          { literal: "a" },
+          { literal: "c" },
+          { literal: "k" },
+          { literal: "s" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_BATTLE$string$2",
+        symbols: [{ literal: "i" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_BATTLE$string$3",
+        symbols: [
+          { literal: "A" },
+          { literal: "t" },
+          { literal: "t" },
+          { literal: "a" },
+          { literal: "c" },
+          { literal: "k" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "s" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_BATTLE$ebnf$1", symbols: ["FACTION_BATTLE_DETAILS"] },
+      {
+        name: "FACTION_BATTLE$ebnf$1",
+        symbols: ["FACTION_BATTLE$ebnf$1", "FACTION_BATTLE_DETAILS"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_BATTLE$string$4",
+        symbols: [
+          { literal: "D" },
+          { literal: "e" },
+          { literal: "f" },
+          { literal: "e" },
+          { literal: "n" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "s" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_BATTLE$ebnf$2", symbols: ["FACTION_BATTLE_DETAILS"] },
+      {
+        name: "FACTION_BATTLE$ebnf$2",
+        symbols: ["FACTION_BATTLE$ebnf$2", "FACTION_BATTLE_DETAILS"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_BATTLE",
+        symbols: [
+          "TEXT",
+          "__",
+          { literal: "(" },
+          "INT",
+          { literal: ")" },
+          "__",
+          "FACTION_BATTLE$string$1",
+          "__",
+          "TEXT",
+          "__",
+          { literal: "(" },
+          "INT",
+          { literal: ")" },
+          "__",
+          "FACTION_BATTLE$string$2",
+          "__",
+          "TEXT",
+          "__",
+          { literal: "(" },
+          "INT",
+          { literal: "," },
+          "INT",
+          { literal: ")" },
+          "__",
+          "TEXT",
+          { literal: "!" },
+          "NL_",
+          "FACTION_BATTLE$string$3",
+          "NL",
+          "FACTION_BATTLE$ebnf$1",
+          "FACTION_BATTLE$string$4",
+          "NL",
+          "FACTION_BATTLE$ebnf$2"
+        ]
+      },
+      { name: "FACTION_BATTLE_DETAILS", symbols: ["SENTENCE", "NL_"] },
+      {
+        name: "FACTION_BATTLE_DETAILS$string$1",
+        symbols: [
+          { literal: "T" },
+          { literal: "o" },
+          { literal: "t" },
+          { literal: "a" },
+          { literal: "l" },
+          { literal: " " },
+          { literal: "C" },
+          { literal: "a" },
+          { literal: "s" },
+          { literal: "u" },
+          { literal: "a" },
+          { literal: "l" },
+          { literal: "t" },
+          { literal: "i" },
+          { literal: "e" },
+          { literal: "s" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_BATTLE_DETAILS", symbols: ["FACTION_BATTLE_DETAILS$string$1", "NL_"] },
+      {
+        name: "FACTION_BATTLE_DETAILS$string$2",
+        symbols: [{ literal: "R" }, { literal: "o" }, { literal: "u" }, { literal: "n" }, { literal: "d" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_BATTLE_DETAILS", symbols: ["FACTION_BATTLE_DETAILS$string$2", "_", "INT", { literal: ":" }, "NL"] },
+      {
         name: "FACTION_EVENTS$string$1",
         symbols: [
           { literal: "E" },
@@ -399,6 +614,329 @@
       },
       { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"] },
       { name: "FACTION_EVENTS_ITEMS", symbols: ["SENTENCE_"] },
+      {
+        name: "FACTION_SKILLS$string$1",
+        symbols: [
+          { literal: "S" },
+          { literal: "k" },
+          { literal: "i" },
+          { literal: "l" },
+          { literal: "l" },
+          { literal: " " },
+          { literal: "r" },
+          { literal: "e" },
+          { literal: "p" },
+          { literal: "o" },
+          { literal: "r" },
+          { literal: "t" },
+          { literal: "s" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_SKILLS$ebnf$1", symbols: ["FACTION_SKILL"] },
+      {
+        name: "FACTION_SKILLS$ebnf$1",
+        symbols: ["FACTION_SKILLS$ebnf$1", "FACTION_SKILL"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "FACTION_SKILLS", symbols: ["FACTION_SKILLS$string$1", "NL_", "FACTION_SKILLS$ebnf$1"] },
+      { name: "FACTION_SKILL", symbols: ["TEXT", { literal: ":" }, "_", "TEXT", "NL_"] },
+      {
+        name: "FACTION_ITEMS$string$1",
+        symbols: [
+          { literal: "I" },
+          { literal: "t" },
+          { literal: "e" },
+          { literal: "m" },
+          { literal: " " },
+          { literal: "r" },
+          { literal: "e" },
+          { literal: "p" },
+          { literal: "o" },
+          { literal: "r" },
+          { literal: "t" },
+          { literal: "s" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ITEMS$ebnf$1", symbols: ["FACTION_ITEM"] },
+      {
+        name: "FACTION_ITEMS$ebnf$1",
+        symbols: ["FACTION_ITEMS$ebnf$1", "FACTION_ITEM"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "FACTION_ITEMS", symbols: ["FACTION_ITEMS$string$1", "NL_", "FACTION_ITEMS$ebnf$1"] },
+      { name: "FACTION_ITEM", symbols: ["TEXT", "NL_"] },
+      {
+        name: "FACTION_ATTITUDES$string$1",
+        symbols: [
+          { literal: "D" },
+          { literal: "e" },
+          { literal: "c" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "r" },
+          { literal: "e" },
+          { literal: "d" },
+          { literal: " " },
+          { literal: "A" },
+          { literal: "t" },
+          { literal: "t" },
+          { literal: "i" },
+          { literal: "t" },
+          { literal: "u" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "s" },
+          { literal: " " },
+          { literal: "(" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "f" },
+          { literal: "a" },
+          { literal: "u" },
+          { literal: "l" },
+          { literal: "t" },
+          { literal: " " }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ATTITUDES$string$2",
+        symbols: [{ literal: ")" }, { literal: ":" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ATTITUDES$ebnf$1", symbols: ["FACTION_ATTITUDE"] },
+      {
+        name: "FACTION_ATTITUDES$ebnf$1",
+        symbols: ["FACTION_ATTITUDES$ebnf$1", "FACTION_ATTITUDE"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_ATTITUDES",
+        symbols: ["FACTION_ATTITUDES$string$1", "WORD", "FACTION_ATTITUDES$string$2", "NL", "FACTION_ATTITUDES$ebnf$1", "NL_"]
+      },
+      { name: "FACTION_ATTITUDE", symbols: ["SENTENCE", "NL"] },
+      {
+        name: "FACTION_UNCLAIMED$string$1",
+        symbols: [
+          { literal: "U" },
+          { literal: "n" },
+          { literal: "c" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "i" },
+          { literal: "m" },
+          { literal: "e" },
+          { literal: "d" },
+          { literal: " " },
+          { literal: "s" },
+          { literal: "i" },
+          { literal: "l" },
+          { literal: "v" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: ":" },
+          { literal: " " }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_UNCLAIMED", symbols: ["FACTION_UNCLAIMED$string$1", "INT", { literal: "." }, "NL_"] },
+      { name: "FACTION_REGIONS$ebnf$1", symbols: ["FACTION_REGION"] },
+      {
+        name: "FACTION_REGIONS$ebnf$1",
+        symbols: ["FACTION_REGIONS$ebnf$1", "FACTION_REGION"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "FACTION_REGIONS", symbols: ["FACTION_REGIONS$ebnf$1"] },
+      {
+        name: "FACTION_REGION$string$1",
+        symbols: [
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" },
+          { literal: "-" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION$ebnf$1", symbols: ["FACTION_REGION_DETAILS"] },
+      {
+        name: "FACTION_REGION$ebnf$1",
+        symbols: ["FACTION_REGION$ebnf$1", "FACTION_REGION_DETAILS"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_REGION$string$2",
+        symbols: [{ literal: "E" }, { literal: "x" }, { literal: "i" }, { literal: "t" }, { literal: "s" }, { literal: ":" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION$ebnf$2", symbols: ["FACTION_REGION_EXIT"] },
+      {
+        name: "FACTION_REGION$ebnf$2",
+        symbols: ["FACTION_REGION$ebnf$2", "FACTION_REGION_EXIT"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "FACTION_REGION$ebnf$3", symbols: [] },
+      {
+        name: "FACTION_REGION$ebnf$3",
+        symbols: ["FACTION_REGION$ebnf$3", "FACTION_REGION_UNIT"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_REGION",
+        symbols: [
+          "TEXT",
+          "_",
+          { literal: "(" },
+          "INT",
+          { literal: "," },
+          "INT",
+          { literal: ")" },
+          "_",
+          "SENTENCE",
+          "NL",
+          "FACTION_REGION$string$1",
+          "NL",
+          "FACTION_REGION$ebnf$1",
+          "NL_",
+          "FACTION_REGION$string$2",
+          "NL",
+          "FACTION_REGION$ebnf$2",
+          "NL_",
+          "FACTION_REGION$ebnf$3"
+        ]
+      },
+      { name: "FACTION_REGION_DETAILS", symbols: ["_", "_", "REGION_SENTENCE", "NL"] },
+      { name: "FACTION_REGION_EXIT", symbols: ["_", "_", "REGION_SENTENCE", "NL"] },
+      { name: "FACTION_REGION_UNIT", symbols: [/[*+\-]/, "_", "TEXT", { literal: "." }, "NL_"] },
+      { name: "REGION_SENTENCE", symbols: ["WORD", /[.!]/] },
+      { name: "REGION_SENTENCE", symbols: ["WORD", "_", "REGION_SENTENCE"], postprocess: array2String },
+      { name: "REGION_SENTENCE", symbols: ["WORD", "NL", "_", "_", "_", "_", "REGION_SENTENCE"], postprocess: array2String },
+      {
+        name: "FACTION_ORDERS_TEMPLATE$string$1",
+        symbols: [
+          { literal: "O" },
+          { literal: "r" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "s" },
+          { literal: " " },
+          { literal: "T" },
+          { literal: "e" },
+          { literal: "m" },
+          { literal: "p" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "t" },
+          { literal: "e" },
+          { literal: " " },
+          { literal: "(" },
+          { literal: "L" },
+          { literal: "o" },
+          { literal: "n" },
+          { literal: "g" },
+          { literal: " " },
+          { literal: "F" },
+          { literal: "o" },
+          { literal: "r" },
+          { literal: "m" },
+          { literal: "a" },
+          { literal: "t" },
+          { literal: ")" },
+          { literal: ":" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ORDERS_TEMPLATE", symbols: ["FACTION_ORDERS_TEMPLATE$string$1", "NL_"] },
       { name: "NL", symbols: [/[\n]/], postprocess: noop },
       { name: "NL_$ebnf$1", symbols: ["NL"] },
       {
