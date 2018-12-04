@@ -546,6 +546,29 @@ Exits:
   1 (30).
 
 
+mountain (66,58) in Beaufor, 210 peasants (hill dwarves), $840.
+------------------------------------------------------------
+  The weather was clear last month; it will be monsoon season next
+    month.
+  Wages: $14 (Max: $588).
+  Wanted: none.
+  For Sale: 42 hill dwarves [HDWA] at $56, 8 leaders [LEAD] at $112.
+  Entertainment available: $42.
+  Products: 32 livestock [LIVE], 27 iron [IRON], 15 stone [STON].
+
+Exits:
+  North : mountain (66,56) in Beaufor.
+  Northeast : ocean (67,57) in Atlantis Ocean.
+  Southeast : mountain (67,59) in Beaufor.
+  South : mountain (66,60) in Beaufor.
+  Southwest : ocean (65,59) in Atlantis Ocean.
+  Northwest : mountain (65,57) in Beaufor.
+
+* Unit (3123), Gragblod (7), avoiding, revealing faction, receiving no
+  aid, nomad [NOMA], 32 silver [SILV]. Weight: 10. Capacity: 0/0/15/0.
+  Skills: combat [COMB] 1 (30).
+
+
 mountain (73,5) in Nakyce, contains Robaedale [city], 6474 peasants
   (hill dwarves), $38844.
 ------------------------------------------------------------
@@ -581,6 +604,102 @@ Exits:
 
 Orders Template (Long Format):
 
+#atlantis 7 "xxxxdddpass"
+
+;*** forest (74,0) in Ranshya ***
+
+unit 613
+;Blackrock Ranchers Trainee (613), avoiding, behind, revealing faction,
+;  holding, consuming faction's food, 5 orcs [ORC]. Weight: 50.
+;  Capacity: 0/0/75/0. Upkeep: $50. Skills: ranching [RANC] 1 (30).
+@CONSUME FACTION
+@BEHIND 1
+@HOLD 1
+@NOAID 0
+@AVOID 1
+
+unit 1021
+;Unit (1021), revealing faction, 2 hill dwarves [HDWA], 4 silver
+;  [SILV]. Weight: 20. Capacity: 0/0/30/0. Skills: combat [COMB] 1
+;  (30).
+@work
+
+;*** underforest (2,42) in Aberdovey ***
+
+unit 1739
+;eye (1739), avoiding, behind, revealing faction, holding, nomad
+;  [NOMA], 52 silver [SILV]. Weight: 10. Capacity: 0/0/15/0. Skills:
+;  observation [OBSE] 2 (90).
+@;;[o]
+@work
+
+;*** forest (79,9) in Surlanque ***
+
+unit 1058
+;Casceius (1058), revealing faction, 2 vikings [VIKI], 8 silver [SILV].
+;  Weight: 20. Capacity: 0/0/30/0. Skills: combat [COMB] 1 (30).
+@work
+
+unit 1508
+;Unit (1508), revealing faction, viking [VIKI], 4 silver [SILV].
+;  Weight: 10. Capacity: 0/0/15/0. Skills: combat [COMB] 1 (30).
+@work
+
+unit 1420
+;Unit (1420), revealing faction, 4 silver [SILV], viking [VIKI].
+;  Weight: 10. Capacity: 0/0/15/0. Skills: combat [COMB] 1 (30).
+@work
+
+;*** forest (81,9,underworld) in Surlanque ***
+
+unit 1192
+;Unit (1192), behind, revealing faction, leader [LEAD], 1391 silver
+;  [SILV], horse [HORS]. Weight: 60. Capacity: 0/70/85/0. Skills:
+;  combat [COMB] 1 (30), tactics [TACT] 5 (450), observation [OBSE] 3
+;  (270).
+@tax
+@study obse
+
+unit 2128
+;Unit (2128), avoiding, behind, holding, 4 horses [HORS], wood elf
+;  [WELF]. Weight: 210. Capacity: 0/280/295/0. Skills: stealth [STEA] 2
+;  (90).
+@;;..SellSPIC-4
+move 2 IN N
+@TURN
+move N N
+ENDTURN
+@TURN
+move S S
+buy 66 SPIC
+ENDTURN
+@TURN
+move S 1 IN
+ENDTURN
+@TURN
+move SW SW
+ENDTURN
+@TURN
+move SW SW
+ENDTURN
+@TURN
+give 2628 all SPIC
+move NE NE
+ENDTURN
+@TURN
+move NE NE
+ENDTURN
+@TURN
+move 2 IN N
+ENDTURN
+
+unit 2473
+;Guard (2473), on guard, revealing faction, holding, darkman [DMAN], 38
+;  silver [SILV]. Weight: 10. Capacity: 0/0/15/0. Skills: combat [COMB]
+;  1 (30).
+@work
+
+#end
 `);
 
 // parser.results is an array of possible parsings.

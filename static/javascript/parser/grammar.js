@@ -533,11 +533,7 @@
           "__",
           "TEXT",
           "__",
-          { literal: "(" },
-          "INT",
-          { literal: "," },
-          "INT",
-          { literal: ")" },
+          "REGION_COORDINATES",
           "__",
           "TEXT",
           { literal: "!" },
@@ -873,11 +869,7 @@
         symbols: [
           "TEXT",
           "_",
-          { literal: "(" },
-          "INT",
-          { literal: "," },
-          "INT",
-          { literal: ")" },
+          "REGION_COORDINATES",
           "_",
           "SENTENCE",
           "NL",
@@ -936,7 +928,123 @@
           return d.join("");
         }
       },
-      { name: "FACTION_ORDERS_TEMPLATE", symbols: ["FACTION_ORDERS_TEMPLATE$string$1", "NL_"] },
+      {
+        name: "FACTION_ORDERS_TEMPLATE$string$2",
+        symbols: [
+          { literal: "#" },
+          { literal: "a" },
+          { literal: "t" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "n" },
+          { literal: "t" },
+          { literal: "i" },
+          { literal: "s" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ORDERS_TEMPLATE$ebnf$1", symbols: ["FACTION_ORDERS_TEMPLATE_REGION"] },
+      {
+        name: "FACTION_ORDERS_TEMPLATE$ebnf$1",
+        symbols: ["FACTION_ORDERS_TEMPLATE$ebnf$1", "FACTION_ORDERS_TEMPLATE_REGION"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE$string$3",
+        symbols: [{ literal: "#" }, { literal: "e" }, { literal: "n" }, { literal: "d" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE",
+        symbols: [
+          "FACTION_ORDERS_TEMPLATE$string$1",
+          "NL_",
+          "FACTION_ORDERS_TEMPLATE$string$2",
+          "_",
+          "INT",
+          "_",
+          { literal: '"' },
+          "TEXT",
+          { literal: '"' },
+          "NL_",
+          "FACTION_ORDERS_TEMPLATE$ebnf$1",
+          "FACTION_ORDERS_TEMPLATE$string$3",
+          "NL_"
+        ]
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_REGION$string$1",
+        symbols: [{ literal: ";" }, { literal: "*" }, { literal: "*" }, { literal: "*" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_REGION$string$2",
+        symbols: [{ literal: "i" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_REGION$string$3",
+        symbols: [{ literal: "*" }, { literal: "*" }, { literal: "*" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ORDERS_TEMPLATE_REGION$ebnf$1", symbols: ["FACTION_ORDERS_TEMPLATE_UNIT"] },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_REGION$ebnf$1",
+        symbols: ["FACTION_ORDERS_TEMPLATE_REGION$ebnf$1", "FACTION_ORDERS_TEMPLATE_UNIT"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_REGION",
+        symbols: [
+          "FACTION_ORDERS_TEMPLATE_REGION$string$1",
+          "_",
+          "TEXT",
+          "_",
+          "REGION_COORDINATES",
+          "_",
+          "FACTION_ORDERS_TEMPLATE_REGION$string$2",
+          "_",
+          "TEXT",
+          "_",
+          "FACTION_ORDERS_TEMPLATE_REGION$string$3",
+          "NL_",
+          "FACTION_ORDERS_TEMPLATE_REGION$ebnf$1"
+        ]
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_UNIT$string$1",
+        symbols: [{ literal: "u" }, { literal: "n" }, { literal: "i" }, { literal: "t" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_ORDERS_TEMPLATE_UNIT$ebnf$1", symbols: ["FACTION_ORDERS_TEMPLATE_UNIT_DETAILS"] },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_UNIT$ebnf$1",
+        symbols: ["FACTION_ORDERS_TEMPLATE_UNIT$ebnf$1", "FACTION_ORDERS_TEMPLATE_UNIT_DETAILS"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "FACTION_ORDERS_TEMPLATE_UNIT",
+        symbols: ["FACTION_ORDERS_TEMPLATE_UNIT$string$1", "_", "INT", "NL_", "FACTION_ORDERS_TEMPLATE_UNIT$ebnf$1", "NL_"]
+      },
+      { name: "FACTION_ORDERS_TEMPLATE_UNIT_DETAILS", symbols: ["BLOB", "NL"] },
       { name: "NL", symbols: [/[\n]/], postprocess: noop },
       { name: "NL_$ebnf$1", symbols: ["NL"] },
       {
@@ -991,7 +1099,47 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "WORD", symbols: ["WORD$ebnf$1"], postprocess: array2String }
+      { name: "WORD", symbols: ["WORD$ebnf$1"], postprocess: array2String },
+      { name: "BLOB$ebnf$1", symbols: [/[^\n\r]/] },
+      {
+        name: "BLOB$ebnf$1",
+        symbols: ["BLOB$ebnf$1", /[^\n\r]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "BLOB", symbols: ["BLOB$ebnf$1"], postprocess: array2String },
+      {
+        name: "REGION_COORDINATES$ebnf$1$string$1",
+        symbols: [
+          { literal: "," },
+          { literal: "u" },
+          { literal: "n" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "w" },
+          { literal: "o" },
+          { literal: "r" },
+          { literal: "l" },
+          { literal: "d" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_COORDINATES$ebnf$1", symbols: ["REGION_COORDINATES$ebnf$1$string$1"], postprocess: id },
+      {
+        name: "REGION_COORDINATES$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REGION_COORDINATES",
+        symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_COORDINATES$ebnf$1", { literal: ")" }]
+      }
     ],
     ParserStart: "REPORT_PARSER"
   };

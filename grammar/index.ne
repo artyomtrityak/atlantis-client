@@ -149,6 +149,7 @@ FACTION_ERRORS ->
 FACTION_ERRORS_ITEMS ->
   SENTENCE_
 
+
 # ------------------------------------------------------------
 # FACTION BATTLES
 # ------------------------------------------------------------
@@ -160,11 +161,12 @@ FACTION_BATTLES ->
   
 
 FACTION_BATTLE ->
-  TEXT __ "(" INT ")" __ "attacks" __ TEXT __ "(" INT ")" __ "in" __ TEXT __ "(" INT "," INT ")" __ TEXT "!" NL_
+  TEXT __ "(" INT ")" __ "attacks" __ TEXT __ "(" INT ")" __ "in" __ TEXT __ REGION_COORDINATES __ TEXT "!" NL_
   "Attackers:" NL
   FACTION_BATTLE_DETAILS:+
   "Defenders:" NL
   FACTION_BATTLE_DETAILS:+
+
 
 FACTION_BATTLE_DETAILS ->
   SENTENCE NL_
@@ -181,6 +183,7 @@ FACTION_EVENTS ->
   FACTION_EVENTS_ITEMS
   NL_
 
+
 FACTION_EVENTS_ITEMS ->
   SENTENCE_
 
@@ -192,12 +195,15 @@ FACTION_SKILLS ->
   "Skill reports:" NL_
   FACTION_SKILL:+
 
+
 FACTION_SKILL ->
   TEXT ":" _ TEXT NL_
+
 
 FACTION_ITEMS ->
   "Item reports:" NL_
   FACTION_ITEM:+
+
 
 FACTION_ITEM ->
   TEXT NL_
@@ -211,6 +217,7 @@ FACTION_ATTITUDES ->
   FACTION_ATTITUDE:+
   NL_
 
+
 FACTION_ATTITUDE ->
   SENTENCE NL
 
@@ -218,22 +225,19 @@ FACTION_ATTITUDE ->
 # ------------------------------------------------------------
 # UNCLAIMED SILVER RULES
 # ------------------------------------------------------------
-
 FACTION_UNCLAIMED ->
   "Unclaimed silver: " INT "." NL_
+
 
 # ------------------------------------------------------------
 # REGIONS RULES
 # ------------------------------------------------------------
-
 FACTION_REGIONS ->
   FACTION_REGION:+
 
-#forest (74,0) in Ranshya, 346 peasants (vikings), $1384.
-
 
 FACTION_REGION ->
-  TEXT _ "(" INT "," INT ")" _ SENTENCE NL
+  TEXT _ REGION_COORDINATES _ SENTENCE NL
   "------------------------------------------------------------" NL
   FACTION_REGION_DETAILS:+
   NL_
@@ -242,14 +246,18 @@ FACTION_REGION ->
   NL_
   FACTION_REGION_UNIT:*
 
+
 FACTION_REGION_DETAILS ->
   _ _ REGION_SENTENCE NL
+
 
 FACTION_REGION_EXIT ->
   _ _ REGION_SENTENCE NL
 
+
 FACTION_REGION_UNIT ->
   [*+\-] _ TEXT "." NL_
+
 
 REGION_SENTENCE ->
   WORD [.!]
@@ -262,6 +270,25 @@ REGION_SENTENCE ->
 # ------------------------------------------------------------
 FACTION_ORDERS_TEMPLATE ->
   "Orders Template (Long Format):" NL_
+  "#atlantis" _ INT _ "\"" TEXT "\"" NL_
+  FACTION_ORDERS_TEMPLATE_REGION:+
+  "#end" NL_
+
+
+FACTION_ORDERS_TEMPLATE_REGION ->
+  ";***" _ TEXT _ REGION_COORDINATES _ "in" _ TEXT _ "***" NL_
+  FACTION_ORDERS_TEMPLATE_UNIT:+
+
+
+FACTION_ORDERS_TEMPLATE_UNIT ->
+  "unit" _ INT NL_
+  FACTION_ORDERS_TEMPLATE_UNIT_DETAILS:+
+  NL_
+
+
+FACTION_ORDERS_TEMPLATE_UNIT_DETAILS ->
+  BLOB NL
+
 
 # ------------------------------------------------------------
 # HELPER RULES
@@ -297,3 +324,9 @@ TEXT ->
 
 WORD ->
   [^\n\r ]:+ {% array2String %}
+
+BLOB ->
+  [^\n\r]:+ {% array2String %}
+
+REGION_COORDINATES ->
+  "(" INT "," INT ",underworld":? ")"
