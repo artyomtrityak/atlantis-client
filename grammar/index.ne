@@ -76,6 +76,55 @@
       errors: d[2][0][0].map((err) => err[0])
     };
   }
+
+  const eventsProcessor = (d) => {
+    return {
+      type: "EVENTS",
+      events: d[2][0][0].map((evt) => evt[0])
+    };
+  }
+
+  const battlesProcessor = (d) => {
+    return {
+      type: "BATTLES",
+      battles: d[2]
+    };
+  }
+
+  const battleProcessor = (d) => {
+    const title = array2String(d.slice(0, 22));
+    const details = d.slice(23); //TODO: parse details too
+
+    const battle = {
+      attackerName: array2String(d[0]),
+      attackerNumber: d[3],
+      defenderName: array2String(d[8]),
+      defenderNumber: d[11],
+      location: {
+        x: d[18][1],
+        y: d[18][3],
+        z: d[18][4]
+      },
+      title,
+      details
+    };
+
+    return battle;
+  };
+
+  const skillsProcessor = (d) => {
+    return {
+      type: "SKILLS",
+      skills: d[2]
+    };
+  }
+
+  const itemsProcessor = (d) => {
+    return {
+      type: "ITEMS",
+      items: d[2]
+    };
+  }
 %}
 
 REPORT_PARSER ->
@@ -175,6 +224,7 @@ FACTION_BATTLES ->
   NL
   FACTION_BATTLE:+
   NL_
+  {% battlesProcessor %}
   
 
 FACTION_BATTLE ->
@@ -183,6 +233,7 @@ FACTION_BATTLE ->
   FACTION_BATTLE_DETAILS:+
   "Defenders:" NL
   FACTION_BATTLE_DETAILS:+
+  {% battleProcessor %}
 
 
 FACTION_BATTLE_DETAILS ->
@@ -199,6 +250,7 @@ FACTION_EVENTS ->
   NL
   FACTION_EVENTS_ITEMS
   NL_
+  {% eventsProcessor %}
 
 
 FACTION_EVENTS_ITEMS ->
@@ -211,19 +263,22 @@ FACTION_EVENTS_ITEMS ->
 FACTION_SKILLS ->
   "Skill reports:" NL_
   FACTION_SKILL:+
+  {% skillsProcessor %}
 
 
 FACTION_SKILL ->
-  TEXT ":" __ TEXT NL_
+  TEXT ":" __ TEXT NL_ {% (d) => ({ skillName: d[0], description: d[3] }) %}
 
 
 FACTION_ITEMS ->
   "Item reports:" NL_
   FACTION_ITEM:+
+  {% itemsProcessor %}
+
 
 
 FACTION_ITEM ->
-  TEXT NL_
+  SENTENCE __ TEXT NL_ {% (d) => ({ itemTitle: d[0], description: d[2] }) %}
 
 
 # ------------------------------------------------------------

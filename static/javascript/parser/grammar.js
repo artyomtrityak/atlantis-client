@@ -85,6 +85,56 @@
       errors: d[2][0][0].map(err => err[0])
     };
   };
+
+  const eventsProcessor = d => {
+    return {
+      type: "EVENTS",
+      events: d[2][0][0].map(evt => evt[0])
+    };
+  };
+
+  const battlesProcessor = d => {
+    return {
+      type: "BATTLES",
+      battles: d[2]
+    };
+  };
+
+  const battleProcessor = d => {
+    const title = array2String(d.slice(0, 22));
+    const details = d.slice(23); //TODO: parse details too
+
+    const battle = {
+      attackerName: array2String(d[0]),
+      attackerNumber: d[3],
+      defenderName: array2String(d[8]),
+      defenderNumber: d[11],
+      location: {
+        x: d[18][1],
+        y: d[18][3],
+        z: d[18][4]
+      },
+      title,
+      details
+    };
+
+    return battle;
+  };
+
+  const skillsProcessor = d => {
+    return {
+      type: "SKILLS",
+      skills: d[2]
+    };
+  };
+
+  const itemsProcessor = d => {
+    console.log("ITEMS:", d);
+    return {
+      type: "ITEMS",
+      skills: d[2]
+    };
+  };
   var grammar = {
     Lexer: undefined,
     ParserRules: [
@@ -566,7 +616,11 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_BATTLES", symbols: ["FACTION_BATTLES$string$1", "NL", "FACTION_BATTLES$ebnf$1", "NL_"] },
+      {
+        name: "FACTION_BATTLES",
+        symbols: ["FACTION_BATTLES$string$1", "NL", "FACTION_BATTLES$ebnf$1", "NL_"],
+        postprocess: battlesProcessor
+      },
       {
         name: "FACTION_BATTLE$string$1",
         symbols: [
@@ -673,7 +727,8 @@
           "FACTION_BATTLE$string$4",
           "NL",
           "FACTION_BATTLE$ebnf$2"
-        ]
+        ],
+        postprocess: battleProcessor
       },
       { name: "FACTION_BATTLE_DETAILS", symbols: ["SENTENCE", "NL_"] },
       {
@@ -737,7 +792,7 @@
           return d.join("");
         }
       },
-      { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"] },
+      { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"], postprocess: eventsProcessor },
       { name: "FACTION_EVENTS_ITEMS", symbols: ["SENTENCE_"] },
       {
         name: "FACTION_SKILLS$string$1",
@@ -769,8 +824,12 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_SKILLS", symbols: ["FACTION_SKILLS$string$1", "NL_", "FACTION_SKILLS$ebnf$1"] },
-      { name: "FACTION_SKILL", symbols: ["TEXT", { literal: ":" }, "__", "TEXT", "NL_"] },
+      { name: "FACTION_SKILLS", symbols: ["FACTION_SKILLS$string$1", "NL_", "FACTION_SKILLS$ebnf$1"], postprocess: skillsProcessor },
+      {
+        name: "FACTION_SKILL",
+        symbols: ["TEXT", { literal: ":" }, "__", "TEXT", "NL_"],
+        postprocess: d => ({ skillName: d[0], description: d[3] })
+      },
       {
         name: "FACTION_ITEMS$string$1",
         symbols: [
@@ -800,8 +859,8 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_ITEMS", symbols: ["FACTION_ITEMS$string$1", "NL_", "FACTION_ITEMS$ebnf$1"] },
-      { name: "FACTION_ITEM", symbols: ["TEXT", "NL_"] },
+      { name: "FACTION_ITEMS", symbols: ["FACTION_ITEMS$string$1", "NL_", "FACTION_ITEMS$ebnf$1"], postprocess: itemsProcessor },
+      { name: "FACTION_ITEM", symbols: ["SENTENCE", "__", "TEXT", "NL_"], postprocess: d => ({ itemTitle: d[0], description: d[2] }) },
       {
         name: "FACTION_ATTITUDES$string$1",
         symbols: [
