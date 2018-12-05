@@ -64,6 +64,7 @@
 
   const versionProcessor = d => {
     return {
+      type: "VERSIONS",
       atlantisVersion: d[2],
       engineName: d[4],
       engineVersion: d[7]
@@ -129,10 +130,54 @@
   };
 
   const itemsProcessor = d => {
-    console.log("ITEMS:", d);
     return {
       type: "ITEMS",
-      skills: d[2]
+      items: d[2]
+    };
+  };
+
+  const attitudesProcessor = d => {
+    return {
+      type: "ATTITUDES",
+      default: d[1],
+      attitudes: d[4]
+    };
+  };
+
+  const unclaimedSilverProcessor = d => {
+    return {
+      type: "UNCLAIMED_SILVER",
+      amount: d[1]
+    };
+  };
+
+  const regionProcessor = d => {
+    return {
+      title: array2String(d.slice(0, 5)),
+      coordinates: {
+        x: d[2][1],
+        y: d[2][3],
+        z: d[2][4]
+      },
+      description: d[8],
+      exits: d[12],
+      unitsAndObjects: d[14]
+    };
+  };
+
+  const regionsProcessor = d => {
+    return {
+      type: "REGIONS",
+      regions: d[0]
+    };
+  };
+
+  const ordersTemplateProcessor = d => {
+    return {
+      type: "ORDERS_TEMPLATE",
+      factionNumber: d[4],
+      factionPassword: array2String(d[7]),
+      orders: d[10]
     };
   };
   var grammar = {
@@ -914,9 +959,10 @@
       },
       {
         name: "FACTION_ATTITUDES",
-        symbols: ["FACTION_ATTITUDES$string$1", "WORD", "FACTION_ATTITUDES$string$2", "NL", "FACTION_ATTITUDES$ebnf$1", "NL_"]
+        symbols: ["FACTION_ATTITUDES$string$1", "WORD", "FACTION_ATTITUDES$string$2", "NL", "FACTION_ATTITUDES$ebnf$1", "NL_"],
+        postprocess: attitudesProcessor
       },
-      { name: "FACTION_ATTITUDE", symbols: ["SENTENCE", "NL"] },
+      { name: "FACTION_ATTITUDE", symbols: ["SENTENCE", "NL"], postprocess: d => d[0] },
       {
         name: "FACTION_UNCLAIMED$string$1",
         symbols: [
@@ -943,7 +989,11 @@
           return d.join("");
         }
       },
-      { name: "FACTION_UNCLAIMED", symbols: ["FACTION_UNCLAIMED$string$1", "INT", { literal: "." }, "NL_"] },
+      {
+        name: "FACTION_UNCLAIMED",
+        symbols: ["FACTION_UNCLAIMED$string$1", "INT", { literal: "." }, "NL_"],
+        postprocess: unclaimedSilverProcessor
+      },
       { name: "FACTION_REGIONS$ebnf$1", symbols: ["FACTION_REGION"] },
       {
         name: "FACTION_REGIONS$ebnf$1",
@@ -952,7 +1002,7 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_REGIONS", symbols: ["FACTION_REGIONS$ebnf$1"] },
+      { name: "FACTION_REGIONS", symbols: ["FACTION_REGIONS$ebnf$1"], postprocess: regionsProcessor },
       {
         name: "FACTION_REGION$string$1",
         symbols: [
@@ -1070,7 +1120,8 @@
           "FACTION_REGION$ebnf$2",
           "NL_",
           "FACTION_REGION$ebnf$3"
-        ]
+        ],
+        postprocess: regionProcessor
       },
       { name: "FACTION_REGION_DETAILS$ebnf$1", symbols: ["_"], postprocess: id },
       {
@@ -1192,7 +1243,8 @@
           "FACTION_ORDERS_TEMPLATE$ebnf$1",
           "FACTION_ORDERS_TEMPLATE$string$3",
           "NL_"
-        ]
+        ],
+        postprocess: ordersTemplateProcessor
       },
       {
         name: "FACTION_ORDERS_TEMPLATE_REGION$string$1",

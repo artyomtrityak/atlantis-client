@@ -58,6 +58,7 @@
 
   const versionProcessor = (d) => {
     return {
+      type: "VERSIONS",
       atlantisVersion: d[2],
       engineName: d[4],
       engineVersion: d[7]
@@ -117,14 +118,59 @@
       type: "SKILLS",
       skills: d[2]
     };
-  }
+  };
 
   const itemsProcessor = (d) => {
     return {
       type: "ITEMS",
       items: d[2]
     };
-  }
+  };
+
+  const attitudesProcessor = (d) => {
+    return {
+      type: "ATTITUDES",
+      default: d[1],
+      attitudes: d[4]
+    };
+  };
+
+  const unclaimedSilverProcessor = (d) => {
+    return {
+      type: "UNCLAIMED_SILVER",
+      amount: d[1]
+    };
+  };
+
+  const regionProcessor = (d) => {
+    return {
+      title: array2String(d.slice(0, 5)),
+      coordinates: {
+        x: d[2][1],
+        y: d[2][3],
+        z: d[2][4]
+      },
+      description: d[8],
+      exits: d[12],
+      unitsAndObjects: d[14]
+    };
+  };
+
+  const regionsProcessor = (d) => {
+    return {
+      type: "REGIONS",
+      regions: d[0]
+    };
+  };
+
+  const ordersTemplateProcessor = (d) => {
+    return {
+      type: "ORDERS_TEMPLATE",
+      factionNumber: d[4],
+      factionPassword: array2String(d[7]),
+      orders: d[10]
+    };
+  };
 %}
 
 REPORT_PARSER ->
@@ -288,24 +334,25 @@ FACTION_ATTITUDES ->
   "Declared Attitudes (default " WORD "):" NL
   FACTION_ATTITUDE:+
   NL_
+  {% attitudesProcessor %}
 
 
 FACTION_ATTITUDE ->
-  SENTENCE NL
+  SENTENCE NL {% (d) => d[0] %}
 
 
 # ------------------------------------------------------------
 # UNCLAIMED SILVER RULES
 # ------------------------------------------------------------
 FACTION_UNCLAIMED ->
-  "Unclaimed silver: " INT "." NL_
+  "Unclaimed silver: " INT "." NL_ {% unclaimedSilverProcessor %}
 
 
 # ------------------------------------------------------------
 # REGIONS RULES
 # ------------------------------------------------------------
 FACTION_REGIONS ->
-  FACTION_REGION:+
+  FACTION_REGION:+ {% regionsProcessor %}
 
 
 FACTION_REGION ->
@@ -317,6 +364,7 @@ FACTION_REGION ->
   FACTION_REGION_EXIT:+
   NL_
   FACTION_REGION_UNIT:*
+  {% regionProcessor %}
 
 
 FACTION_REGION_DETAILS ->
@@ -345,6 +393,7 @@ FACTION_ORDERS_TEMPLATE ->
   "#atlantis" _ INT _ "\"" TEXT "\"" NL_
   FACTION_ORDERS_TEMPLATE_REGION:+
   "#end" NL_
+  {% ordersTemplateProcessor %}
 
 
 FACTION_ORDERS_TEMPLATE_REGION ->
