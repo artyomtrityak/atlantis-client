@@ -35,10 +35,10 @@
     }, "");
   };
 
-  const factionProcessor = (d, i, reject) => {
+  function factionProcessor(d) {
     const faction = {
       type: "FACTION_INFO",
-      factionName: d[0],
+      factionName: d[0][0],
       factionNumber: d[3],
       points: {
         war: 0,
@@ -46,19 +46,19 @@
         magic: 0
       }
     };
-
-    if (d[6]) {
-      (faction.points.war = d[6].war || 0), (faction.points.trade = d[6].trade || 0);
-      faction.points.magic = d[6].magic || 0;
+    if (d[5] && Array.isArray(d[5][2])) {
+      faction.points = d[5][2].reduce((result, val) => {
+        return Object.assign(result, val);
+      }, {});
     }
     return faction;
-  };
+  }
 
   const dateProcessor = (d, i, reject) => {
     return {
       type: "DATE",
-      month: d[0],
-      day: d[5]
+      month: d[0][0],
+      year: d[5]
     };
   };
 
@@ -66,33 +66,23 @@
     return {
       atlantisVersion: d[2],
       engineName: d[4],
-      engineVersion: d[9]
+      engineVersion: d[7]
     };
   };
 
   const factionStatusProcessor = d => {
-    if (!Array.isArray(d[2])) {
-      return null;
-    }
-
     return d[2].reduce(
       (result, val) => {
-        if (val == null) {
-          return result;
-        }
-        return Object.assign({}, result, val[0]);
+        return Object.assign({}, result, val);
       },
       { type: "FACTION_STATUS" }
     );
   };
 
   const errorsProcessor = d => {
-    if (!Array.isArray(d[2])) {
-      return null;
-    }
     return {
       type: "ERRORS",
-      errors: d[2]
+      errors: d[2][0][0].map(err => err[0])
     };
   };
   var grammar = {
@@ -196,10 +186,101 @@
         }
       },
       { name: "START", symbols: ["START$string$1", "NL_"], postprocess: noop },
-      { name: "REPORT_FACTION", symbols: ["TEXT", "REPORT_FACTION_STATS", "NL_"] },
+      { name: "REPORT_FACTION$ebnf$1", symbols: ["REPORT_FACTION_STATS"], postprocess: id },
       {
-        name: "REPORT_FACTION_STATS",
-        symbols: ["_", { literal: "(" }, "INT", { literal: ")" }, "_", { literal: "(" }, "TEXT", { literal: ")" }]
+        name: "REPORT_FACTION$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REPORT_FACTION",
+        symbols: ["TEXT", "_", { literal: "(" }, "INT", { literal: ")" }, "REPORT_FACTION$ebnf$1", "NL_"],
+        postprocess: factionProcessor
+      },
+      { name: "REPORT_FACTION_STATS$ebnf$1", symbols: ["REPORT_FACTION_STATS_DETAILS"] },
+      {
+        name: "REPORT_FACTION_STATS$ebnf$1",
+        symbols: ["REPORT_FACTION_STATS$ebnf$1", "REPORT_FACTION_STATS_DETAILS"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "REPORT_FACTION_STATS", symbols: ["_", { literal: "(" }, "REPORT_FACTION_STATS$ebnf$1", { literal: ")" }] },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$string$1",
+        symbols: [{ literal: "W" }, { literal: "a" }, { literal: "r" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REPORT_FACTION_STATS_DETAILS$ebnf$1", symbols: [{ literal: "," }], postprocess: id },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS",
+        symbols: ["REPORT_FACTION_STATS_DETAILS$string$1", "_", "INT", "REPORT_FACTION_STATS_DETAILS$ebnf$1"],
+        postprocess: d => ({ war: d[2] })
+      },
+      { name: "REPORT_FACTION_STATS_DETAILS$ebnf$2", symbols: ["_"], postprocess: id },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$string$2",
+        symbols: [{ literal: "T" }, { literal: "r" }, { literal: "a" }, { literal: "d" }, { literal: "e" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REPORT_FACTION_STATS_DETAILS$ebnf$3", symbols: [{ literal: "," }], postprocess: id },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$ebnf$3",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS",
+        symbols: [
+          "REPORT_FACTION_STATS_DETAILS$ebnf$2",
+          "REPORT_FACTION_STATS_DETAILS$string$2",
+          "_",
+          "INT",
+          "REPORT_FACTION_STATS_DETAILS$ebnf$3"
+        ],
+        postprocess: d => ({ trade: d[3] })
+      },
+      { name: "REPORT_FACTION_STATS_DETAILS$ebnf$4", symbols: ["_"], postprocess: id },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$ebnf$4",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS$string$3",
+        symbols: [{ literal: "M" }, { literal: "a" }, { literal: "g" }, { literal: "i" }, { literal: "c" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "REPORT_FACTION_STATS_DETAILS",
+        symbols: ["REPORT_FACTION_STATS_DETAILS$ebnf$4", "REPORT_FACTION_STATS_DETAILS$string$3", "_", "INT"],
+        postprocess: d => ({ magic: d[3] })
       },
       {
         name: "REPORT_DATE$string$1",
@@ -208,7 +289,11 @@
           return d.join("");
         }
       },
-      { name: "REPORT_DATE", symbols: ["TEXT", { literal: "," }, "_", "REPORT_DATE$string$1", "_", "INT", "NL_"] },
+      {
+        name: "REPORT_DATE",
+        symbols: ["TEXT", { literal: "," }, "_", "REPORT_DATE$string$1", "_", "INT", "NL_"],
+        postprocess: dateProcessor
+      },
       {
         name: "ATL_VERSION$string$1",
         symbols: [
@@ -261,10 +346,11 @@
       },
       {
         name: "ATL_VERSION",
-        symbols: ["ATL_VERSION$string$1", "_", "VERSION", "NL", "TEXT", "ATL_VERSION$string$2", "_", "VERSION", "NL_"]
+        symbols: ["ATL_VERSION$string$1", "_", "VERSION", "NL", "TEXT", "ATL_VERSION$string$2", "_", "VERSION", "NL_"],
+        postprocess: versionProcessor
       },
       { name: "VERSION", symbols: ["INT"] },
-      { name: "VERSION", symbols: ["INT", { literal: "." }, "VERSION"] },
+      { name: "VERSION", symbols: ["INT", { literal: "." }, "VERSION"], postprocess: array2String },
       {
         name: "FACTION_STATUS$string$1",
         symbols: [
@@ -296,7 +382,11 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_STATUS", symbols: ["FACTION_STATUS$string$1", "NL", "FACTION_STATUS$ebnf$1", "NL_"] },
+      {
+        name: "FACTION_STATUS",
+        symbols: ["FACTION_STATUS$string$1", "NL", "FACTION_STATUS$ebnf$1", "NL_"],
+        postprocess: factionStatusProcessor
+      },
       {
         name: "FACTION_STATUS_DETAILS$string$1",
         symbols: [
@@ -319,7 +409,8 @@
       },
       {
         name: "FACTION_STATUS_DETAILS",
-        symbols: ["FACTION_STATUS_DETAILS$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+        symbols: ["FACTION_STATUS_DETAILS$string$1", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
+        postprocess: d => ({ tax: d[2], taxMax: d[5] })
       },
       {
         name: "FACTION_STATUS_DETAILS$string$2",
@@ -345,7 +436,8 @@
       },
       {
         name: "FACTION_STATUS_DETAILS",
-        symbols: ["FACTION_STATUS_DETAILS$string$2", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+        symbols: ["FACTION_STATUS_DETAILS$string$2", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
+        postprocess: d => ({ trade: d[2], tradeMax: d[5] })
       },
       {
         name: "FACTION_STATUS_DETAILS$string$3",
@@ -356,7 +448,8 @@
       },
       {
         name: "FACTION_STATUS_DETAILS",
-        symbols: ["FACTION_STATUS_DETAILS$string$3", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+        symbols: ["FACTION_STATUS_DETAILS$string$3", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
+        postprocess: d => ({ mages: d[2], magesMax: d[5] })
       },
       {
         name: "FACTION_STATUS_DETAILS$string$4",
@@ -380,7 +473,8 @@
       },
       {
         name: "FACTION_STATUS_DETAILS",
-        symbols: ["FACTION_STATUS_DETAILS$string$4", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"]
+        symbols: ["FACTION_STATUS_DETAILS$string$4", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
+        postprocess: d => ({ apprentices: d[2], apprenticesMax: d[5] })
       },
       {
         name: "FACTION_ERRORS$string$1",
@@ -409,7 +503,7 @@
           return d.join("");
         }
       },
-      { name: "FACTION_ERRORS", symbols: ["FACTION_ERRORS$string$1", "NL", "FACTION_ERRORS_ITEMS", "NL_"] },
+      { name: "FACTION_ERRORS", symbols: ["FACTION_ERRORS$string$1", "NL", "FACTION_ERRORS_ITEMS", "NL_"], postprocess: errorsProcessor },
       { name: "FACTION_ERRORS_ITEMS", symbols: ["SENTENCE_"] },
       {
         name: "FACTION_ORIENTATION$string$1",

@@ -29,10 +29,10 @@
     }, "");
   }
 
-  const factionProcessor = (d, i, reject) => {
+  function factionProcessor(d) {
     const faction = {
       type: "FACTION_INFO",
-      factionName: d[0],
+      factionName: d[0][0],
       factionNumber: d[3],
       points: {
         war: 0,
@@ -40,11 +40,10 @@
         magic: 0
       }
     };
-
-    if (d[6]) {
-      faction.points.war = d[6].war || 0,
-      faction.points.trade = d[6].trade || 0
-      faction.points.magic = d[6].magic || 0
+    if (d[5] && Array.isArray(d[5][2])) {
+      faction.points = d[5][2].reduce((result, val) => {
+        return Object.assign(result, val);
+      }, {});
     }
     return faction;
   }
@@ -52,8 +51,8 @@
   const dateProcessor = (d, i, reject) => {
     return {
       type: "DATE",
-      month: d[0],
-      day: d[5]
+      month: d[0][0],
+      year: d[5]
     };
   }
 
@@ -61,30 +60,20 @@
     return {
       atlantisVersion: d[2],
       engineName: d[4],
-      engineVersion: d[9]
+      engineVersion: d[7]
     };
   };
 
   const factionStatusProcessor = (d) => {
-    if (!Array.isArray(d[2])) {
-      return null;
-    }
-
     return d[2].reduce((result, val) => {
-      if (val == null) {
-        return result;
-      }
-      return Object.assign({}, result, val[0]);
+      return Object.assign({}, result, val);
     }, {type: "FACTION_STATUS"});
   };
 
   const errorsProcessor = (d) => {
-    if (!Array.isArray(d[2])) {
-      return null;
-    }
     return {
       type: "ERRORS",
-      errors: d[2]
+      errors: d[2][0][0].map((err) => err[0])
     };
   }
 %}
@@ -114,33 +103,46 @@ REPORT_PARSER ->
 START ->
   "Atlantis Report For:" NL_ {% noop %}
 
-#TODO: REPORT_FACTION_STATS:?
+
 REPORT_FACTION ->
-  TEXT REPORT_FACTION_STATS NL_
+  TEXT _ "(" INT ")" REPORT_FACTION_STATS:? NL_ {% factionProcessor %}
+
 
 REPORT_FACTION_STATS ->
-  _ "(" INT ")" _ "(" TEXT ")"
+  _ "(" REPORT_FACTION_STATS_DETAILS:+ ")"
+
+
+REPORT_FACTION_STATS_DETAILS ->
+  "War" _ INT ",":? {% (d) => ({ war: d[2] }) %}
+  | _:? "Trade" _ INT ",":? {% (d) => ({ trade: d[3] }) %}
+  | _:? "Magic" _ INT {% (d) => ({ magic: d[3] }) %}
+
 
 REPORT_DATE ->
-  TEXT "," _ "Year" _ INT NL_
+  TEXT "," _ "Year" _ INT NL_ {% dateProcessor %}
+
 
 ATL_VERSION ->
   "Atlantis Engine Version:" _ VERSION NL
-  TEXT ", Version:" _ VERSION NL_
+  TEXT ", Version:" _ VERSION NL_ {% versionProcessor %}
+
 
 VERSION ->
-  INT | INT "." VERSION
+  INT | INT "." VERSION {% array2String %}
+
 
 FACTION_STATUS ->
   "Faction Status:" NL
   FACTION_STATUS_DETAILS:+
   NL_
+  {% factionStatusProcessor %}
+
 
 FACTION_STATUS_DETAILS ->
-  "Tax Regions:" _ INT _ "(" INT ")" NL
-  | "Trade Regions:" _ INT _ "(" INT ")" NL
-  | "Mages:" _ INT _ "(" INT ")" NL
-  | "Apprentices:" _ INT _ "(" INT ")" NL
+  "Tax Regions:" _ INT _ "(" INT ")" NL {% (d) => ({ tax: d[2], taxMax: d[5] }) %}
+  | "Trade Regions:" _ INT _ "(" INT ")" NL {% (d) => ({ trade: d[2], tradeMax: d[5] }) %}
+  | "Mages:" _ INT _ "(" INT ")" NL {% (d) => ({ mages: d[2], magesMax: d[5] }) %}
+  | "Apprentices:" _ INT _ "(" INT ")" NL {% (d) => ({ apprentices: d[2], apprenticesMax: d[5] }) %}
 
 
 # ------------------------------------------------------------
@@ -151,6 +153,8 @@ FACTION_ERRORS ->
   NL
   FACTION_ERRORS_ITEMS
   NL_
+  {% errorsProcessor %}
+
 
 FACTION_ERRORS_ITEMS ->
   SENTENCE_
