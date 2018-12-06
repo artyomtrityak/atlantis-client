@@ -123,7 +123,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  console.log(dispatch);
   return {
     onRowClick: unitId => {
       dispatch(selectUnit(unitId));

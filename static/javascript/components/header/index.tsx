@@ -1,6 +1,7 @@
 import cn from "classnames";
 import React from "react";
 import { connect } from "react-redux";
+import { showLoadReportModal } from "../../actions/navigation-actions";
 import "./header-styles.scss";
 
 class Header extends React.PureComponent {
@@ -14,7 +15,7 @@ class Header extends React.PureComponent {
     this.onGlobalClick = this.onGlobalClick.bind(this);
     this.onReportsDropdownToggle = this.onReportsDropdownToggle.bind(this);
     this.onUserDropdownToggle = this.onUserDropdownToggle.bind(this);
-    this.onActionClick = this.onActionClick.bind(this);
+    this.closeDropdowns = this.closeDropdowns.bind(this);
   }
 
   componentDidMount() {
@@ -52,7 +53,7 @@ class Header extends React.PureComponent {
     });
   }
 
-  onActionClick(actionName) {
+  closeDropdowns() {
     // switch
     this.setState({
       userDropdownOpen: false,
@@ -70,7 +71,7 @@ class Header extends React.PureComponent {
               Reports & Orders
             </a>
             <div className={cn("dropdown-menu", { show: this.state.reportsDropdownOpen })}>
-              <a className="dropdown-item" href="#">
+              <a className="dropdown-item" href="#" onClick={this.props.showLoadReport}>
                 Load Turn Report
               </a>
               <a className="dropdown-item" href="#">
@@ -148,8 +149,13 @@ const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
-  return {};
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    showLoadReport: () => {
+      console.log("SHOW");
+      dispatch(showLoadReportModal());
+    }
+  };
 };
 
 export default connect(

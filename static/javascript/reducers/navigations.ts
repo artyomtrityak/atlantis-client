@@ -1,16 +1,26 @@
-import { OPEN_GAME_MENU, CLOSE_GAME_MENU } from "../actions/navigation-actions";
+import { OPEN_GAME_MENU, CLOSE_GAME_MENU, SHOW_LOAD_REPORT_MODAL, CLOSE_MODAL } from "../actions/navigation-actions";
 
 const initialState = {
-  isGameMenuOpen: false
+  isGameMenuOpen: false,
+  activeModalName: undefined
 };
 
 function navigationReducer(state = initialState, action) {
   switch (action.type) {
     case OPEN_GAME_MENU:
-      state = Object.assign({}, state, { isGameMenuOpen: true });
+      state = { ...state, isGameMenuOpen: true };
       break;
+
     case CLOSE_GAME_MENU:
-      state = Object.assign({}, state, { isGameMenuOpen: false });
+      state = { ...state, isGameMenuOpen: false };
+      break;
+
+    case CLOSE_MODAL:
+      state = { ...state, activeModalName: undefined };
+      break;
+
+    case SHOW_LOAD_REPORT_MODAL:
+      state = { ...state, activeModalName: "LOAD_REPORT" };
       break;
   }
   return state;

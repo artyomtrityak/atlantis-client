@@ -1,6 +1,8 @@
 import React from "react";
 import cn from "classnames";
 import { connect } from "react-redux";
+import { diff } from "deep-diff";
+import { getParser } from "../../../parser";
 
 class LoadReportModal extends React.PureComponent {
   state = {
@@ -10,6 +12,7 @@ class LoadReportModal extends React.PureComponent {
   constructor(props) {
     super(props);
     this.onFileSelect = this.onFileSelect.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onFileSelect(e) {
@@ -20,7 +23,15 @@ class LoadReportModal extends React.PureComponent {
     reader.readAsText(e.target.files[0]);
   }
 
-  onSubmit() {}
+  onSubmit() {
+    console.log(this.state.reportData);
+    const parser = getParser();
+    parser.feed(this.state.reportData);
+    if (parser.results.length > 1) {
+      console.log(diff(parser.results[0], parser.results[1]));
+    }
+    console.log("RES:", parser.results);
+  }
 
   onCancel() {}
 

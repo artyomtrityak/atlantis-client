@@ -32,7 +32,7 @@
   function factionProcessor(d) {
     const faction = {
       type: "FACTION_INFO",
-      factionName: d[0][0],
+      factionName: array2String(d[0]),
       factionNumber: d[3],
       points: {
         war: 0,
@@ -74,7 +74,7 @@
   const errorsProcessor = (d) => {
     return {
       type: "ERRORS",
-      errors: d[2][0][0].map((err) => err[0])
+      errors: d[2][0].map((err) => err[0])
     };
   }
 
@@ -179,13 +179,13 @@ REPORT_PARSER ->
   REPORT_DATE
   ATL_VERSION
   FACTION_STATUS
-  FACTION_ERRORS:?
   FACTION_ORIENTATION:?
+  FACTION_ERRORS:?
   FACTION_BATTLES:?
   FACTION_EVENTS:?
   FACTION_SKILLS:?
   FACTION_ITEMS:?
-  FACTION_ATTITUDES
+  FACTION_ATTITUDES:?
   FACTION_UNCLAIMED
   FACTION_REGIONS
   FACTION_ORDERS_TEMPLATE
@@ -252,7 +252,7 @@ FACTION_ERRORS ->
 
 
 FACTION_ERRORS_ITEMS ->
-  SENTENCE_
+  (SENTENCE NL):+
 
 
 # ------------------------------------------------------------
@@ -273,8 +273,9 @@ FACTION_BATTLES ->
   {% battlesProcessor %}
   
 
+#TODO: change it
 FACTION_BATTLE ->
-  TEXT __ "(" INT ")" __ "attacks" __ TEXT __ "(" INT ")" __ "in" __ TEXT __ REGION_COORDINATES __ TEXT "!" NL_
+  TEXT __AND_NL "(" INT ")" __AND_NL "attacks" __AND_NL TEXT __AND_NL "(" INT ")" __AND_NL "in" __AND_NL TEXT __AND_NL REGION_COORDINATES __AND_NL TEXT "!" NL_
   "Attackers:" NL
   FACTION_BATTLE_DETAILS:+
   "Defenders:" NL
@@ -296,11 +297,10 @@ FACTION_EVENTS ->
   NL
   FACTION_EVENTS_ITEMS
   NL_
-  {% eventsProcessor %}
 
 
 FACTION_EVENTS_ITEMS ->
-  SENTENCE_
+  (SENTENCE NL):+
 
 
 # ------------------------------------------------------------
@@ -313,18 +313,19 @@ FACTION_SKILLS ->
 
 
 FACTION_SKILL ->
-  TEXT ":" __ TEXT NL_ {% (d) => ({ skillName: d[0], description: d[3] }) %}
+  TEXT "." NL NL
+  #TEXT ":" __ TEXT NL_ {% (d) => ({ skillName: d[0], description: d[3] }) %}
 
 
 FACTION_ITEMS ->
-  "Item reports:" NL_
+  "Item reports:" NL NL
   FACTION_ITEM:+
-  {% itemsProcessor %}
 
 
 
 FACTION_ITEM ->
-  SENTENCE __ TEXT NL_ {% (d) => ({ itemTitle: d[0], description: d[2] }) %}
+  TEXT "." NL NL
+  # SENTENCE __ TEXT NL_ {% (d) => ({ itemTitle: d[0], description: d[2] }) %}
 
 
 # ------------------------------------------------------------
@@ -363,6 +364,7 @@ FACTION_REGION ->
   "Exits:" NL
   FACTION_REGION_EXIT:+
   NL_
+  FACTION_REGION_GATE:?
   FACTION_REGION_UNIT:*
   {% regionProcessor %}
 
@@ -373,6 +375,10 @@ FACTION_REGION_DETAILS ->
 
 FACTION_REGION_EXIT ->
   _ _:? REGION_SENTENCE NL
+
+
+FACTION_REGION_GATE ->
+  "There is a Gate here (Gate " INT " of " INT ")." NL_
 
 
 FACTION_REGION_UNIT ->
@@ -392,19 +398,25 @@ FACTION_ORDERS_TEMPLATE ->
   "Orders Template (Long Format):" NL_
   "#atlantis" _ INT _ "\"" TEXT "\"" NL_
   FACTION_ORDERS_TEMPLATE_REGION:+
-  "#end" NL_
+  "#end" NL:*
   {% ordersTemplateProcessor %}
 
 
+#TODO: fix FACTION_ORDERS_REGION_TEXT, make generic new line or somethng else
 FACTION_ORDERS_TEMPLATE_REGION ->
-  ";***" _ TEXT _ REGION_COORDINATES _ "in" _ TEXT _ "***" NL_
+  ";***" _ TEXT _ REGION_COORDINATES _ FACTION_ORDERS_REGION_TEXT _ "***" NL_
   FACTION_ORDERS_TEMPLATE_UNIT:+
+
+FACTION_ORDERS_REGION_TEXT ->
+  WORD
+  | WORD __ FACTION_ORDERS_REGION_TEXT {% array2String %}
+  | WORD NL ";" __ FACTION_ORDERS_REGION_TEXT {% array2String %}
 
 
 FACTION_ORDERS_TEMPLATE_UNIT ->
   "unit" _ INT NL_
   FACTION_ORDERS_TEMPLATE_UNIT_DETAILS:+
-  NL_
+  [\n]:*
 
 
 FACTION_ORDERS_TEMPLATE_UNIT_DETAILS ->
@@ -430,13 +442,13 @@ _ ->
 __ ->
   _:+ {% id %}
 
+__AND_NL ->
+  [ \n]:+ {% id %}
+
 SENTENCE ->
   WORD [.!]
   | WORD __ SENTENCE {% array2String %}
   | WORD NL __ SENTENCE {% array2String %}
-
-SENTENCE_ ->
-  (SENTENCE NL_):+
 
 TEXT ->
   WORD

@@ -12,7 +12,9 @@ const Modals = props => {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    activeModalName: state.navigations.activeModalName
+  };
 };
 
 export default connect(mapStateToProps)(React.memo(Modals));
