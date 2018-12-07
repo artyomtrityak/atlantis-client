@@ -1,34 +1,6 @@
+@include "./shared.ne"
+
 @{%
-  const noop = () => null;
-
-  const filterEmpty = (d) => {
-    return d.filter((val) => {
-      if (val == null) {
-        return false;
-      }
-      if (Array.isArray(val) && val.length === 0) {
-        return false;
-      }
-      return true;
-    });
-  }
-
-  const array2String = (d) => {
-    if (!Array.isArray(d)) {
-      return d;
-    }
-    return d.reduce((result, val) => {
-      if (Array.isArray(val)) {
-        val = array2String(val);
-      }
-      if (val == null) {
-        val = "";
-      }
-      result += val;
-      return result;
-    }, "");
-  }
-
   function factionProcessor(d) {
     const faction = {
       type: "FACTION_INFO",
@@ -175,11 +147,13 @@
 
 REPORT_PARSER ->
   START
+  # HEADER START
   REPORT_FACTION
   REPORT_DATE
   ATL_VERSION
   FACTION_STATUS
   FACTION_ORIENTATION:?
+  # -HEADER END
   FACTION_ERRORS:?
   FACTION_BATTLES:?
   FACTION_EVENTS:?
@@ -404,7 +378,7 @@ FACTION_ORDERS_TEMPLATE ->
 
 #TODO: fix FACTION_ORDERS_REGION_TEXT, make generic new line or somethng else
 FACTION_ORDERS_TEMPLATE_REGION ->
-  ";***" _ TEXT _ REGION_COORDINATES _ FACTION_ORDERS_REGION_TEXT _ "***" NL_
+  ";***" _ TEXT _ REGION_COORDINATES _ FACTION_ORDERS_REGION_TEXT [ \n;]:+ "***" NL_
   FACTION_ORDERS_TEMPLATE_UNIT:+
 
 FACTION_ORDERS_REGION_TEXT ->
@@ -422,44 +396,3 @@ FACTION_ORDERS_TEMPLATE_UNIT ->
 FACTION_ORDERS_TEMPLATE_UNIT_DETAILS ->
   BLOB NL
 
-
-# ------------------------------------------------------------
-# HELPER RULES
-# ------------------------------------------------------------
-
-NL ->
-  [\n] {% noop %}
-
-NL_ ->
-  NL:+
-
-INT ->
-  [0-9]:+ {% (d) => parseInt(d[0].join("")) %}
-
-_ ->
-  [ ] {% id %}
-
-__ ->
-  _:+ {% id %}
-
-__AND_NL ->
-  [ \n]:+ {% id %}
-
-SENTENCE ->
-  WORD [.!]
-  | WORD __ SENTENCE {% array2String %}
-  | WORD NL __ SENTENCE {% array2String %}
-
-TEXT ->
-  WORD
-  | WORD __ TEXT {% array2String %}
-  | WORD NL __ TEXT {% array2String %}
-
-WORD ->
-  [^\n\r ]:+ {% array2String %}
-
-BLOB ->
-  [^\n\r]:+ {% array2String %}
-
-REGION_COORDINATES ->
-  "(" INT "," INT ",underworld":? ")"

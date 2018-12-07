@@ -13,7 +13,7 @@ import Modals from "./components/modals";
 const App = () => {
   return (
     <div>
-      {/* <Header />
+      <Header />
       <GameMenu />
       <div className="container-fluid application" style={{ height: "calc(100vh - 42px)" }}>
         <div className="row" style={{ height: "70%" }}>
@@ -31,7 +31,7 @@ const App = () => {
         </div>
       </div>
 
-      <Modals /> */}
+      <Modals />
     </div>
   );
 };
