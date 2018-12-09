@@ -16,6 +16,7 @@ class Header extends React.PureComponent {
     this.onReportsDropdownToggle = this.onReportsDropdownToggle.bind(this);
     this.onUserDropdownToggle = this.onUserDropdownToggle.bind(this);
     this.closeDropdowns = this.closeDropdowns.bind(this);
+    this.showLoadReport = this.showLoadReport.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +62,11 @@ class Header extends React.PureComponent {
     });
   }
 
+  showLoadReport() {
+    this.closeDropdowns();
+    this.props.showLoadReport();
+  }
+
   render() {
     return (
       <nav className="navbar navbar-expand-lg header" ref={this.elRef}>
@@ -71,7 +77,7 @@ class Header extends React.PureComponent {
               Reports & Orders
             </a>
             <div className={cn("dropdown-menu", { show: this.state.reportsDropdownOpen })}>
-              <a className="dropdown-item" href="#" onClick={this.props.showLoadReport}>
+              <a className="dropdown-item" href="#" onClick={this.showLoadReport}>
                 Load Turn Report
               </a>
               <a className="dropdown-item" href="#">

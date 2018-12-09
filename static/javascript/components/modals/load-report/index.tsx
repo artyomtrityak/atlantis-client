@@ -2,7 +2,9 @@ import React from "react";
 import cn from "classnames";
 import { connect } from "react-redux";
 import { diff } from "deep-diff";
+import Noty from "noty";
 import { getParser } from "../../../parser";
+import { closeModal } from "../../../actions/navigation-actions";
 
 class LoadReportModal extends React.PureComponent {
   state = {
@@ -24,16 +26,24 @@ class LoadReportModal extends React.PureComponent {
   }
 
   onSubmit() {
+    if (!this.state.reportData) {
+      return;
+    }
     console.log(this.state.reportData);
     const parser = getParser();
     parser.feed(this.state.reportData);
-    if (parser.results.length > 1) {
+    if (parser.results && parser.results.length > 1) {
       console.log(diff(parser.results[0], parser.results[1]));
     }
     console.log("RES:", parser.results);
+    new Noty({
+      theme: "bootstrap-v4",
+      type: "success",
+      layout: "topRight",
+      text: "Some notification text"
+    }).show();
+    console.log("AAA");
   }
-
-  onCancel() {}
 
   render() {
     return (
@@ -53,7 +63,7 @@ class LoadReportModal extends React.PureComponent {
                 </form>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={this.onCancel}>
+                <button type="button" className="btn btn-secondary" onClick={this.props.closeModal}>
                   Cancel
                 </button>
                 <button type="button" className="btn btn-primary" onClick={this.onSubmit}>
@@ -74,7 +84,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch: any) => {
-  return {};
+  return {
+    closeModal: () => dispatch(closeModal())
+  };
 };
 
 export default connect(
