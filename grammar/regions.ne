@@ -2,11 +2,7 @@
   const regionProcessor = (d) => {
     return {
       title: array2String(d.slice(0, 5)),
-      coordinates: {
-        x: d[2][1],
-        y: d[2][3],
-        z: d[2][4]
-      },
+      coordinates: d[2],
       description: d[8],
       exits: d[12],
       unitsAndObjects: d[14]

@@ -15,11 +15,7 @@
       attackerNumber: d[3],
       defenderName: array2String(d[8]),
       defenderNumber: d[11],
-      location: {
-        x: d[18][1],
-        y: d[18][3],
-        z: d[18][4]
-      },
+      location: d[18],
       title,
       details
     };

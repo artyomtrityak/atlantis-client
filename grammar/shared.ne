@@ -28,6 +28,21 @@
       return result;
     }, "");
   }
+
+  const parseRegionCoordinates = (d) => {
+    let z = 1;
+    if (d[4] === ",underworld") {
+      z = 2;
+    }
+    if (d[4] === ",nexus") {
+      z = 0;
+    }
+    return {
+      x: d[1],
+      y: d[3],
+      z
+    };
+  };
 %}
 
 NL ->
@@ -65,4 +80,4 @@ BLOB ->
   [^\n\r]:+ {% array2String %}
 
 REGION_COORDINATES ->
-  "(" INT "," INT ",underworld":? ")"
+  "(" INT "," INT ",underworld":? ")" {% parseRegionCoordinates  %}

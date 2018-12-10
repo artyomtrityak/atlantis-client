@@ -35,6 +35,21 @@
     }, "");
   };
 
+  const parseRegionCoordinates = d => {
+    let z = 1;
+    if (d[4] === ",underworld") {
+      z = 2;
+    }
+    if (d[4] === ",nexus") {
+      z = 0;
+    }
+    return {
+      x: d[1],
+      y: d[3],
+      z
+    };
+  };
+
   function factionProcessor(d) {
     const faction = {
       type: "FACTION_INFO",
@@ -118,11 +133,7 @@
       attackerNumber: d[3],
       defenderName: array2String(d[8]),
       defenderNumber: d[11],
-      location: {
-        x: d[18][1],
-        y: d[18][3],
-        z: d[18][4]
-      },
+      location: d[18],
       title,
       details
     };
@@ -154,11 +165,7 @@
   const regionProcessor = d => {
     return {
       title: array2String(d.slice(0, 5)),
-      coordinates: {
-        x: d[2][1],
-        y: d[2][3],
-        z: d[2][4]
-      },
+      coordinates: d[2],
       description: d[8],
       exits: d[12],
       unitsAndObjects: d[14]
@@ -274,7 +281,8 @@
       },
       {
         name: "REGION_COORDINATES",
-        symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_COORDINATES$ebnf$1", { literal: ")" }]
+        symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_COORDINATES$ebnf$1", { literal: ")" }],
+        postprocess: parseRegionCoordinates
       },
       { name: "REPORT_FACTION$ebnf$1", symbols: ["REPORT_FACTION_STATS"], postprocess: id },
       {
