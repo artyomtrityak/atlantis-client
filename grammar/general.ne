@@ -40,6 +40,21 @@
       return Object.assign({}, result, val);
     }, {type: "FACTION_STATUS"});
   };
+
+  const attitudesProcessor = (d) => {
+    return {
+      type: "ATTITUDES",
+      default: d[1],
+      attitudes: d[4]
+    };
+  };
+
+  const unclaimedSilverProcessor = (d) => {
+    return {
+      type: "UNCLAIMED_SILVER",
+      amount: d[1]
+    };
+  };
 %}
 
 
@@ -86,3 +101,24 @@ FACTION_STATUS_DETAILS ->
 
 FACTION_ORIENTATION ->
   "Your faction is " WORD "." NL_
+
+
+# ------------------------------------------------------------
+# ATTITUDE RULES
+# ------------------------------------------------------------
+FACTION_ATTITUDES ->
+  "Declared Attitudes (default " WORD "):" NL
+  FACTION_ATTITUDE:+
+  NL_
+  {% attitudesProcessor %}
+
+
+FACTION_ATTITUDE ->
+  SENTENCE NL {% (d) => d[0] %}
+
+
+# ------------------------------------------------------------
+# UNCLAIMED SILVER RULES
+# ------------------------------------------------------------
+FACTION_UNCLAIMED ->
+  "Unclaimed silver: " INT "." NL_ {% unclaimedSilverProcessor %}
