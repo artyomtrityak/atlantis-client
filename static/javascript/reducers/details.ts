@@ -6,8 +6,9 @@ const initialState = {
 
 function detailsReducer(state = initialState, action) {
   switch (action.type) {
+    // TOOD: move to navigation
     case ACTIVATE_TAB:
-      state = Object.assign({}, state, { activeTab: action.tabName });
+      state = { ...state, activeTab: action.tabName };
       break;
   }
   return state;

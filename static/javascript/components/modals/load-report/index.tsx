@@ -1,10 +1,8 @@
 import React from "react";
-import cn from "classnames";
 import { connect } from "react-redux";
-import { diff } from "deep-diff";
-import Noty from "noty";
-import { getParser } from "../../../parser";
+import parse from "../../../parser";
 import { closeModal } from "../../../actions/navigation-actions";
+import { reportLoaded } from "../../../actions/report-actions";
 
 class LoadReportModal extends React.PureComponent {
   state = {
@@ -29,20 +27,9 @@ class LoadReportModal extends React.PureComponent {
     if (!this.state.reportData) {
       return;
     }
-    console.log(this.state.reportData);
-    const parser = getParser();
-    parser.feed(this.state.reportData);
-    if (parser.results && parser.results.length > 1) {
-      console.log(diff(parser.results[0], parser.results[1]));
-    }
-    console.log("RES:", parser.results);
-    new Noty({
-      theme: "bootstrap-v4",
-      type: "success",
-      layout: "topRight",
-      text: "Some notification text"
-    }).show();
-    console.log("AAA");
+
+    const parsedReport = parse(this.state.reportData);
+    this.props.reportLoaded(parsedReport);
   }
 
   render() {
@@ -67,7 +54,7 @@ class LoadReportModal extends React.PureComponent {
                   Cancel
                 </button>
                 <button type="button" className="btn btn-primary" onClick={this.onSubmit}>
-                  OK
+                  Load
                 </button>
               </div>
             </div>
@@ -85,7 +72,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    closeModal: () => dispatch(closeModal())
+    closeModal: () => dispatch(closeModal()),
+    reportLoaded: report => dispatch(reportLoaded(report))
   };
 };
 

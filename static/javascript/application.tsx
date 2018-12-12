@@ -10,7 +10,12 @@ import GameMenu from "./components/game-menu";
 // Modal dialogs
 import Modals from "./components/modals";
 
+import { showConfirmation } from "./actions/notification-actions";
+
 const App = () => {
+  showConfirmation("Hello?").then(() => {
+    console.log("OK");
+  });
   return (
     <div>
       <Header />

@@ -1,4 +1,4 @@
-import { ACTIVATE_TAB } from "../actions/regions-actions";
+import { REPORT_LOADED } from "../actions/report-actions";
 
 const initialState = {
   regions: []
@@ -6,6 +6,9 @@ const initialState = {
 
 function regionsReducer(state = initialState, action) {
   switch (action.type) {
+    case REPORT_LOADED:
+      // TODO: parse regions
+      break;
   }
   return state;
 }

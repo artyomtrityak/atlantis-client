@@ -3,10 +3,12 @@ import navigations from "./navigations";
 import details from "./details";
 import units from "./units";
 import regions from "./regions";
+import report from "./report";
 
 export default combineReducers({
   details,
   units,
   navigations,
-  regions
+  regions,
+  report
 });
