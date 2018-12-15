@@ -40,7 +40,10 @@
     return {
       x: d[1],
       y: d[3],
-      z
+      z,
+      toString() {
+        return array2String(d);
+      }
     };
   };
 %}

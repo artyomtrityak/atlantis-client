@@ -1,11 +1,20 @@
 @{%
+  const regionExitProcessor = (d) => {
+    return {
+      title: array2String(d),
+      type: d[6],
+      coordinates: d[8]
+    };
+  };
+
   const regionProcessor = (d) => {
     return {
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
-      description: d[8],
+      details: d[8],
       exits: d[12],
-      unitsAndObjects: d[14]
+      unitsAndObjects: d[15],
+      type: d[0][0]
     };
   };
 
@@ -39,19 +48,21 @@ FACTION_REGION ->
 
 
 FACTION_REGION_DETAILS ->
-  _ _:? REGION_SENTENCE NL
+  _ _:? REGION_SENTENCE NL {% array2String %}
 
 
 FACTION_REGION_EXIT ->
-  _ _:? REGION_SENTENCE NL
+  _ _:? WORD _ ":" _ WORD _ REGION_COORDINATES _ REGION_SENTENCE NL {% regionExitProcessor  %}
 
 
 FACTION_REGION_GATE ->
   "There is a Gate here (Gate " INT " of " INT ")." NL_
 
 
+# TODO: different parser for * my faction
+# TODO: different parser for - + buildings and other factions
 FACTION_REGION_UNIT ->
-  [*+\-] _ TEXT "." NL_
+  [*+\-] _ TEXT "." NL_ {% array2String %}
 
 
 REGION_SENTENCE ->

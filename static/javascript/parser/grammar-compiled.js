@@ -46,7 +46,10 @@
     return {
       x: d[1],
       y: d[3],
-      z
+      z,
+      toString() {
+        return array2String(d);
+      }
     };
   };
 
@@ -162,13 +165,22 @@
     };
   };
 
+  const regionExitProcessor = d => {
+    return {
+      title: array2String(d),
+      type: d[6],
+      coordinates: d[8]
+    };
+  };
+
   const regionProcessor = d => {
     return {
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
-      description: d[8],
+      details: d[8],
       exits: d[12],
-      unitsAndObjects: d[14]
+      unitsAndObjects: d[15],
+      type: d[0][0]
     };
   };
 
@@ -1192,7 +1204,11 @@
           return null;
         }
       },
-      { name: "FACTION_REGION_DETAILS", symbols: ["_", "FACTION_REGION_DETAILS$ebnf$1", "REGION_SENTENCE", "NL"] },
+      {
+        name: "FACTION_REGION_DETAILS",
+        symbols: ["_", "FACTION_REGION_DETAILS$ebnf$1", "REGION_SENTENCE", "NL"],
+        postprocess: array2String
+      },
       { name: "FACTION_REGION_EXIT$ebnf$1", symbols: ["_"], postprocess: id },
       {
         name: "FACTION_REGION_EXIT$ebnf$1",
@@ -1201,7 +1217,24 @@
           return null;
         }
       },
-      { name: "FACTION_REGION_EXIT", symbols: ["_", "FACTION_REGION_EXIT$ebnf$1", "REGION_SENTENCE", "NL"] },
+      {
+        name: "FACTION_REGION_EXIT",
+        symbols: [
+          "_",
+          "FACTION_REGION_EXIT$ebnf$1",
+          "WORD",
+          "_",
+          { literal: ":" },
+          "_",
+          "WORD",
+          "_",
+          "REGION_COORDINATES",
+          "_",
+          "REGION_SENTENCE",
+          "NL"
+        ],
+        postprocess: regionExitProcessor
+      },
       {
         name: "FACTION_REGION_GATE$string$1",
         symbols: [
@@ -1255,7 +1288,7 @@
         name: "FACTION_REGION_GATE",
         symbols: ["FACTION_REGION_GATE$string$1", "INT", "FACTION_REGION_GATE$string$2", "INT", "FACTION_REGION_GATE$string$3", "NL_"]
       },
-      { name: "FACTION_REGION_UNIT", symbols: [/[*+\-]/, "_", "TEXT", { literal: "." }, "NL_"] },
+      { name: "FACTION_REGION_UNIT", symbols: [/[*+\-]/, "_", "TEXT", { literal: "." }, "NL_"], postprocess: array2String },
       { name: "REGION_SENTENCE", symbols: ["WORD", /[.!]/] },
       { name: "REGION_SENTENCE", symbols: ["WORD", "_", "REGION_SENTENCE"], postprocess: array2String },
       { name: "REGION_SENTENCE$ebnf$1", symbols: ["_"], postprocess: id },
