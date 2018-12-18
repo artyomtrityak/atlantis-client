@@ -42,10 +42,9 @@ class Map extends React.PureComponent {
   }
 
   render() {
-    // TODO calculate max map size based on wrap flags: isWrapLeft, isWrapRight, isTopEdge, isBottomEdge
+    // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
     // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
-    // If isWrapLeft - no buffer left
-    // If isWrapRight - no buffer right
+    // If isWrap - no buffer left and right
     // If both - no buffers
     // If isTopEdge - no buffer top
     // If isBottomEdge - no buffer bottom

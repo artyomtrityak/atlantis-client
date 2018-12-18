@@ -2,19 +2,27 @@
   const regionExitProcessor = (d) => {
     return {
       title: array2String(d),
+      coordinates: d[8],
       type: d[6],
-      coordinates: d[8]
+      direction: d[2],
+      isExit: true
     };
   };
 
   const regionProcessor = (d) => {
+    const exits = d[12].reduce((result, exit) => {
+      result[exit.direction.toLowerCase()] = exit;
+      return result;
+    }, {});
+
     return {
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
       details: d[8],
-      exits: d[12],
+      exits: exits,
       unitsAndObjects: d[15],
-      type: d[0][0]
+      type: d[0][0],
+      isExit: false
     };
   };
 
