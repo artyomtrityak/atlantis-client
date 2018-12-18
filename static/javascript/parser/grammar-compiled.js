@@ -36,19 +36,15 @@
   };
 
   const parseRegionCoordinates = d => {
-    let z = 1;
-    if (d[4] === ",underworld") {
-      z = 2;
-    }
-    if (d[4] === ",nexus") {
-      z = 0;
-    }
+    let title = d.slice();
+    title[4] = title[4].title;
+
     return {
       x: d[1],
       y: d[3],
-      z,
+      z: d[4].z,
       toString() {
-        return array2String(d);
+        return array2String(title);
       }
     };
   };
@@ -273,7 +269,21 @@
       },
       { name: "BLOB", symbols: ["BLOB$ebnf$1"], postprocess: array2String },
       {
-        name: "REGION_COORDINATES$ebnf$1$string$1",
+        name: "REGION_COORDINATES",
+        symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_Z_LEVEL", { literal: ")" }],
+        postprocess: parseRegionCoordinates
+      },
+      {
+        name: "REGION_Z_LEVEL$string$1",
+        symbols: [{ literal: "," }, { literal: "n" }, { literal: "e" }, { literal: "x" }, { literal: "u" }, { literal: "s" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$1"], postprocess: d => ({ title: d[0], z: 0 }) },
+      { name: "REGION_Z_LEVEL", symbols: [], postprocess: d => ({ title: "", z: 1 }) },
+      {
+        name: "REGION_Z_LEVEL$string$2",
         symbols: [
           { literal: "," },
           { literal: "u" },
@@ -291,19 +301,34 @@
           return d.join("");
         }
       },
-      { name: "REGION_COORDINATES$ebnf$1", symbols: ["REGION_COORDINATES$ebnf$1$string$1"], postprocess: id },
+      { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$2"], postprocess: d => ({ title: d[0], z: 2 }) },
       {
-        name: "REGION_COORDINATES$ebnf$1",
-        symbols: [],
-        postprocess: function(d) {
-          return null;
+        name: "REGION_Z_LEVEL$string$3",
+        symbols: [
+          { literal: "," },
+          { literal: "u" },
+          { literal: "n" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "d" },
+          { literal: "e" },
+          { literal: "e" },
+          { literal: "p" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
         }
       },
+      { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$3"], postprocess: d => ({ title: d[0], z: 3 }) },
       {
-        name: "REGION_COORDINATES",
-        symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_COORDINATES$ebnf$1", { literal: ")" }],
-        postprocess: parseRegionCoordinates
+        name: "REGION_Z_LEVEL$string$4",
+        symbols: [{ literal: "," }, { literal: "a" }, { literal: "b" }, { literal: "y" }, { literal: "s" }, { literal: "s" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
       },
+      { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$4"], postprocess: d => ({ title: d[0], z: 4 }) },
       { name: "REPORT_FACTION$ebnf$1", symbols: ["REPORT_FACTION_STATS"], postprocess: id },
       {
         name: "REPORT_FACTION$ebnf$1",

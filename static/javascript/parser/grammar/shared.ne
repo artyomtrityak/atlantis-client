@@ -30,19 +30,14 @@
   }
 
   const parseRegionCoordinates = (d) => {
-    let z = 1;
-    if (d[4] === ",underworld") {
-      z = 2;
-    }
-    if (d[4] === ",nexus") {
-      z = 0;
-    }
     return {
       x: d[1],
       y: d[3],
-      z,
+      z: d[4].z,
       toString() {
-        return array2String(d);
+        let title = d.slice();
+        title[4] = title[4].title;
+        return array2String(title);
       }
     };
   };
@@ -83,4 +78,11 @@ BLOB ->
   [^\n\r]:+ {% array2String %}
 
 REGION_COORDINATES ->
-  "(" INT "," INT ",underworld":? ")" {% parseRegionCoordinates  %}
+  "(" INT "," INT REGION_Z_LEVEL ")" {% parseRegionCoordinates  %}
+
+REGION_Z_LEVEL ->
+  ",nexus" {% (d) => ({ title: d[0], z: 0 }) %}
+  | null {% (d) => ({ title: "", z: 1 }) %}
+  | ",underworld" {% (d) => ({ title: d[0], z: 2 }) %}
+  | ",underdeep" {% (d) => ({ title: d[0], z: 3 }) %}
+  | ",abyss" {% (d) => ({ title: d[0], z: 4 }) %}
