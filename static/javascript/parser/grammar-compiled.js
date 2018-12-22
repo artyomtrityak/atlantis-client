@@ -36,14 +36,13 @@
   };
 
   const parseRegionCoordinates = d => {
-    let title = d.slice();
-    title[4] = title[4].title;
-
     return {
       x: d[1],
       y: d[3],
       z: d[4].z,
       toString() {
+        let title = d.slice();
+        title[4] = title[4].title;
         return array2String(title);
       }
     };
@@ -163,7 +162,7 @@
 
   const regionExitProcessor = d => {
     return {
-      title: array2String(d),
+      title: array2String(d.slice(6)),
       coordinates: d[8],
       type: d[6],
       direction: d[2],

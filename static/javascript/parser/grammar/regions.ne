@@ -1,7 +1,7 @@
 @{%
   const regionExitProcessor = (d) => {
     return {
-      title: array2String(d),
+      title: array2String(d.slice(6)),
       coordinates: d[8],
       type: d[6],
       direction: d[2],

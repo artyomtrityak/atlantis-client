@@ -1,85 +1,86 @@
+import _ from "lodash";
 import { REPORT_LOADED } from "../actions/report-actions";
 
 const initialState = {
-  levels: ["nexus", "upperworld", "underworld", "underdeep", "abyss"],
-  regions: {},
-  regionsUnderworld: {},
+  levels: [],
+  currentLevel: 0,
   selectedRegion: undefined
+};
+
+const parseRegion = (result, region) => {
+  if (!result[region.coordinates.z]) {
+    result[region.coordinates.z] = { regions: {}, maxX: 0, maxY: 0 };
+  }
+  const { x, y } = region.coordinates;
+  result[region.coordinates.z].regions[`${x}_${y}`] = region;
+
+  // Exits
+  for (const dir in region.exits) {
+    if (!region.exits.hasOwnProperty(dir)) {
+      continue;
+    }
+    const {
+      coordinates: { x: exitX, y: exitY }
+    } = region.exits[dir];
+    if (!result[region.coordinates.z].regions[`${exitX}_${exitY}`]) {
+      result[region.coordinates.z].regions[`${exitX}_${exitY}`] = region.exits[dir];
+    }
+  }
+  return result;
+};
+
+const parseLevel = level => {
+  let minX = 1000;
+  let maxX = 0;
+  let minY = 1000;
+  let maxY = 0;
+  let isWrap = false;
+  for (const locator in level.regions) {
+    if (!level.regions.hasOwnProperty(locator)) {
+      continue;
+    }
+    if (level.regions[locator].coordinates.x < minX) {
+      minX = level.regions[locator].coordinates.x;
+    }
+    if (level.regions[locator].coordinates.x > maxX) {
+      maxX = level.regions[locator].coordinates.x;
+    }
+    if (level.regions[locator].coordinates.y < minY) {
+      minY = level.regions[locator].coordinates.y;
+    }
+    if (level.regions[locator].coordinates.y > maxY) {
+      maxY = level.regions[locator].coordinates.y;
+    }
+    if (level.regions[locator].coordinates.x === 0) {
+      isWrap = true;
+    }
+  }
+  level.minX = minX;
+  level.maxX = maxX;
+  level.minY = minY;
+  level.maxY = maxY;
+  level.isWrap = isWrap;
+  // TODO: add isTop/BottonEdge check
+  return level;
 };
 
 const parseRegions = report => {
   const reportData = report.find(d => d.type === "REGIONS");
   if (!reportData || !reportData.regions) {
-    return {};
+    return [];
   }
-  const regions = {};
-  const exitRegions = {};
-  let isWrap = false;
-  let isTopEdge = false;
-  let isBottomEdge = false;
-  let maxX = 0;
-  let maxY = 0;
-
-  // TODO: do same for z (undeground)
-
-  for (let region of reportData.regions) {
-    const { x, y, z } = region.coordinates;
-    regions[`${x}_${y}_${z}`] = region;
-
-    if (x === 0) {
-      isWrap = true;
-    }
-    if (y === 0) {
-      isTopEdge = true;
-    }
-    if (!region.exits.south) {
-      isBottomEdge = true;
-    }
-    if (x > maxX) {
-      maxX = x;
-    }
-    if (y > maxY) {
-      maxY = y;
-    }
-
-    for (const dir in region.exits) {
-      if (!region.exits.hasOwnProperty(dir)) {
-        continue;
-      }
-      const {
-        coordinates: { x: exitX, y: exitY, z: exitZ }
-      } = region.exits[dir];
-      exitRegions[`${exitX}_${exitY}_${exitZ}`] = region.exits[dir];
-
-      if (exitX === 0) {
-        isWrap = true;
-      }
-      if (exitY === 0) {
-        isTopEdge = true;
-      }
-      if (exitX > maxX) {
-        maxX = exitX;
-      }
-      if (exitY > maxY) {
-        maxY = exitY;
-      }
-    }
-  }
-
-  return {
-    regions: { ...exitRegions, ...regions },
-    isWrap,
-    isTopEdge,
-    isBottomEdge,
-    maxX,
-    maxY
-  };
+  return _.chain(reportData.regions)
+    .reduce(parseRegion, [])
+    .compact()
+    .map(parseLevel)
+    .value();
 };
 
 function regionsReducer(state = initialState, action) {
   switch (action.type) {
     case REPORT_LOADED:
-      state = { ...state, ...parseRegions(action.report) };
+      state = { ...state, levels: parseRegions(action.report) };
+      console.log(state);
       break;
   }
   return state;
