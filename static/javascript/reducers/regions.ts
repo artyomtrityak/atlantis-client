@@ -30,23 +30,15 @@ const parseRegion = (result, region) => {
 };
 
 const parseLevel = level => {
-  let minX = 1000;
   let maxX = 0;
-  let minY = 1000;
   let maxY = 0;
   let isWrap = false;
   for (const locator in level.regions) {
     if (!level.regions.hasOwnProperty(locator)) {
       continue;
     }
-    if (level.regions[locator].coordinates.x < minX) {
-      minX = level.regions[locator].coordinates.x;
-    }
     if (level.regions[locator].coordinates.x > maxX) {
       maxX = level.regions[locator].coordinates.x;
-    }
-    if (level.regions[locator].coordinates.y < minY) {
-      minY = level.regions[locator].coordinates.y;
     }
     if (level.regions[locator].coordinates.y > maxY) {
       maxY = level.regions[locator].coordinates.y;
@@ -55,9 +47,7 @@ const parseLevel = level => {
       isWrap = true;
     }
   }
-  level.minX = minX;
   level.maxX = maxX;
-  level.minY = minY;
   level.maxY = maxY;
   level.isWrap = isWrap;
   // TODO: add isTop/BottonEdge check

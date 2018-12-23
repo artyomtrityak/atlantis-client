@@ -1,8 +1,8 @@
 import React from "react";
 
 const Hex = props => {
-  const row = props.index % 10;
-  const col = parseInt(props.index / 10, 10);
+  const row = props.index % props.maxY;
+  const col = parseInt(props.index / props.maxY, 10);
   const width = 100;
   const height = 90;
 
@@ -34,6 +34,7 @@ const Hex = props => {
       stroke="#000000"
       strokeWidth="0.5"
       points={pointsPath}
+      className="hex"
     />
   );
 };

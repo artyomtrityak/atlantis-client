@@ -983,9 +983,9 @@
         }
       },
       { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"] },
-      { name: "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$1", symbols: ["SENTENCE", "NL"] },
+      { name: "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$1", symbols: ["EVENT_SENTENCE", "NL"] },
       { name: "FACTION_EVENTS_ITEMS$ebnf$1", symbols: ["FACTION_EVENTS_ITEMS$ebnf$1$subexpression$1"] },
-      { name: "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$2", symbols: ["SENTENCE", "NL"] },
+      { name: "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$2", symbols: ["EVENT_SENTENCE", "NL"] },
       {
         name: "FACTION_EVENTS_ITEMS$ebnf$1",
         symbols: ["FACTION_EVENTS_ITEMS$ebnf$1", "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$2"],
@@ -994,6 +994,9 @@
         }
       },
       { name: "FACTION_EVENTS_ITEMS", symbols: ["FACTION_EVENTS_ITEMS$ebnf$1"] },
+      { name: "EVENT_SENTENCE", symbols: ["WORD"] },
+      { name: "EVENT_SENTENCE", symbols: ["WORD", "_", "EVENT_SENTENCE"], postprocess: array2String },
+      { name: "EVENT_SENTENCE", symbols: ["WORD", "NL", "_", "EVENT_SENTENCE"], postprocess: array2String },
       {
         name: "FACTION_SKILLS$string$1",
         symbols: [

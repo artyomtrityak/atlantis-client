@@ -42,17 +42,21 @@ class Map extends React.PureComponent {
   }
 
   render() {
+    const { maxX, maxY } = this.props;
+    const svgWidth = maxX * 50; // TODO: add zoom support
+    const svgHeight = maxY * 45;
+    const regionsCount = maxX * maxY;
+
     // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
     // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
     // If isWrap - no buffer left and right
-    // If both - no buffers
     // If isTopEdge - no buffer top
     // If isBottomEdge - no buffer bottom
     return (
       <div ref={this.containerRef} style={{ width: this.props.width, height: this.props.height, overflow: "hidden" }}>
         {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
-        <svg ref={this.mapSvgRef} style={{ width: 5000, height: 5000 }}>
-          {_.range(1000).map(this.renderHex)}
+        <svg ref={this.mapSvgRef} style={{ width: svgWidth, height: svgHeight }}>
+          {_.range(regionsCount).map(this.renderHex)}
         </svg>
         {/* TODO: if there is edge in report which goes from 100,x to 0,x render copy */}
       </div>
@@ -60,13 +64,28 @@ class Map extends React.PureComponent {
   }
 
   renderHex(d, i) {
-    return <Hex index={i} key={d} />;
+    const { maxX, maxY, minY } = this.props;
+    // TODO: move calc position here?
+    return <Hex index={i} key={d} maxY={maxY} />;
   }
 }
 
 const mapStateToProps = (state: any) => {
+  console.log(state);
+  const currentLevelData = state.regions.levels[state.regions.currentLevel];
+  if (!currentLevelData) {
+    return {
+      regions: {},
+      maxX: 0,
+      maxY: 0,
+      isWrap: false
+    };
+  }
   return {
-    a: 2
+    regions: currentLevelData.regions,
+    maxX: currentLevelData.maxX,
+    maxY: currentLevelData.maxY,
+    isWrap: currentLevelData.isWrap
   };
 };
 
