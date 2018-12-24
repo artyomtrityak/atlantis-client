@@ -4,6 +4,7 @@ import { REPORT_LOADED } from "../actions/report-actions";
 const initialState = {
   levels: [],
   currentLevel: 0,
+  zoom: 1,
   selectedRegion: undefined
 };
 

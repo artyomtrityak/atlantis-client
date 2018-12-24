@@ -1,8 +1,6 @@
 import React from "react";
 
 const Hex = props => {
-  const row = props.index % props.maxY;
-  const col = parseInt(props.index / props.maxY, 10);
   const width = 100;
   const height = 90;
 
@@ -14,27 +12,30 @@ const Hex = props => {
     { x: 0.75 * width, y: 1 * height },
     { x: 0.25 * width, y: 1 * height }
   ];
+  // TODO: pass zoom from reducer
   const zoom = 0.5;
-
   const pointsPath = points.map(d => `${zoom * d.x},${zoom * d.y}`).join(" ");
+
   let offsetX = 0;
-  let offsetY = 0;
-  if (col !== 0) {
-    offsetX = (-52 * col) / 2;
+  if (props.col !== 0) {
+    offsetX = (-52 * props.col) / 2;
   }
-  if (col % 2 === 1) {
-    offsetX = -26 * col;
-    offsetY = 44;
+  if (props.col % 2 === 1) {
+    offsetX = -26 * props.col;
   }
+
+  const moveY = (height / 2) * props.row * zoom;
+  const moveX = width * props.col * zoom + offsetX * zoom;
 
   return (
     <polygon
-      transform={`translate(${zoom * width * col + zoom * offsetX}, ${zoom * height * row + zoom * offsetY})`}
+      transform={`translate(${moveX}, ${moveY})`}
       fill="#FFFFFF"
       stroke="#000000"
       strokeWidth="0.5"
       points={pointsPath}
       className="hex"
+      title={`${props.col},${props.row}`}
     />
   );
 };

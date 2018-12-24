@@ -43,9 +43,13 @@ class Map extends React.PureComponent {
 
   render() {
     const { maxX, maxY } = this.props;
-    const svgWidth = maxX * 50; // TODO: add zoom support
-    const svgHeight = maxY * 45;
-    const regionsCount = maxX * maxY;
+    const horRegionsCount = maxX + 1; // include 0,y region
+    const vertRegionsCount = maxY + 1; // include x,0 region
+    const svgWidth = horRegionsCount * 50; // TODO: add zoom support
+    const svgHeight = vertRegionsCount * 45;
+    const regionsCount = vertRegionsCount * horRegionsCount;
+
+    console.log(regionsCount);
 
     // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
     // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
@@ -63,10 +67,23 @@ class Map extends React.PureComponent {
     );
   }
 
-  renderHex(d, i) {
-    const { maxX, maxY, minY } = this.props;
-    // TODO: move calc position here?
-    return <Hex index={i} key={d} maxY={maxY} />;
+  renderHex(d, index) {
+    const { regions, maxY } = this.props;
+    const test = maxY + 1;
+    const row = index % test;
+    const col = parseInt(index / test, 10);
+    console.log("x,y", col, row);
+    const regionKey = `${col}_${row}`;
+    const region = regions[regionKey];
+
+    // TODO: add checks around to render empty hexes
+    if (!region) {
+      return null;
+    }
+
+    console.log(region);
+
+    return <Hex key={regionKey} row={row} col={col} region={region} />;
   }
 }
 
