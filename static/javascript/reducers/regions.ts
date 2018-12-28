@@ -13,7 +13,8 @@ const parseRegion = (result, region) => {
     result[region.coordinates.z] = { regions: {}, maxX: 0, maxY: 0 };
   }
   const { x, y } = region.coordinates;
-  result[region.coordinates.z].regions[`${x}_${y}`] = region;
+  const regions = result[region.coordinates.z].regions;
+  regions[`${x}_${y}`] = region;
 
   // Exits
   for (const dir in region.exits) {
@@ -23,9 +24,27 @@ const parseRegion = (result, region) => {
     const {
       coordinates: { x: exitX, y: exitY }
     } = region.exits[dir];
-    if (!result[region.coordinates.z].regions[`${exitX}_${exitY}`]) {
-      result[region.coordinates.z].regions[`${exitX}_${exitY}`] = region.exits[dir];
+    if (!regions[`${exitX}_${exitY}`] || regions[`${exitX}_${exitY}`].type === "unknown") {
+      regions[`${exitX}_${exitY}`] = region.exits[dir];
     }
+
+    // Shadow exit regions
+    [
+      { x: exitX + 1, y: exitY - 1 },
+      { x: exitX + 1, y: exitY + 1 },
+      { x: exitX, y: exitY - 2 },
+      { x: exitX, y: exitY + 2 },
+      { x: exitX - 1, y: exitY - 1 },
+      { x: exitX - 1, y: exitY + 1 }
+    ].forEach(d => {
+      if (!regions[`${d.x}_${d.y}`] && d.x >= 0 && d.y >= 0) {
+        regions[`${d.x}_${d.y}`] = {
+          coordinates: { x: d.x, y: d.y, z: region.coordinates.z },
+          title: "Unknown",
+          type: "unknown"
+        };
+      }
+    });
   }
   return result;
 };

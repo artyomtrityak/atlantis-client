@@ -1,4 +1,5 @@
 import React from "react";
+import cn from "classnames";
 
 const Hex = props => {
   const width = 100;
@@ -30,11 +31,8 @@ const Hex = props => {
   return (
     <polygon
       transform={`translate(${moveX}, ${moveY})`}
-      fill="#FFFFFF"
-      stroke="#000000"
-      strokeWidth="0.5"
       points={pointsPath}
-      className="hex"
+      className={cn("hex", `hex--type-${props.region.type}`)}
       title={`${props.col},${props.row}`}
     />
   );

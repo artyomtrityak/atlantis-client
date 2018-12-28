@@ -1,0 +1,44 @@
+.hex {
+  stroke: black;
+  stroke-width: 0.5;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.hex--selected {
+  stroke: red;
+}
+
+.hex--type-unknown {
+  fill: lightgray;
+}
+
+.hex--type-forest {
+  fill: green;
+}
+
+.hex--type-plain {
+  fill: lightgreen;
+}
+
+.hex--type-swamp {
+  fill: greenyellow;
+}
+
+.hex--type-mountain {
+  fill: brown;
+}
+
+.hex--type-hill {
+  fill: darkgreen;
+}
+
+.hex--type-wasteland {
+  fill: aquamarine;
+}
+
+.hex--type-ocean {
+  fill: blue;
+}

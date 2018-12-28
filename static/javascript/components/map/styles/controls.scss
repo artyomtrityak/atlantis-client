@@ -1,0 +1,17 @@
+.map-controls {
+  position: absolute;
+  left: 5px;
+  top: 60px;
+  width: 30px;
+
+  .map-controls__icon {
+    width: 24px;
+    height: 24px;
+    fill: black;
+    cursor: pointer;
+
+    &:hover {
+      fill: lighten(black, 30%);
+    }
+  }
+}

@@ -28,8 +28,11 @@ class LoadReportModal extends React.PureComponent {
       return;
     }
 
+    // TODO: add loader
     const parsedReport = parse(this.state.reportData);
     this.props.reportLoaded(parsedReport);
+    // TODO: check errors
+    this.props.closeModal();
   }
 
   render() {

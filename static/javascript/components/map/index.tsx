@@ -4,6 +4,9 @@ import _ from "lodash";
 import { withSize } from "../utils";
 import Hex from "./hex";
 import Draggable from "gsap/Draggable";
+import Controls from "./controls";
+
+import "./styles/index.scss";
 
 class Map extends React.PureComponent {
   constructor(props) {
@@ -49,15 +52,14 @@ class Map extends React.PureComponent {
     const svgHeight = vertRegionsCount * 45;
     const regionsCount = vertRegionsCount * horRegionsCount;
 
-    console.log(regionsCount);
-
     // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
     // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
     // If isWrap - no buffer left and right
     // If isTopEdge - no buffer top
     // If isBottomEdge - no buffer bottom
     return (
-      <div ref={this.containerRef} style={{ width: this.props.width, height: this.props.height, overflow: "hidden" }}>
+      <div ref={this.containerRef} className="map" style={{ width: this.props.width, height: this.props.height, overflow: "hidden" }}>
+        <Controls />
         {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
         <svg ref={this.mapSvgRef} style={{ width: svgWidth, height: svgHeight }}>
           {_.range(regionsCount).map(this.renderHex)}
@@ -81,9 +83,7 @@ class Map extends React.PureComponent {
       return null;
     }
 
-    console.log(region);
-
-    return <Hex key={regionKey} row={row} col={col} region={region} />;
+    return <Hex key={regionKey} row={row} col={col} region={region} onSelect={this.props.onSelect} />;
   }
 }
 
@@ -108,7 +108,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onClick: () => dispatch("")
+    onSelect: () => dispatch("") // TODO: dispatch select
   };
 };
 
