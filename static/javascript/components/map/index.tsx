@@ -2,10 +2,11 @@ import Draggable from "gsap/Draggable";
 import React from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
+import { selectRegion } from "../../actions/regions-actions";
 import { withSize } from "../utils";
 import Hex from "./hex";
 import Controls from "./controls";
-import { selectRegion } from "../../actions/regions-actions";
+import { calculateMapPositions } from "./utils";
 
 import "./styles/index.scss";
 
@@ -13,16 +14,13 @@ class Map extends React.PureComponent {
   constructor(props) {
     super(props);
     this.renderHex = this.renderHex.bind(this);
-    this.onDragStart = this.onDragStart.bind(this);
-    this.onDragEnd = this.onDragEnd.bind(this);
-    this.onDrag = this.onDrag.bind(this);
-
     this.containerRef = React.createRef();
     this.mapSvgRef = React.createRef();
   }
 
   componentDidMount() {
     this.draggableIns = Draggable.create(this.mapSvgRef.current, {
+      dragClickables: true,
       type: "x,y",
       bounds: this.containerRef.current,
       overshootTolerance: 0
@@ -33,25 +31,9 @@ class Map extends React.PureComponent {
     this.draggableIns.kill();
   }
 
-  onDragStart(e) {
-    console.log("ON drag start");
-  }
-
-  onDragEnd(e) {
-    console.log("ON drag end");
-  }
-
-  onDrag(e) {
-    console.log("ON drag");
-  }
-
   render() {
-    const { maxX, maxY } = this.props;
-    const horRegionsCount = maxX + 1; // include 0,y region
-    const vertRegionsCount = maxY + 1; // include x,0 region
-    const svgWidth = horRegionsCount * 50; // TODO: add zoom support
-    const svgHeight = vertRegionsCount * 45;
-    const regionsCount = vertRegionsCount * horRegionsCount;
+    const { maxX, maxY, zoom } = this.props;
+    const { svgWidth, svgHeight, regionsCount } = calculateMapPositions({ maxX, maxY, zoom });
 
     // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
     // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
@@ -59,7 +41,7 @@ class Map extends React.PureComponent {
     // If isTopEdge - no buffer top
     // If isBottomEdge - no buffer bottom
     return (
-      <div ref={this.containerRef} className="map" style={{ width: this.props.width, height: this.props.height }}>
+      <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height }}>
         <Controls />
         {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
         <svg ref={this.mapSvgRef} style={{ width: svgWidth, height: svgHeight }}>
@@ -71,13 +53,12 @@ class Map extends React.PureComponent {
   }
 
   renderHex(d, index) {
-    const { regions, maxY } = this.props;
+    const { regions, maxY, zoom, selectedRegion } = this.props;
     const row = index % (maxY + 1);
     const col = parseInt(index / (maxY + 1), 10);
     const regionKey = `${col}_${row}`;
     const region = regions[regionKey];
 
-    // TODO: add checks around to render empty hexes
     if (!region) {
       return null;
     }
@@ -89,7 +70,8 @@ class Map extends React.PureComponent {
         col={col}
         region={region}
         onSelect={this.props.onSelect}
-        isSelected={region.id === this.props.selectedRegion}
+        isSelected={region.id === selectedRegion}
+        zoom={zoom}
       />
     );
   }
@@ -104,7 +86,8 @@ const mapStateToProps = (state: any) => {
       maxX: 0,
       maxY: 0,
       isWrap: false,
-      selectedRegion: undefined
+      selectedRegion: state.regions.selectedRegion,
+      zoom: state.regions.zoom
     };
   }
   return {
@@ -112,13 +95,14 @@ const mapStateToProps = (state: any) => {
     maxX: currentLevelData.maxX,
     maxY: currentLevelData.maxY,
     isWrap: currentLevelData.isWrap,
-    selectedRegion: state.regions.selectedRegion
+    selectedRegion: state.regions.selectedRegion,
+    zoom: state.regions.zoom
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSelect: regionId => dispatch(selectRegion(regionId)) // TODO: dispatch select
+    onSelect: regionId => dispatch(selectRegion(regionId))
   };
 };
 

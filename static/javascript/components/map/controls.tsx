@@ -6,6 +6,7 @@ import zoomOutIcon from "../../../assets/svg/zoom-out.svg";
 import downLevelIcon from "../../../assets/svg/down-level.svg";
 import upLevelIcon from "../../../assets/svg/up-level.svg";
 import { Icon } from "../utils";
+import { zoomIn, zoomOut } from "../../actions/regions-actions";
 
 const MapControls = props => {
   return (
@@ -25,8 +26,8 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onZoomIn: () => dispatch(""), // TODO: zoom in event
-    onZoomOut: () => dispatch(""), // TODO: zoom out event
+    onZoomIn: () => dispatch(zoomIn()), // TODO: zoom in event
+    onZoomOut: () => dispatch(zoomOut()), // TODO: zoom out event
     onCenter: () => dispatch(""), // TODO: default zoom and center event
     onLevelUp: () => dispatch(""), // TODO: level up
     onLevelDown: () => dispatch("") // TODO: level down

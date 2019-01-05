@@ -1,5 +1,6 @@
 import React from "react";
 import cn from "classnames";
+import { calculateHexPosition } from "./utils";
 
 class Hex extends React.PureComponent {
   elRef = React.createRef();
@@ -23,7 +24,7 @@ class Hex extends React.PureComponent {
   }
 
   render() {
-    const props = this.props;
+    const { col, row, zoom, isSelected, region } = this.props;
     const width = 100;
     const height = 90;
 
@@ -35,30 +36,31 @@ class Hex extends React.PureComponent {
       { x: 0.75 * width, y: 1 * height },
       { x: 0.25 * width, y: 1 * height }
     ];
-    // TODO: pass zoom from reducer
-    const zoom = 0.5;
+
     const pointsPath = points.map(d => `${zoom * d.x},${zoom * d.y}`).join(" ");
 
-    let offsetX = 0;
-    if (props.col !== 0) {
-      offsetX = (-52 * props.col) / 2;
-    }
-    if (props.col % 2 === 1) {
-      offsetX = -26 * props.col;
-    }
+    // let offsetX = 0;
+    // if (col !== 0) {
+    //   offsetX = (-52 * col) / 2;
+    // }
+    // if (col % 2 === 1) {
+    //   offsetX = -26 * col;
+    // }
 
-    const moveY = (height / 2) * props.row * zoom;
-    const moveX = width * props.col * zoom + offsetX * zoom;
+    // const moveY = (height / 2) * row * zoom;
+    // const moveX = width * col * zoom + offsetX * zoom;
+
+    const { x, y } = calculateHexPosition({ col, row, zoom });
 
     return (
       <polygon
         ref={this.elRef}
-        transform={`translate(${moveX}, ${moveY})`}
+        transform={`translate(${x}, ${y})`}
         points={pointsPath}
-        className={cn("hex", `hex--type-${props.region.type}`, {
-          "hex--selected": this.props.isSelected
+        className={cn("hex", `hex--type-${region.type}`, {
+          "hex--selected": isSelected
         })}
-        title={`${props.col},${props.row}`}
+        title={`${col},${row}`}
         onClick={this.onSelect}
       />
     );

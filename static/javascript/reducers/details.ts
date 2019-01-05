@@ -4,6 +4,10 @@ const initialState = {
   activeTab: "region"
 };
 
+// -------------------
+// Details Reducer
+// -------------------
+
 function detailsReducer(state = initialState, action) {
   switch (action.type) {
     // TOOD: move to navigation

@@ -5,6 +5,10 @@ const initialState = {
   selectedUnitId: null
 };
 
+// -------------------
+// Units Reducer
+// -------------------
+
 function unitsReducer(state = initialState, action) {
   switch (action.type) {
     case SELECT_UNIT:

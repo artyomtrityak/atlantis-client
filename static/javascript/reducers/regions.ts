@@ -1,11 +1,11 @@
 import _ from "lodash";
 import { REPORT_LOADED } from "../actions/report-actions";
-import { SELECT_REGION } from "../actions/regions-actions";
+import { SELECT_REGION, ZOOM_IN, ZOOM_OUT } from "../actions/regions-actions";
 
 const initialState = {
   levels: [],
   currentLevel: 0,
-  zoom: 1,
+  zoom: 0.5,
   selectedRegion: undefined
 };
 
@@ -40,6 +40,7 @@ const parseRegion = (result, region) => {
     ].forEach(d => {
       if (!regions[`${d.x}_${d.y}`] && d.x >= 0 && d.y >= 0) {
         regions[`${d.x}_${d.y}`] = {
+          id: `region_${d.x}_${d.y}_${region.coordinates.z}`,
           coordinates: { x: d.x, y: d.y, z: region.coordinates.z },
           title: "Unknown",
           type: "unknown"
@@ -87,6 +88,10 @@ const parseRegions = report => {
     .value();
 };
 
+// -------------------
+// Regions Reducer
+// -------------------
+
 function regionsReducer(state = initialState, action) {
   switch (action.type) {
     case REPORT_LOADED:
@@ -96,6 +101,15 @@ function regionsReducer(state = initialState, action) {
 
     case SELECT_REGION:
       state = { ...state, selectedRegion: action.regionId };
+      break;
+
+    case ZOOM_IN:
+      console.log("ZOOM IN");
+      state = { ...state, zoom: state.zoom + 0.1 };
+      break;
+
+    case ZOOM_OUT:
+      state = { ...state, zoom: state.zoom - 0.1 };
       break;
   }
   return state;

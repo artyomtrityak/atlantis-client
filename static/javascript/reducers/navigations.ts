@@ -5,6 +5,10 @@ const initialState = {
   activeModalName: undefined
 };
 
+// -------------------
+// Navigation Reducer
+// -------------------
+
 function navigationReducer(state = initialState, action) {
   switch (action.type) {
     case OPEN_GAME_MENU:
