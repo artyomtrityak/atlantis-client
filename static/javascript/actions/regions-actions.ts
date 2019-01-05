@@ -2,11 +2,11 @@
  * Regions actions and action creators
  */
 
-export const ACTIVATE_TAB = "ACTIVATE_TAB";
+export const SELECT_REGION = "SELECT_REGION";
 
-export function activateTab(tabName) {
+export function selectRegion(regionId) {
   return {
-    type: ACTIVATE_TAB,
-    tabName
+    type: SELECT_REGION,
+    regionId
   };
 }

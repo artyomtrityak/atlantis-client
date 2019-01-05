@@ -51,7 +51,7 @@ const FLAGS = [
     name: "NOCROSS",
     title: "[NOCROSS explanation]",
     icon: bridgeIcon
-  }
+  } // TODO: add SHARE flag
 ];
 
 const renderFlag = (d, i) => {

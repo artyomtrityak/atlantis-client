@@ -1,10 +1,11 @@
+import Draggable from "gsap/Draggable";
 import React from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { withSize } from "../utils";
 import Hex from "./hex";
-import Draggable from "gsap/Draggable";
 import Controls from "./controls";
+import { selectRegion } from "../../actions/regions-actions";
 
 import "./styles/index.scss";
 
@@ -58,7 +59,7 @@ class Map extends React.PureComponent {
     // If isTopEdge - no buffer top
     // If isBottomEdge - no buffer bottom
     return (
-      <div ref={this.containerRef} className="map" style={{ width: this.props.width, height: this.props.height, overflow: "hidden" }}>
+      <div ref={this.containerRef} className="map" style={{ width: this.props.width, height: this.props.height }}>
         <Controls />
         {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
         <svg ref={this.mapSvgRef} style={{ width: svgWidth, height: svgHeight }}>
@@ -71,10 +72,8 @@ class Map extends React.PureComponent {
 
   renderHex(d, index) {
     const { regions, maxY } = this.props;
-    const test = maxY + 1;
-    const row = index % test;
-    const col = parseInt(index / test, 10);
-    console.log("x,y", col, row);
+    const row = index % (maxY + 1);
+    const col = parseInt(index / (maxY + 1), 10);
     const regionKey = `${col}_${row}`;
     const region = regions[regionKey];
 
@@ -83,7 +82,16 @@ class Map extends React.PureComponent {
       return null;
     }
 
-    return <Hex key={regionKey} row={row} col={col} region={region} onSelect={this.props.onSelect} />;
+    return (
+      <Hex
+        key={regionKey}
+        row={row}
+        col={col}
+        region={region}
+        onSelect={this.props.onSelect}
+        isSelected={region.id === this.props.selectedRegion}
+      />
+    );
   }
 }
 
@@ -95,20 +103,22 @@ const mapStateToProps = (state: any) => {
       regions: {},
       maxX: 0,
       maxY: 0,
-      isWrap: false
+      isWrap: false,
+      selectedRegion: undefined
     };
   }
   return {
     regions: currentLevelData.regions,
     maxX: currentLevelData.maxX,
     maxY: currentLevelData.maxY,
-    isWrap: currentLevelData.isWrap
+    isWrap: currentLevelData.isWrap,
+    selectedRegion: state.regions.selectedRegion
   };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSelect: () => dispatch("") // TODO: dispatch select
+    onSelect: regionId => dispatch(selectRegion(regionId)) // TODO: dispatch select
   };
 };
 

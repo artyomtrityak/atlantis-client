@@ -1,4 +1,7 @@
 .map {
+  overflow: hidden;
+  padding-left: 10px;
+
   @import "./hex.scss";
   @import "./controls.scss";
 }

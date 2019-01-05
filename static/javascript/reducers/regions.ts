@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { REPORT_LOADED } from "../actions/report-actions";
+import { SELECT_REGION } from "../actions/regions-actions";
 
 const initialState = {
   levels: [],
@@ -91,6 +92,10 @@ function regionsReducer(state = initialState, action) {
     case REPORT_LOADED:
       state = { ...state, levels: parseRegions(action.report) };
       console.log(state);
+      break;
+
+    case SELECT_REGION:
+      state = { ...state, selectedRegion: action.regionId };
       break;
   }
   return state;
