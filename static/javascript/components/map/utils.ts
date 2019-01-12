@@ -1,28 +1,35 @@
 export const regionWidth = 100;
 export const regionHeight = 90;
 
-export function calculateHexPosition({ col, row, zoom }) {
-  let offsetX = 0;
-  if (col !== 0) {
-    offsetX = (-52 * col) / 2;
-  }
-  if (col % 2 === 1) {
-    offsetX = -26 * col;
-  }
-
-  const x = regionWidth * col * zoom + offsetX * zoom;
-  const y = (regionHeight / 2) * row * zoom;
-  return { x, y };
+interface IHexPosition {
+  x: number;
+  y: number;
+  zoom: number;
 }
 
-export function calculateMapPositions(params) {
-  const { zoom } = params;
-  let { maxX, maxY } = params;
-  maxX += 1; // because regions start with 0
-  maxY += 1; // because regions start with 0
+export function calculateHexPosition({ x, y, zoom }: IHexPosition) {
+  let offsetX = 0;
+  if (y !== 0) {
+    offsetX = (-52 * y) / 2;
+  }
+  if (y % 2 === 1) {
+    offsetX = -26 * y;
+  }
 
-  let { x, y } = calculateHexPosition({ col: maxX, row: maxY, zoom });
-  x += (regionWidth * zoom) / 2;
-  y += (regionHeight * zoom) / 2;
-  return { svgWidth: x, svgHeight: y, regionsCount: maxX * maxY };
+  // TODO: -50 fix remove?
+  const posX = regionWidth * y * zoom + offsetX * zoom - 50 * zoom;
+  const posY = (regionHeight / 2) * x * zoom;
+  return { x: posX, y: posY };
+}
+
+export function calculateMapPositions(params: IHexPosition) {
+  const { zoom } = params;
+  let { x, y } = params;
+  x += 1; // because regions start with 0
+  y += 1; // because regions start with 0
+
+  const position = calculateHexPosition({ x, y, zoom });
+  const svgWidth = position.x + (regionWidth * zoom) / 2;
+  const svgHeight = position.y + (regionHeight * zoom) / 2;
+  return { svgWidth, svgHeight };
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import cn from "classnames";
-import { calculateHexPosition } from "./utils";
+import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
 
 class Hex extends React.PureComponent {
   elRef = React.createRef();
@@ -24,43 +24,28 @@ class Hex extends React.PureComponent {
   }
 
   render() {
-    const { col, row, zoom, isSelected, region } = this.props;
-    const width = 100;
-    const height = 90;
-
+    const { y, x, zoom, isSelected, region } = this.props;
     const points = [
-      { x: 0, y: 0.5 * height },
-      { x: 0.25 * width, y: 0 },
-      { x: 0.75 * width, y: 0 },
-      { x: 1 * width, y: 0.5 * height },
-      { x: 0.75 * width, y: 1 * height },
-      { x: 0.25 * width, y: 1 * height }
+      { x: 0, y: 0.5 * regionHeight },
+      { x: 0.25 * regionWidth, y: 0 },
+      { x: 0.75 * regionWidth, y: 0 },
+      { x: 1 * regionWidth, y: 0.5 * regionHeight },
+      { x: 0.75 * regionWidth, y: 1 * regionHeight },
+      { x: 0.25 * regionWidth, y: 1 * regionHeight }
     ];
 
     const pointsPath = points.map(d => `${zoom * d.x},${zoom * d.y}`).join(" ");
-
-    // let offsetX = 0;
-    // if (col !== 0) {
-    //   offsetX = (-52 * col) / 2;
-    // }
-    // if (col % 2 === 1) {
-    //   offsetX = -26 * col;
-    // }
-
-    // const moveY = (height / 2) * row * zoom;
-    // const moveX = width * col * zoom + offsetX * zoom;
-
-    const { x, y } = calculateHexPosition({ col, row, zoom });
+    const position = calculateHexPosition({ x, y, zoom });
 
     return (
       <polygon
         ref={this.elRef}
-        transform={`translate(${x}, ${y})`}
+        transform={`translate(${position.x}, ${position.y})`}
         points={pointsPath}
         className={cn("hex", `hex--type-${region.type}`, {
           "hex--selected": isSelected
         })}
-        title={`${col},${row}`}
+        title={`${y},${x}`}
         onClick={this.onSelect}
       />
     );

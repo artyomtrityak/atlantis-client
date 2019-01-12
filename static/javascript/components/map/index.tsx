@@ -33,7 +33,7 @@ class Map extends React.PureComponent {
 
   render() {
     const { maxX, maxY, zoom } = this.props;
-    const { svgWidth, svgHeight, regionsCount } = calculateMapPositions({ maxX, maxY, zoom });
+    const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
 
     // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
     // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
@@ -44,19 +44,30 @@ class Map extends React.PureComponent {
       <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height }}>
         <Controls />
         {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
-        <svg ref={this.mapSvgRef} style={{ width: svgWidth, height: svgHeight }}>
-          {_.range(regionsCount).map(this.renderHex)}
+        <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
+          <g transform={`translate(0, 0)`}>{this.renderMap()}</g>
+          <g transform={`translate(${svgWidth}, 0)`}>{this.renderMap()}</g>
+          <g transform={`translate(${svgWidth * 2}, 0)`}>{this.renderMap()}</g>
         </svg>
         {/* TODO: if there is edge in report which goes from 100,x to 0,x render copy */}
       </div>
     );
   }
 
-  renderHex(d, index) {
-    const { regions, maxY, zoom, selectedRegion } = this.props;
-    const row = index % (maxY + 1);
-    const col = parseInt(index / (maxY + 1), 10);
-    const regionKey = `${col}_${row}`;
+  renderMap() {
+    const { maxX, maxY } = this.props;
+    const regionsHexes = [];
+    for (let y = 0; y <= maxY; y++) {
+      for (let x = 0; x <= maxX; x++) {
+        regionsHexes.push(this.renderHex({ x, y }));
+      }
+    }
+    return regionsHexes;
+  }
+
+  renderHex({ x, y }) {
+    const { regions, zoom, selectedRegion } = this.props;
+    const regionKey = `${y}_${x}`;
     const region = regions[regionKey];
 
     if (!region) {
@@ -66,8 +77,8 @@ class Map extends React.PureComponent {
     return (
       <Hex
         key={regionKey}
-        row={row}
-        col={col}
+        x={x}
+        y={y}
         region={region}
         onSelect={this.props.onSelect}
         isSelected={region.id === selectedRegion}

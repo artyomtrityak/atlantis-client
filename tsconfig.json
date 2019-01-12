@@ -2,15 +2,21 @@
   "compilerOptions": {
       "outDir": "./dist/",
       "sourceMap": true,
-      "noImplicitAny": true,
-      "strictNullChecks": true,
+
+      "strict": true,
+      "noImplicitAny": true, // included in strict: true
+      "noImplicitThis": true, // included in strict: true
+      "alwaysStrict": true, // included in strict: true
+      "strictNullChecks": true, // included in strict: true
+      "strictFunctionTypes": true, // included in strict: true
+      "strictPropertyInitialization": true, // included in strict: true
+
       "module": "commonjs",
       "target": "esnext",
       "jsx": "react",
       "moduleResolution": "node",
       "allowJs": true,
       "noEmit": true,
-      "strict": true,
       "isolatedModules": false,
       "esModuleInterop": true
   },
