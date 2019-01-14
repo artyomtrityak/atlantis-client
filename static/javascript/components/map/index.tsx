@@ -56,6 +56,9 @@ class Map extends React.PureComponent {
 
   renderMap() {
     const { maxX, maxY } = this.props;
+
+    console.log("MAX:", maxX, maxY);
+
     const regionsHexes = [];
     for (let y = 0; y <= maxY; y++) {
       for (let x = 0; x <= maxX; x++) {

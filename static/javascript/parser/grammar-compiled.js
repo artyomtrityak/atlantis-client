@@ -1066,8 +1066,24 @@
       },
       { name: "FACTION_EVENTS_ITEMS", symbols: ["FACTION_EVENTS_ITEMS$ebnf$1"] },
       { name: "EVENT_SENTENCE", symbols: ["WORD"] },
-      { name: "EVENT_SENTENCE", symbols: ["WORD", "_", "EVENT_SENTENCE"], postprocess: array2String },
-      { name: "EVENT_SENTENCE", symbols: ["WORD", "NL", "_", "EVENT_SENTENCE"], postprocess: array2String },
+      { name: "EVENT_SENTENCE$ebnf$1", symbols: ["_"], postprocess: id },
+      {
+        name: "EVENT_SENTENCE$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "EVENT_SENTENCE", symbols: ["WORD", "_", "EVENT_SENTENCE$ebnf$1", "EVENT_SENTENCE"], postprocess: array2String },
+      { name: "EVENT_SENTENCE$ebnf$2", symbols: ["_"], postprocess: id },
+      {
+        name: "EVENT_SENTENCE$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "EVENT_SENTENCE", symbols: ["WORD", "NL", "_", "EVENT_SENTENCE$ebnf$2", "EVENT_SENTENCE"], postprocess: array2String },
       {
         name: "FACTION_SKILLS$string$1",
         symbols: [

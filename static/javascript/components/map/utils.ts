@@ -17,7 +17,7 @@ export function calculateHexPosition({ x, y, zoom }: IHexPosition) {
   }
 
   // TODO: -50 fix remove?
-  const posX = regionWidth * y * zoom + offsetX * zoom - 50 * zoom;
+  const posX = regionWidth * y * zoom + offsetX * zoom;
   const posY = (regionHeight / 2) * x * zoom;
   return { x: posX, y: posY };
 }

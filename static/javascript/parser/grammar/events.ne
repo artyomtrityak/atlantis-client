@@ -22,5 +22,5 @@ FACTION_EVENTS_ITEMS ->
 
 EVENT_SENTENCE ->
   WORD
-  | WORD _ EVENT_SENTENCE {% array2String %}
-  | WORD NL _ EVENT_SENTENCE {% array2String %}
+  | WORD _ _:? EVENT_SENTENCE {% array2String %}
+  | WORD NL _ _:? EVENT_SENTENCE {% array2String %}
