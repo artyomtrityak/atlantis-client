@@ -38,7 +38,7 @@ const parseRegion = (result, region) => {
       { x: exitX - 1, y: exitY - 1 },
       { x: exitX - 1, y: exitY + 1 }
     ].forEach(d => {
-      if (!regions[`${d.x}_${d.y}`] && d.x >= 0 && d.y >= 0) {
+      if (!regions[`${d.x}_${d.y}`] && d.y >= 0) {
         regions[`${d.x}_${d.y}`] = {
           id: `region_${d.x}_${d.y}_${region.coordinates.z}`,
           coordinates: { x: d.x, y: d.y, z: region.coordinates.z },

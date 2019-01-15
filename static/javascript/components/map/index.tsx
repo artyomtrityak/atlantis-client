@@ -45,9 +45,10 @@ class Map extends React.PureComponent {
         <Controls />
         {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
         <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
+          <rect width="100%" height="100%" fill="lightgray" />
           <g transform={`translate(0, 0)`}>{this.renderMap()}</g>
-          <g transform={`translate(${svgWidth}, 0)`}>{this.renderMap()}</g>
-          <g transform={`translate(${svgWidth * 2}, 0)`}>{this.renderMap()}</g>
+          <g transform={`translate(${svgWidth - 50 * zoom}, 0)`}>{this.renderMap()}</g>
+          <g transform={`translate(${svgWidth * 2 - 100 * zoom}, 0)`}>{this.renderMap()}</g>
         </svg>
         {/* TODO: if there is edge in report which goes from 100,x to 0,x render copy */}
       </div>
