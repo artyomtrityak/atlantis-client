@@ -73,7 +73,7 @@ const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {
     closeModal: () => dispatch(closeModal()),
     reportLoaded: report => dispatch(reportLoaded(report))

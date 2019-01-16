@@ -155,7 +155,7 @@ const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {
     showLoadReport: () => {
       console.log("SHOW");

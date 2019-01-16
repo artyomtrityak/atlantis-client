@@ -44,13 +44,13 @@ class GameMenuIcon extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = state => {
   return {
     isOpen: state.navigations.isGameMenuOpen
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {
     open: () => dispatch(openGameMenu()),
     close: () => dispatch(closeGameMenu())

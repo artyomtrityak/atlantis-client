@@ -83,7 +83,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {
     onActivateTab: tabName => dispatch(activateTab(tabName))
   };

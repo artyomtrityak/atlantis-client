@@ -1,4 +1,5 @@
 import React from "react";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import centerIcon from "../../../assets/svg/center.svg";
 import zoomInIcon from "../../../assets/svg/zoom-in.svg";
@@ -20,14 +21,14 @@ const MapControls = props => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    onZoomIn: () => dispatch(zoomIn()), // TODO: zoom in event
-    onZoomOut: () => dispatch(zoomOut()), // TODO: zoom out event
+    onZoomIn: () => dispatch(zoomIn()),
+    onZoomOut: () => dispatch(zoomOut()),
     onCenter: () => dispatch(""), // TODO: default zoom and center event
     onLevelUp: () => dispatch(""), // TODO: level up
     onLevelDown: () => dispatch("") // TODO: level down

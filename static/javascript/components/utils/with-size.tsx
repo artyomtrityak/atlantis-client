@@ -1,9 +1,9 @@
 import React from "react";
 import _ from "lodash";
 
-export default (Child: any) => {
+export default Child => {
   return class WithSize extends React.PureComponent {
-    constructor(props: any) {
+    constructor(props) {
       super(props);
       this.state = {
         width: undefined,

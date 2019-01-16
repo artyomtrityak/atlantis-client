@@ -69,11 +69,11 @@ const GameMenu = props => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 

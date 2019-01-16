@@ -8,30 +8,9 @@ import { withSize } from "../utils";
 import Hex from "./hex";
 import Controls from "./controls";
 import { calculateMapPositions } from "./utils";
+import { IMapProps } from "./map.d";
 
 import "./styles/index.scss";
-
-// TODO: import region type
-interface IRegion {
-  id: string;
-  type: string;
-}
-
-// TODO: import regions type
-interface IRegions {
-  [key: string]: IRegion;
-}
-
-interface IMapProps {
-  maxX: number;
-  maxY: number;
-  zoom: number;
-  width: number;
-  height: number;
-  selectedRegion?: string; // TODO: get selectedRegion type from reducer
-  onSelect: (regionId: string) => void;
-  regions: IRegions;
-}
 
 class Map extends React.PureComponent<IMapProps> {
   private containerRef = React.createRef<HTMLDivElement>();
@@ -65,7 +44,7 @@ class Map extends React.PureComponent<IMapProps> {
         <Controls />
         <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
           <rect width="100%" height="100%" fill="lightgray" />
-          {_.range(3).map(i => (
+          {_.range(3).map((i: number) => (
             <g key={`map_${i}`} transform={`translate(${svgWidth * i - i * 50 * zoom} , 0)`}>
               {this.renderMap()}
             </g>

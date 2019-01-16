@@ -41,11 +41,11 @@ const App = () => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = state => {
   return {};
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = dispatch => {
   return {};
 };
 

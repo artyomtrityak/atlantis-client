@@ -1,31 +1,17 @@
 import React from "react";
 import cn from "classnames";
 import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
+import { IHexProps } from "./map.d";
 
-// TODO: import region type
-interface IRegion {
-  id: string;
-  type: string;
-}
-
-interface IProps {
-  isSelected: boolean;
-  zoom: number;
-  x: number;
-  y: number;
-  onSelect: (regionId: string) => void;
-  region: IRegion;
-}
-
-class Hex extends React.PureComponent<IProps> {
+class Hex extends React.PureComponent<IHexProps> {
   elRef = React.createRef<SVGPolygonElement>();
 
-  constructor(props: IProps) {
+  constructor(props: IHexProps) {
     super(props);
     this.onSelect = this.onSelect.bind(this);
   }
 
-  componentDidUpdate(prevProps: IProps) {
+  componentDidUpdate(prevProps: IHexProps) {
     // Detach / attach element to DOM because of svg no z-index and last renders on top
     if (this.props.isSelected && !prevProps.isSelected && this.elRef.current && this.elRef.current.parentNode) {
       const parent = this.elRef.current.parentNode;
