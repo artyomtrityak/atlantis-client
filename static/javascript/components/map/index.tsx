@@ -1,5 +1,6 @@
 import Draggable from "gsap/Draggable";
 import React from "react";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { selectRegion } from "../../actions/regions-actions";
@@ -13,6 +14,7 @@ import "./styles/index.scss";
 // TODO: import region type
 interface IRegion {
   id: string;
+  type: string;
 }
 
 // TODO: import regions type
@@ -110,7 +112,8 @@ class Map extends React.PureComponent<IMapProps> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+// TODO: import state object
+const mapStateToProps = state => {
   console.log(state);
   const currentLevelData = state.regions.levels[state.regions.currentLevel];
   if (!currentLevelData) {
@@ -133,7 +136,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onSelect: (regionId: string) => dispatch(selectRegion(regionId))
   };
