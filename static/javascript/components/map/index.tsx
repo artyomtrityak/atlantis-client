@@ -10,12 +10,35 @@ import { calculateMapPositions } from "./utils";
 
 import "./styles/index.scss";
 
-class Map extends React.PureComponent {
-  constructor(props) {
+// TODO: import region type
+interface IRegion {
+  id: string;
+}
+
+// TODO: import regions type
+interface IRegions {
+  [key: string]: IRegion;
+}
+
+interface IMapProps {
+  maxX: number;
+  maxY: number;
+  zoom: number;
+  width: number;
+  height: number;
+  selectedRegion?: string; // TODO: get selectedRegion type from reducer
+  onSelect: (regionId: string) => void;
+  regions: IRegions;
+}
+
+class Map extends React.PureComponent<IMapProps> {
+  private containerRef = React.createRef<HTMLDivElement>();
+  private mapSvgRef = React.createRef<SVGSVGElement>();
+  private draggableIns: any;
+
+  constructor(props: IMapProps) {
     super(props);
     this.renderHex = this.renderHex.bind(this);
-    this.containerRef = React.createRef();
-    this.mapSvgRef = React.createRef();
   }
 
   componentDidMount() {
@@ -35,22 +58,17 @@ class Map extends React.PureComponent {
     const { maxX, maxY, zoom } = this.props;
     const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
 
-    // TODO calculate max map size based on wrap flags: isWrap, isTopEdge, isBottomEdge
-    // If no flags - max regions + buffer right / left for blanks, + buffer top / bottom for blanks
-    // If isWrap - no buffer left and right
-    // If isTopEdge - no buffer top
-    // If isBottomEdge - no buffer bottom
     return (
       <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height }}>
         <Controls />
-        {/* TODO: if there is edge in report which goes from 0,x to 100,x render copy */}
         <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
           <rect width="100%" height="100%" fill="lightgray" />
-          <g transform={`translate(0, 0)`}>{this.renderMap()}</g>
-          <g transform={`translate(${svgWidth - 50 * zoom}, 0)`}>{this.renderMap()}</g>
-          <g transform={`translate(${svgWidth * 2 - 100 * zoom}, 0)`}>{this.renderMap()}</g>
+          {_.range(3).map(i => (
+            <g key={`map_${i}`} transform={`translate(${svgWidth * i - i * 50 * zoom} , 0)`}>
+              {this.renderMap()}
+            </g>
+          ))}
         </svg>
-        {/* TODO: if there is edge in report which goes from 100,x to 0,x render copy */}
       </div>
     );
   }
@@ -63,15 +81,15 @@ class Map extends React.PureComponent {
     const regionsHexes = [];
     for (let y = 0; y <= maxY; y++) {
       for (let x = 0; x <= maxX; x++) {
-        regionsHexes.push(this.renderHex({ x, y }));
+        regionsHexes.push(this.renderHex(x, y));
       }
     }
     return regionsHexes;
   }
 
-  renderHex({ x, y }) {
+  renderHex(x: number, y: number) {
     const { regions, zoom, selectedRegion } = this.props;
-    const regionKey = `${y}_${x}`;
+    const regionKey: string = `${y}_${x}`;
     const region = regions[regionKey];
 
     if (!region) {
@@ -117,7 +135,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    onSelect: regionId => dispatch(selectRegion(regionId))
+    onSelect: (regionId: string) => dispatch(selectRegion(regionId))
   };
 };
 
