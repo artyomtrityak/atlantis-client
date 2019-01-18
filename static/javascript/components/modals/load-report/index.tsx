@@ -1,8 +1,16 @@
 import React from "react";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
-import parse from "../../../parser";
+import parse, { IReport } from "../../../parser";
+import { ICombinedReducersState } from "../../../reducers";
 import { closeModal } from "../../../actions/navigation-actions";
 import { reportLoaded } from "../../../actions/report-actions";
+
+interface IFileEvent {
+  target: {
+    files: [Blob];
+  };
+}
 
 class LoadReportModal extends React.PureComponent {
   state = {
@@ -15,10 +23,10 @@ class LoadReportModal extends React.PureComponent {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onFileSelect(e) {
+  onFileSelect(e: IFileEvent) {
     const reader = new FileReader();
-    reader.onload = event => {
-      this.setState({ reportData: event.target.result });
+    reader.onload = () => {
+      this.setState({ reportData: reader.result });
     };
     reader.readAsText(e.target.files[0]);
   }
@@ -69,14 +77,14 @@ class LoadReportModal extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     closeModal: () => dispatch(closeModal()),
-    reportLoaded: report => dispatch(reportLoaded(report))
+    reportLoaded: (report: IReport) => dispatch(reportLoaded(report))
   };
 };
 

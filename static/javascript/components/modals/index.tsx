@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { ICombinedReducersState } from "../../reducers";
 import LoadReport from "./load-report";
 
 interface IProps {
@@ -15,8 +16,7 @@ const Modals = (props: IProps) => {
   }
 };
 
-// TODO: state from redux
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   return {
     activeModalName: state.navigations.activeModalName
   };
