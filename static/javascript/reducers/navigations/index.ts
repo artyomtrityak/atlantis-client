@@ -1,6 +1,8 @@
-import { OPEN_GAME_MENU, CLOSE_GAME_MENU, SHOW_LOAD_REPORT_MODAL, CLOSE_MODAL } from "../actions/navigation-actions";
+import { OPEN_GAME_MENU, CLOSE_GAME_MENU, SHOW_LOAD_REPORT_MODAL, CLOSE_MODAL, IActions } from "../../actions/navigation-actions";
+import { IState } from "./navigations.d";
+export { IState };
 
-const initialState = {
+const initialState: IState = {
   isGameMenuOpen: false,
   activeModalName: undefined
 };
@@ -9,7 +11,7 @@ const initialState = {
 // Navigation Reducer
 // -------------------
 
-function navigationReducer(state = initialState, action) {
+function navigationReducer(state: IState = initialState, action: IActions) {
   switch (action.type) {
     case OPEN_GAME_MENU:
       state = { ...state, isGameMenuOpen: true };

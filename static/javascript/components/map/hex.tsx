@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
-import { IHexProps } from "./map.d";
+import { IHexProps, IPoint } from "./map.d";
 
 class Hex extends React.PureComponent<IHexProps> {
   elRef = React.createRef<SVGPolygonElement>();
@@ -35,7 +35,7 @@ class Hex extends React.PureComponent<IHexProps> {
       { x: 0.25 * regionWidth, y: 1 * regionHeight }
     ];
 
-    const pointsPath = points.map(d => `${zoom * d.x},${zoom * d.y}`).join(" ");
+    const pointsPath = points.map((d: IPoint) => `${zoom * d.x},${zoom * d.y}`).join(" ");
     const position = calculateHexPosition({ x, y, zoom });
 
     return (

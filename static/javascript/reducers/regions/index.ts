@@ -1,17 +1,21 @@
 import _ from "lodash";
-import { REPORT_LOADED } from "../actions/report-actions";
-import { SELECT_REGION, ZOOM_IN, ZOOM_OUT } from "../actions/regions-actions";
+import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
+import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, IActions as IRegionActions } from "../../actions/regions-actions";
+import { IReport, IReportItemRegions } from "../../parser";
+import { IState, ILevel, IRegion } from "./regions.d";
 
-const initialState = {
+export { IState, ILevel, IRegion };
+
+const initialState: IState = {
   levels: [],
   currentLevel: 0,
   zoom: 0.5,
   selectedRegion: undefined
 };
 
-const parseRegion = (result, region) => {
+const parseRegion = (result: ILevel[], region: IRegion) => {
   if (!result[region.coordinates.z]) {
-    result[region.coordinates.z] = { regions: {}, maxX: 0, maxY: 0 };
+    result[region.coordinates.z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false };
   }
   const { x, y } = region.coordinates;
   const regions = result[region.coordinates.z].regions;
@@ -51,7 +55,7 @@ const parseRegion = (result, region) => {
   return result;
 };
 
-const parseLevel = level => {
+const parseLevel = (level: ILevel) => {
   let maxX = 0;
   let maxY = 0;
   let isWrap = false;
@@ -76,11 +80,15 @@ const parseLevel = level => {
   return level;
 };
 
-const parseRegions = report => {
-  const reportData = report.find(d => d.type === "REGIONS");
-  if (!reportData || !reportData.regions) {
+const parseRegions = (report: IReport) => {
+  const reportData = report.find(d => {
+    return d.type === "REGIONS";
+  });
+
+  if (!reportData || reportData.type !== "REGIONS") {
     return [];
   }
+
   return _.chain(reportData.regions)
     .reduce(parseRegion, [])
     .compact()
@@ -92,23 +100,31 @@ const parseRegions = report => {
 // Regions Reducer
 // -------------------
 
-function regionsReducer(state = initialState, action) {
+function regionsReducer(state: IState = initialState, action: IRegionActions | IReportActions): IState {
   switch (action.type) {
     case REPORT_LOADED:
-      state = { ...state, levels: parseRegions(action.report) };
+      console.log("ACTION:", action.payload);
+      state = { ...state, levels: parseRegions(action.payload) };
       console.log(state);
       break;
 
     case SELECT_REGION:
-      state = { ...state, selectedRegion: action.regionId };
+      state = { ...state, selectedRegion: action.payload };
       break;
 
     case ZOOM_IN:
-      console.log("ZOOM IN");
+      if (state.zoom === 1) {
+        // max
+        return state;
+      }
       state = { ...state, zoom: state.zoom + 0.1 };
       break;
 
     case ZOOM_OUT:
+      if (state.zoom === 0.1) {
+        // min
+        return state;
+      }
       state = { ...state, zoom: state.zoom - 0.1 };
       break;
   }

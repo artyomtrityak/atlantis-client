@@ -6,10 +6,6 @@ import { createStore } from "redux";
 import rootReducer from "./reducers";
 import App from "./application";
 
-import parser from "./parser";
-
-console.log(parser);
-
 const store = createStore(rootReducer);
 
 render(

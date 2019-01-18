@@ -1,13 +1,15 @@
-import { REPORT_LOADED } from "../../actions/report-actions";
+import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
+import { IState } from "./report.d";
+export { IState };
 
-const initialState = {
-  report: undefined
+const initialState: IState = {
+  report: []
 };
 
-function detailsReducer(state = initialState, action) {
+function detailsReducer(state: IState = initialState, action: IReportActions) {
   switch (action.type) {
     case REPORT_LOADED:
-      state = { ...state, report: action.report };
+      state = { ...state, report: action.payload };
       break;
   }
   return state;

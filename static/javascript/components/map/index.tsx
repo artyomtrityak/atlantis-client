@@ -3,6 +3,7 @@ import React from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import _ from "lodash";
+import { ICombinedReducersState } from "../../reducers";
 import { selectRegion } from "../../actions/regions-actions";
 import { withSize } from "../utils";
 import Hex from "./hex";
@@ -35,13 +36,17 @@ class Map extends React.PureComponent<IMapProps> {
     this.draggableIns.kill();
   }
 
+  onCenter() {
+    console.log("CENTER");
+  }
+
   render() {
     const { maxX, maxY, zoom } = this.props;
     const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
 
     return (
       <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height }}>
-        <Controls />
+        <Controls onCenter={this.onCenter} />
         <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
           <rect width="100%" height="100%" fill="lightgray" />
           {_.range(3).map((i: number) => (
@@ -91,8 +96,7 @@ class Map extends React.PureComponent<IMapProps> {
   }
 }
 
-// TODO: import state object
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   console.log(state);
   const currentLevelData = state.regions.levels[state.regions.currentLevel];
   if (!currentLevelData) {

@@ -28,3 +28,16 @@ export interface IHexProps {
   onSelect: (regionId: string) => void;
   region: IRegion;
 }
+
+export interface IPoint {
+  x: number;
+  y: number;
+}
+
+export interface IControlProps {
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onCenter: () => void;
+  onLevelUp: () => void;
+  onLevelDown: () => void;
+}

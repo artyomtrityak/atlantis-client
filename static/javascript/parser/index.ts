@@ -2,7 +2,10 @@ import nearley from "nearley";
 import { diff } from "deep-diff";
 import grammar from "./grammar-compiled";
 
-const parseReport = reportData => {
+import { IReport, IReportItemRegions } from "./parser.d";
+export { IReport, IReportItemRegions };
+
+const parseReport = (reportData: string): IReport => {
   const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar));
   parser.feed(reportData);
 

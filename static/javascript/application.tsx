@@ -10,12 +10,7 @@ import GameMenu from "./components/game-menu";
 // Modal dialogs
 import Modals from "./components/modals";
 
-import { showConfirmation } from "./actions/notification-actions";
-
 const App = () => {
-  showConfirmation("Hello?").then(() => {
-    console.log("OK");
-  });
   return (
     <div>
       <Header />
@@ -41,15 +36,4 @@ const App = () => {
   );
 };
 
-const mapStateToProps = state => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default App;

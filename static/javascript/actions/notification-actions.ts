@@ -4,7 +4,7 @@ import Noty from "noty";
  * Notification actions
  */
 
-export function showErrorNotification(message) {
+export function showErrorNotification(message: string) {
   new Noty({
     theme: "bootstrap-v4",
     type: "error",
@@ -13,7 +13,7 @@ export function showErrorNotification(message) {
   }).show();
 }
 
-export function showInfoNotification(message) {
+export function showInfoNotification(message: string) {
   new Noty({
     theme: "bootstrap-v4",
     type: "success",
@@ -22,7 +22,7 @@ export function showInfoNotification(message) {
   }).show();
 }
 
-export function showConfirmation(message) {
+export function showConfirmation(message: string) {
   return new Promise((resolve, reject) => {
     const n = new Noty({
       theme: "bootstrap-v4",

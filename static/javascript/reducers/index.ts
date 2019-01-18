@@ -1,11 +1,19 @@
 import { combineReducers } from "redux";
-import navigations from "./navigations";
-import details from "./details";
-import units from "./units";
-import regions from "./regions";
-import report from "./report";
+import navigations, { IState as INavigationState } from "./navigations";
+import details, { IState as IDetailsState } from "./details";
+import units, { IState as IUnitsState } from "./units";
+import regions, { IState as IRegionsState } from "./regions";
+import report, { IState as IReportState } from "./report";
 
-export default combineReducers({
+export interface ICombinedReducersState {
+  readonly details: IDetailsState;
+  readonly units: IUnitsState;
+  readonly navigations: INavigationState;
+  readonly regions: IRegionsState;
+  readonly report: IReportState;
+}
+
+export default combineReducers<ICombinedReducersState>({
   details,
   units,
   navigations,
