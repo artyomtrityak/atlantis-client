@@ -86,6 +86,7 @@ const parseRegions = (report: IReport) => {
   });
 
   if (!reportData || reportData.type !== "REGIONS") {
+    // typescript wtf
     return [];
   }
 

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
+import _ from "lodash";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import parse, { IReport } from "../../../parser";
 import { ICombinedReducersState } from "../../../reducers";
-import { closeModal } from "../../../actions/navigation-actions";
+import { closeModal, showLoader, hideLoader } from "../../../actions/navigation-actions";
 import { reportLoaded } from "../../../actions/report-actions";
 
 interface IFileEvent {
@@ -12,34 +13,54 @@ interface IFileEvent {
   };
 }
 
-class LoadReportModal extends React.PureComponent {
+interface IProps {
+  reportLoaded: (report: IReport) => void;
+  closeModal: () => void;
+  hideLoader: () => void;
+  showLoader: () => void;
+}
+
+interface IState {
+  reportData: string | ArrayBuffer | null;
+}
+
+class LoadReportModal extends React.PureComponent<IProps, IState> {
   state = {
-    reportData: undefined
+    reportData: ""
   };
 
-  constructor(props) {
+  constructor(props: IProps) {
     super(props);
     this.onFileSelect = this.onFileSelect.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.parseReport = _.debounce(this.parseReport.bind(this), 100);
   }
 
-  onFileSelect(e: IFileEvent) {
+  onFileSelect(e: ChangeEvent<HTMLInputElement>) {
     const reader = new FileReader();
     reader.onload = () => {
       this.setState({ reportData: reader.result });
     };
-    reader.readAsText(e.target.files[0]);
+    if (e.target.files) {
+      reader.readAsText(e.target.files[0]);
+    } else {
+      // TODO: display error
+      console.error("File can not be read");
+    }
   }
 
   onSubmit() {
-    if (!this.state.reportData) {
+    this.props.showLoader();
+    this.parseReport(); // calling debounced function to give time for parser and loader
+  }
+
+  parseReport() {
+    const parsedReport = parse(this.state.reportData);
+    this.props.hideLoader();
+    if (!parsedReport) {
       return;
     }
-
-    // TODO: add loader
-    const parsedReport = parse(this.state.reportData);
     this.props.reportLoaded(parsedReport);
-    // TODO: check errors
     this.props.closeModal();
   }
 
@@ -84,7 +105,9 @@ const mapStateToProps = (state: ICombinedReducersState) => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     closeModal: () => dispatch(closeModal()),
-    reportLoaded: (report: IReport) => dispatch(reportLoaded(report))
+    reportLoaded: (report: IReport) => dispatch(reportLoaded(report)),
+    showLoader: () => dispatch(showLoader()),
+    hideLoader: () => dispatch(hideLoader())
   };
 };
 

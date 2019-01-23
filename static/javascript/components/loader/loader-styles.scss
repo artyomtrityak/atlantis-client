@@ -1,0 +1,9 @@
+.atl-loader {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1000000000000;
+  opacity: 0.4;
+  background-color: gray;
+}

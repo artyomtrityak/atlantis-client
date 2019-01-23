@@ -6,6 +6,7 @@ import Map from "./components/map";
 import Details from "./components/details";
 import UnitsList from "./components/units-list";
 import GameMenu from "./components/game-menu";
+import Loader from "./components/loader";
 
 // Modal dialogs
 import Modals from "./components/modals";
@@ -13,6 +14,7 @@ import Modals from "./components/modals";
 const App = () => {
   return (
     <div>
+      <Loader />
       <Header />
       <GameMenu />
       <div className="container-fluid application" style={{ height: "calc(100vh - 42px)" }}>
