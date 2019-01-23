@@ -17,7 +17,12 @@ class Loading extends React.PureComponent<IProps> {
     if (!this.props.loading) {
       return null;
     }
-    return <div className="atl-loader" />;
+    return (
+      <div className="atl-loader">
+        <div className="atl-loader__backdrop" />
+        <img className="atl-loader__loader" src="/static/assets/images/loader.gif" />
+      </div>
+    );
   }
 }
 

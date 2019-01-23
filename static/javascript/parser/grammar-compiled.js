@@ -303,6 +303,14 @@
         }
       },
       { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$2"], postprocess: d => ({ title: d[0], z: 2 }) },
+      { name: "REGION_Z_LEVEL$ebnf$1", symbols: ["NL"], postprocess: id },
+      {
+        name: "REGION_Z_LEVEL$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
       {
         name: "REGION_Z_LEVEL$string$3",
         symbols: [
@@ -325,7 +333,7 @@
       },
       {
         name: "REGION_Z_LEVEL",
-        symbols: [{ literal: "," }, "INT", "_", "REGION_Z_LEVEL$string$3"],
+        symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$1", "_", "REGION_Z_LEVEL$string$3"],
         postprocess: d => ({ title: array2String(d), z: String(2) + String(d[1]) })
       },
       {
@@ -347,6 +355,14 @@
         }
       },
       { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$4"], postprocess: d => ({ title: d[0], z: 3 }) },
+      { name: "REGION_Z_LEVEL$ebnf$2", symbols: ["NL"], postprocess: id },
+      {
+        name: "REGION_Z_LEVEL$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
       {
         name: "REGION_Z_LEVEL$string$5",
         symbols: [
@@ -368,7 +384,7 @@
       },
       {
         name: "REGION_Z_LEVEL",
-        symbols: [{ literal: "," }, "INT", "_", "REGION_Z_LEVEL$string$5"],
+        symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$2", "_", "REGION_Z_LEVEL$string$5"],
         postprocess: d => ({ title: array2String(d), z: String(3) + String(d[1]) })
       },
       {
@@ -379,6 +395,14 @@
         }
       },
       { name: "REGION_Z_LEVEL", symbols: ["REGION_Z_LEVEL$string$6"], postprocess: d => ({ title: d[0], z: 4 }) },
+      { name: "REGION_Z_LEVEL$ebnf$3", symbols: ["NL"], postprocess: id },
+      {
+        name: "REGION_Z_LEVEL$ebnf$3",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
       {
         name: "REGION_Z_LEVEL$string$7",
         symbols: [
@@ -396,7 +420,7 @@
       },
       {
         name: "REGION_Z_LEVEL",
-        symbols: [{ literal: "," }, "INT", "_", "REGION_Z_LEVEL$string$7"],
+        symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$3", "_", "REGION_Z_LEVEL$string$7"],
         postprocess: d => ({ title: array2String(d), z: String(4) + String(d[1]) })
       },
       { name: "REPORT_FACTION$ebnf$1", symbols: ["REPORT_FACTION_STATS"], postprocess: id },

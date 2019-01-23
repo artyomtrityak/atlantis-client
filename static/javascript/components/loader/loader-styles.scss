@@ -1,9 +1,20 @@
 .atl-loader {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  z-index: 1000000000000;
-  opacity: 0.4;
-  background-color: gray;
+  .atl-loader__backdrop {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 100000;
+    opacity: 0.4;
+    background-color: gray;
+  }
+
+  .atl-loader__loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 100001;
+    margin-top: -100px;
+    margin-left: -30px;
+  }
 }

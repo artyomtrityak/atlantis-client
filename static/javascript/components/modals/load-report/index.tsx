@@ -33,7 +33,6 @@ class LoadReportModal extends React.PureComponent<IProps, IState> {
     super(props);
     this.onFileSelect = this.onFileSelect.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.parseReport = _.debounce(this.parseReport.bind(this), 100);
   }
 
   onFileSelect(e: ChangeEvent<HTMLInputElement>) {
@@ -49,19 +48,20 @@ class LoadReportModal extends React.PureComponent<IProps, IState> {
     }
   }
 
-  onSubmit() {
-    this.props.showLoader();
-    this.parseReport(); // calling debounced function to give time for parser and loader
-  }
-
-  parseReport() {
-    const parsedReport = parse(this.state.reportData);
-    this.props.hideLoader();
-    if (!parsedReport) {
-      return;
+  async onSubmit() {
+    try {
+      this.props.showLoader();
+      const parsedReport = await parse(this.state.reportData);
+      this.props.hideLoader();
+      if (!parsedReport) {
+        return;
+      }
+      this.props.reportLoaded(parsedReport);
+      this.props.closeModal();
+    } catch (err) {
+      this.props.hideLoader();
+      console.error(err);
     }
-    this.props.reportLoaded(parsedReport);
-    this.props.closeModal();
   }
 
   render() {
