@@ -7,17 +7,25 @@ import { ICombinedReducersState } from "../../reducers";
 import { IHeaderProps } from "./header.d";
 import "./header-styles.scss";
 
-class Header extends React.PureComponent<IHeaderProps> {
+interface IState {
+  openDropdownName?: DROPDOWNS;
+}
+
+enum DROPDOWNS {
+  REPORT,
+  USER
+}
+
+class Header extends React.PureComponent<IHeaderProps, IState> {
   elRef = React.createRef<HTMLDivElement>();
+
+  state = {
+    openDropdownName: undefined
+  };
 
   constructor(props: IHeaderProps) {
     super(props);
 
-    // TODO: move state to props
-    this.state = {
-      reportsDropdownOpen: false,
-      userDropdownOpen: false
-    };
     this.onGlobalClick = this.onGlobalClick.bind(this);
     this.onReportsDropdownToggle = this.onReportsDropdownToggle.bind(this);
     this.onUserDropdownToggle = this.onUserDropdownToggle.bind(this);
@@ -34,8 +42,7 @@ class Header extends React.PureComponent<IHeaderProps> {
   }
 
   onGlobalClick(e: MouseEvent) {
-    // TODO: move state to reducer
-    if (!this.state.reportsDropdownOpen && !this.state.userDropdownOpen) {
+    if (this.state.openDropdownName === undefined) {
       return;
     }
     if (!(e.target instanceof Element)) {
@@ -44,32 +51,19 @@ class Header extends React.PureComponent<IHeaderProps> {
     if (!this.elRef.current || this.elRef.current.contains(e.target)) {
       return;
     }
-    this.setState({
-      reportsDropdownOpen: false,
-      userDropdownOpen: false
-    });
+    this.closeDropdowns();
   }
 
   onReportsDropdownToggle() {
-    this.setState({
-      reportsDropdownOpen: !this.state.reportsDropdownOpen,
-      userDropdownOpen: false
-    });
+    this.setState({ openDropdownName: DROPDOWNS.REPORT });
   }
 
   onUserDropdownToggle() {
-    this.setState({
-      userDropdownOpen: !this.state.userDropdownOpen,
-      reportsDropdownOpen: false
-    });
+    this.setState({ openDropdownName: DROPDOWNS.USER });
   }
 
   closeDropdowns() {
-    // switch
-    this.setState({
-      userDropdownOpen: false,
-      reportsDropdownOpen: false
-    });
+    this.setState({ openDropdownName: undefined });
   }
 
   showLoadReport() {
@@ -78,6 +72,8 @@ class Header extends React.PureComponent<IHeaderProps> {
   }
 
   render() {
+    const { openDropdownName } = this.state;
+
     return (
       <nav className="navbar navbar-expand-lg header" ref={this.elRef}>
         <a className="navbar-brand">Atlantis Client</a>
@@ -86,7 +82,7 @@ class Header extends React.PureComponent<IHeaderProps> {
             <a className="nav-link dropdown-toggle header__link" href="#" role="button" onClick={this.onReportsDropdownToggle}>
               Reports & Orders
             </a>
-            <div className={cn("dropdown-menu", { show: this.state.reportsDropdownOpen })}>
+            <div className={cn("dropdown-menu", { show: openDropdownName === DROPDOWNS.REPORT })}>
               <a className="dropdown-item" href="#" onClick={this.showLoadReport}>
                 Load Turn Report
               </a>
@@ -135,7 +131,7 @@ class Header extends React.PureComponent<IHeaderProps> {
             <a className="nav-item nav-link dropdown-toggle mr-2 header__link" href="#" onClick={this.onUserDropdownToggle}>
               Artem Trytiak
             </a>
-            <div className={cn("dropdown-menu", "dropdown-menu-right", { show: this.state.userDropdownOpen })}>
+            <div className={cn("dropdown-menu", "dropdown-menu-right", { show: openDropdownName === DROPDOWNS.USER })}>
               <a className="dropdown-item" href="#">
                 Account Settings
               </a>
