@@ -29,7 +29,7 @@ export function calculateMapPositions(params: IHexPosition) {
   y += 1; // because regions start with 0
 
   const position = calculateHexPosition({ x, y, zoom });
-  const svgWidth = position.x + (regionWidth * zoom) / 2;
+  const svgWidth = position.x + (regionWidth * zoom) / 2 - 74 * zoom;
   const svgHeight = position.y + (regionHeight * zoom) / 2;
   return { svgWidth, svgHeight };
 }

@@ -42,10 +42,12 @@ class Map extends React.PureComponent<IMapProps> {
 
   render() {
     const { maxX, maxY, zoom } = this.props;
-    const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+    let { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+    svgWidth = this.props.width > svgWidth ? this.props.width : svgWidth;
+    svgHeight = this.props.height > svgHeight ? this.props.height : svgHeight;
 
     return (
-      <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height }}>
+      <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height - 10 }}>
         <Controls onCenter={this.onCenter} />
         <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
           <rect width="100%" height="100%" fill="lightgray" />

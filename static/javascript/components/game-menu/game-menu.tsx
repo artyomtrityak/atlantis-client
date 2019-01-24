@@ -1,4 +1,5 @@
 import React from "react";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import cn from "classnames";
 import checkIcon from "../../../assets/svg/check.svg";
@@ -13,9 +14,11 @@ import cityIcon from "../../../assets/svg/city.svg";
 import gateIcon from "../../../assets/svg/gate.svg";
 import unitIcon from "../../../assets/svg/troll.svg";
 import crownIcon from "../../../assets/svg/crown.svg";
+import { ICombinedReducersState } from "../../reducers";
 import { Icon } from "../utils";
+import { IGameMenuProps } from "./game-menu.d";
 
-const GameMenu = props => {
+const GameMenu = (props: IGameMenuProps) => {
   const { isOpen } = props;
   return (
     <div className={cn("game-menu", { "game-menu--expanded": isOpen })}>
@@ -69,11 +72,11 @@ const GameMenu = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {};
 };
 

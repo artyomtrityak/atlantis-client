@@ -105,7 +105,7 @@ function regionsReducer(state: IState = initialState, action: IRegionActions | I
   switch (action.type) {
     case REPORT_LOADED:
       console.log("ACTION:", action.payload);
-      state = { ...state, levels: parseRegions(action.payload) };
+      state = { ...state, zoom: 0.5, levels: parseRegions(action.payload) };
       console.log(state);
       break;
 
