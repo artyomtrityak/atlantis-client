@@ -7,12 +7,6 @@ import { ICombinedReducersState } from "../../../reducers";
 import { closeModal, showLoader, hideLoader } from "../../../actions/navigation-actions";
 import { reportLoaded } from "../../../actions/report-actions";
 
-interface IFileEvent {
-  target: {
-    files: [Blob];
-  };
-}
-
 interface IProps {
   reportLoaded: (report: IReport) => void;
   closeModal: () => void;

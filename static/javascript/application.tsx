@@ -1,6 +1,7 @@
+"use strict";
+
 import React from "react";
 import { connect } from "react-redux";
-
 import Header from "./components/header";
 import Map from "./components/map";
 import Details from "./components/details";

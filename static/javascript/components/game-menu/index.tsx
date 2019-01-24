@@ -1,17 +1,22 @@
 import React from "react";
 import cn from "classnames";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import menuIcon from "../../../assets/svg/menu.svg";
 import { openGameMenu, closeGameMenu } from "../../actions/navigation-actions";
+import { ICombinedReducersState } from "../../reducers";
 import { Icon } from "../utils";
 import "./game-menu-styles.scss";
 import GameMenu from "./game-menu";
+import { IGameMenuIconProps } from "./game-menu.d";
 
-class GameMenuIcon extends React.PureComponent {
-  constructor(props) {
+class GameMenuIcon extends React.PureComponent<IGameMenuIconProps> {
+  private elRef = React.createRef<HTMLDivElement>();
+
+  constructor(props: IGameMenuIconProps) {
     super(props);
     this.onGlobalClick = this.onGlobalClick.bind(this);
-    this.elRef = React.createRef();
+    this.onClick = this.onClick.bind(this);
   }
 
   componentDidMount() {
@@ -22,35 +27,48 @@ class GameMenuIcon extends React.PureComponent {
     window.removeEventListener("click", this.onGlobalClick);
   }
 
-  onGlobalClick(e) {
-    if (!this.props.isOpen || this.elRef.current.contains(e.target)) {
+  onGlobalClick(e: MouseEvent) {
+    if (!this.props.isOpen) {
+      return;
+    }
+
+    if (!(e.target instanceof Element)) {
+      return;
+    }
+
+    if (!this.elRef.current || this.elRef.current.contains(e.target)) {
       return;
     }
     this.props.close();
   }
 
-  render() {
+  onClick() {
     const { isOpen, close, open } = this.props;
+    if (isOpen) {
+      close();
+    } else {
+      open();
+    }
+  }
+
+  render() {
+    const { isOpen } = this.props;
     return (
       <div ref={this.elRef}>
-        <Icon
-          {...menuIcon}
-          className={cn("game-menu-icon", { "game-menu-icon--expanded": isOpen })}
-          onClick={() => (isOpen ? close() : open())}
-        />
+        <Icon {...menuIcon} className={cn("game-menu-icon", { "game-menu-icon--expanded": isOpen })} onClick={this.onClick} />
         <GameMenu isOpen={isOpen} />
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   return {
     isOpen: state.navigations.isGameMenuOpen
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     open: () => dispatch(openGameMenu()),
     close: () => dispatch(closeGameMenu())

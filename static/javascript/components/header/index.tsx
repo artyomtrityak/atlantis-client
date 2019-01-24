@@ -1,17 +1,23 @@
 import cn from "classnames";
 import React from "react";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { showLoadReportModal } from "../../actions/navigation-actions";
+import { ICombinedReducersState } from "../../reducers";
+import { IHeaderProps } from "./header.d";
 import "./header-styles.scss";
 
-class Header extends React.PureComponent {
-  constructor(props) {
+class Header extends React.PureComponent<IHeaderProps> {
+  elRef = React.createRef<HTMLDivElement>();
+
+  constructor(props: IHeaderProps) {
     super(props);
+
+    // TODO: move state to props
     this.state = {
       reportsDropdownOpen: false,
       userDropdownOpen: false
     };
-    this.elRef = React.createRef();
     this.onGlobalClick = this.onGlobalClick.bind(this);
     this.onReportsDropdownToggle = this.onReportsDropdownToggle.bind(this);
     this.onUserDropdownToggle = this.onUserDropdownToggle.bind(this);
@@ -27,11 +33,15 @@ class Header extends React.PureComponent {
     window.removeEventListener("click", this.onGlobalClick);
   }
 
-  onGlobalClick(e) {
+  onGlobalClick(e: MouseEvent) {
+    // TODO: move state to reducer
     if (!this.state.reportsDropdownOpen && !this.state.userDropdownOpen) {
       return;
     }
-    if (this.elRef.current.contains(e.target)) {
+    if (!(e.target instanceof Element)) {
+      return;
+    }
+    if (!this.elRef.current || this.elRef.current.contains(e.target)) {
       return;
     }
     this.setState({
@@ -147,20 +157,13 @@ class Header extends React.PureComponent {
   }
 }
 
-// const Header = () => {
-
-// };
-
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    showLoadReport: () => {
-      console.log("SHOW");
-      dispatch(showLoadReportModal());
-    }
+    showLoadReport: () => dispatch(showLoadReportModal())
   };
 };
 
