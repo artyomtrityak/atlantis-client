@@ -9,7 +9,7 @@ import { selectRegion } from "../../actions/regions-actions";
 import { withSize } from "../utils";
 import Hex from "./hex";
 import Controls from "./controls";
-import { calculateMapPositions } from "./utils";
+import { calculateMapPositions, calculateHexPosition } from "./utils";
 import { IMapProps } from "./map.d";
 
 import "./styles/index.scss";
@@ -23,7 +23,6 @@ class Map extends React.PureComponent<IMapProps> {
     super(props);
     this.renderHex = this.renderHex.bind(this);
     this.onCenter = this.onCenter.bind(this);
-    this.onCenterHex = this.onCenterHex.bind(this);
   }
 
   componentDidMount() {
@@ -50,26 +49,26 @@ class Map extends React.PureComponent<IMapProps> {
   }
 
   onCenter() {
-    // console.log("CENTER");
-    // const { maxX, maxY, zoom } = this.props;
-    // let { svgWidth } = calculateMapPositions({ x: maxX, y: maxY, zoom });
-    // svgWidth = this.props.width > svgWidth ? this.props.width : svgWidth;
+    const { maxX, maxY, zoom, regions, width, height } = this.props;
+    let { selectedRegion } = this.props;
+    let { svgWidth } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+    svgWidth = this.props.width > svgWidth ? this.props.width : svgWidth;
 
-    // TweenLite.set(this.mapSvgRef.current, {x: -1 * svgWidth * zoom, y: 0});
+    if (!selectedRegion) {
+      selectedRegion = Object.keys(regions)[0];
+    }
 
-    // this.onCenterHex();
-    console.log("CENTER");
-  }
+    const {
+      coordinates: { x, y }
+    } = regions[selectedRegion];
+    const position = calculateHexPosition({ x, y, zoom });
 
-  onCenterHex() {
-    // const { regions, zoom, selectedRegion } = this.props;
-    // if (!selectedRegion) {
-    //   return;
-    // }
+    // TODO: limit x,y offset if zoom is minimum
 
-    // const region = regions[selectedRegion];
-    // console.log("SELECTED: region", region, selectedRegion);
-    console.log("CENTER HEX");
+    TweenLite.set(this.mapSvgRef.current, {
+      x: -1 * svgWidth - position.x + width / 2,
+      y: -1 * position.y + height / 2
+    });
   }
 
   render() {
