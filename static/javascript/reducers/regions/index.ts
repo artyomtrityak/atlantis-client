@@ -2,24 +2,25 @@ import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, IActions as IRegionActions } from "../../actions/regions-actions";
 import { IReport, IReportItemRegions } from "../../parser";
-import { IState, ILevel, IRegion } from "./regions.d";
+import { IState, ILevel, IRegion, IRegions } from "./regions.d";
 
-export { IState, ILevel, IRegion };
+export { IState, ILevel, IRegion, IRegions };
 
 const initialState: IState = {
   levels: [],
-  currentLevel: 0,
-  zoom: 0.5,
+  currentLevel: 1, // TODO: parse and find level where there is at least 1 region
+  zoom: 0.1,
   selectedRegion: undefined
 };
 
 const parseRegion = (result: ILevel[], region: IRegion) => {
-  if (!result[region.coordinates.z]) {
-    result[region.coordinates.z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false };
+  const { x, y, z } = region.coordinates;
+
+  if (!result[z]) {
+    result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z };
   }
-  const { x, y } = region.coordinates;
-  const regions = result[region.coordinates.z].regions;
-  regions[`${x}_${y}`] = region;
+  const regions = result[z].regions;
+  regions[`${x}_${y}_${z}`] = region;
 
   // Exits
   for (const dir in region.exits) {
@@ -29,28 +30,9 @@ const parseRegion = (result: ILevel[], region: IRegion) => {
     const {
       coordinates: { x: exitX, y: exitY }
     } = region.exits[dir];
-    if (!regions[`${exitX}_${exitY}`] || regions[`${exitX}_${exitY}`].type === "unknown") {
-      regions[`${exitX}_${exitY}`] = region.exits[dir];
+    if (!regions[`${exitX}_${exitY}_${z}`] || regions[`${exitX}_${exitY}_${z}`].type === "unknown") {
+      regions[`${exitX}_${exitY}_${z}`] = region.exits[dir];
     }
-
-    // Shadow exit regions
-    [
-      { x: exitX + 1, y: exitY - 1 },
-      { x: exitX + 1, y: exitY + 1 },
-      { x: exitX, y: exitY - 2 },
-      { x: exitX, y: exitY + 2 },
-      { x: exitX - 1, y: exitY - 1 },
-      { x: exitX - 1, y: exitY + 1 }
-    ].forEach(d => {
-      if (!regions[`${d.x}_${d.y}`] && d.y >= 0) {
-        regions[`${d.x}_${d.y}`] = {
-          id: `region_${d.x}_${d.y}_${region.coordinates.z}`,
-          coordinates: { x: d.x, y: d.y, z: region.coordinates.z },
-          title: "Unknown",
-          type: "unknown"
-        };
-      }
-    });
   }
   return result;
 };
@@ -80,6 +62,49 @@ const parseLevel = (level: ILevel) => {
   return level;
 };
 
+const addShadowRegions = (level: ILevel) => {
+  for (const locator in level.regions) {
+    if (!level.regions.hasOwnProperty(locator)) {
+      continue;
+    }
+    const {
+      coordinates: { x, y, z }
+    } = level.regions[locator];
+
+    // Shadow regions
+    [
+      { x: x + 1, y: y - 1 },
+      { x: x + 1, y: y + 1 },
+      { x, y: y - 2 },
+      { x, y: y + 2 },
+      { x: x - 1, y: y - 1 },
+      { x: x - 1, y: y + 1 }
+    ].forEach(d => {
+      // If region exist
+      if (level.regions[`${d.x}_${d.y}_${z}`]) {
+        return;
+      }
+
+      // If region off boundry
+      if (d.y < 0) {
+        return;
+      }
+
+      // If wrapped
+      if (level.isWrap && x === level.maxX && x < d.x) {
+        return;
+      }
+      level.regions[`${d.x}_${d.y}_${z}`] = {
+        id: `${d.x}_${d.y}_${z}`,
+        coordinates: { x: d.x, y: d.y, z },
+        title: "Unknown",
+        type: "unknown"
+      };
+    });
+  }
+  return level;
+};
+
 const parseRegions = (report: IReport) => {
   const reportData = report.find(d => {
     return d.type === "REGIONS";
@@ -94,6 +119,8 @@ const parseRegions = (report: IReport) => {
     .reduce(parseRegion, [])
     .compact()
     .map(parseLevel)
+    .map(addShadowRegions)
+    .map(parseLevel)
     .value();
 };
 
@@ -104,8 +131,8 @@ const parseRegions = (report: IReport) => {
 function regionsReducer(state: IState = initialState, action: IRegionActions | IReportActions): IState {
   switch (action.type) {
     case REPORT_LOADED:
-      console.log("ACTION:", action.payload);
-      state = { ...state, zoom: 0.5, levels: parseRegions(action.payload) };
+      console.log("REPORT_LOADED ACTION:", action.payload, parseRegions(action.payload));
+      state = { ...state, zoom: 0.1, levels: parseRegions(action.payload) };
       console.log(state);
       break;
 

@@ -162,7 +162,7 @@
 
   const regionExitProcessor = d => {
     return {
-      id: `region_${d[8].x}_${d[8].y}_${d[8].z}`,
+      id: `${d[8].x}_${d[8].y}_${d[8].z}`,
       title: array2String(d.slice(6)),
       coordinates: d[8],
       type: d[6],
@@ -178,7 +178,7 @@
     }, {});
 
     return {
-      id: `region_${d[2].x}_${d[2].y}_${d[2].z}`,
+      id: `${d[2].x}_${d[2].y}_${d[2].z}`,
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
       details: d[8],
@@ -334,7 +334,7 @@
       {
         name: "REGION_Z_LEVEL",
         symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$1", "_", "REGION_Z_LEVEL$string$3"],
-        postprocess: d => ({ title: array2String(d), z: String(2) + String(d[1]) })
+        postprocess: d => ({ title: array2String(d), z: parseInt(String(2) + String(d[1]), 10) })
       },
       {
         name: "REGION_Z_LEVEL$string$4",
@@ -385,7 +385,7 @@
       {
         name: "REGION_Z_LEVEL",
         symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$2", "_", "REGION_Z_LEVEL$string$5"],
-        postprocess: d => ({ title: array2String(d), z: String(3) + String(d[1]) })
+        postprocess: d => ({ title: array2String(d), z: parseInt(String(3) + String(d[1]), 10) })
       },
       {
         name: "REGION_Z_LEVEL$string$6",
@@ -421,7 +421,7 @@
       {
         name: "REGION_Z_LEVEL",
         symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$3", "_", "REGION_Z_LEVEL$string$7"],
-        postprocess: d => ({ title: array2String(d), z: String(4) + String(d[1]) })
+        postprocess: d => ({ title: array2String(d), z: parseInt(String(4) + String(d[1]), 10) })
       },
       { name: "REPORT_FACTION$ebnf$1", symbols: ["REPORT_FACTION_STATS"], postprocess: id },
       {

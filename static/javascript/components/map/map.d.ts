@@ -1,13 +1,4 @@
-// TODO: import regions type
-export interface IRegion {
-  id: string;
-  type: string;
-}
-
-// TODO: import regions type
-export interface IRegions {
-  [key: string]: IRegion;
-}
+import { IRegion, IRegions } from "../../reducers/regions";
 
 export interface IMapProps {
   maxX: number;
@@ -15,7 +6,8 @@ export interface IMapProps {
   zoom: number;
   width: number;
   height: number;
-  selectedRegion?: string; // TODO: get selectedRegion type from reducer
+  level: number;
+  selectedRegion?: string;
   onSelect: (regionId: string) => void;
   regions: IRegions;
 }
@@ -35,9 +27,16 @@ export interface IPoint {
 }
 
 export interface IControlProps {
+  zoom: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onCenter: () => void;
   onLevelUp: () => void;
   onLevelDown: () => void;
+}
+
+export interface IHexPosition {
+  x: number;
+  y: number;
+  zoom: number;
 }

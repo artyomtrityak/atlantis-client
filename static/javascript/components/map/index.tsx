@@ -1,4 +1,5 @@
 import Draggable from "gsap/Draggable";
+import TweenLite from "gsap/TweenLite";
 import React from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
@@ -21,6 +22,8 @@ class Map extends React.PureComponent<IMapProps> {
   constructor(props: IMapProps) {
     super(props);
     this.renderHex = this.renderHex.bind(this);
+    this.onCenter = this.onCenter.bind(this);
+    this.onCenterHex = this.onCenterHex.bind(this);
   }
 
   componentDidMount() {
@@ -28,8 +31,18 @@ class Map extends React.PureComponent<IMapProps> {
       dragClickables: true,
       type: "x,y",
       bounds: this.containerRef.current,
-      overshootTolerance: 0
+      overshootTolerance: 0,
+      onDragEnd: () => {
+        // console.log(this, arguments);
+        // console.log(this.draggableIns.endX, this.draggableIns.endY);
+      }
     });
+  }
+
+  componentDidUpdate(prevProps: IMapProps) {
+    if (prevProps.zoom !== this.props.zoom) {
+      this.onCenter();
+    }
   }
 
   componentWillUnmont() {
@@ -37,22 +50,40 @@ class Map extends React.PureComponent<IMapProps> {
   }
 
   onCenter() {
+    // console.log("CENTER");
+    // const { maxX, maxY, zoom } = this.props;
+    // let { svgWidth } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+    // svgWidth = this.props.width > svgWidth ? this.props.width : svgWidth;
+
+    // TweenLite.set(this.mapSvgRef.current, {x: -1 * svgWidth * zoom, y: 0});
+
+    // this.onCenterHex();
     console.log("CENTER");
+  }
+
+  onCenterHex() {
+    // const { regions, zoom, selectedRegion } = this.props;
+    // if (!selectedRegion) {
+    //   return;
+    // }
+
+    // const region = regions[selectedRegion];
+    // console.log("SELECTED: region", region, selectedRegion);
+    console.log("CENTER HEX");
   }
 
   render() {
     const { maxX, maxY, zoom } = this.props;
-    let { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
-    svgWidth = this.props.width > svgWidth ? this.props.width : svgWidth;
-    svgHeight = this.props.height > svgHeight ? this.props.height : svgHeight;
+    const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+    const svgHeightFit = this.props.height > svgHeight ? this.props.height : svgHeight;
 
     return (
       <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height - 10 }}>
         <Controls onCenter={this.onCenter} />
-        <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeight }}>
+        <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeightFit }}>
           <rect width="100%" height="100%" fill="lightgray" />
           {_.range(3).map((i: number) => (
-            <g key={`map_${i}`} transform={`translate(${svgWidth * i - i * 50 * zoom} , 0)`}>
+            <g key={`map_${i}`} transform={`translate(${svgWidth * i} , 0)`}>
               {this.renderMap()}
             </g>
           ))}
@@ -64,11 +95,9 @@ class Map extends React.PureComponent<IMapProps> {
   renderMap() {
     const { maxX, maxY } = this.props;
 
-    console.log("MAX:", maxX, maxY);
-
     const regionsHexes = [];
-    for (let y = 0; y <= maxY; y++) {
-      for (let x = 0; x <= maxX; x++) {
+    for (let x = 0; x <= maxX; x++) {
+      for (let y = 0; y <= maxY; y++) {
         regionsHexes.push(this.renderHex(x, y));
       }
     }
@@ -76,8 +105,8 @@ class Map extends React.PureComponent<IMapProps> {
   }
 
   renderHex(x: number, y: number) {
-    const { regions, zoom, selectedRegion } = this.props;
-    const regionKey: string = `${y}_${x}`;
+    const { regions, zoom, selectedRegion, level } = this.props;
+    const regionKey = `${x}_${y}_${level}`;
     const region = regions[regionKey];
 
     if (!region) {
@@ -99,8 +128,7 @@ class Map extends React.PureComponent<IMapProps> {
 }
 
 const mapStateToProps = (state: ICombinedReducersState) => {
-  console.log(state);
-  const currentLevelData = state.regions.levels[state.regions.currentLevel];
+  const currentLevelData = state.regions.levels.find(r => r.level === state.regions.currentLevel);
   if (!currentLevelData) {
     return {
       regions: {},
@@ -108,7 +136,8 @@ const mapStateToProps = (state: ICombinedReducersState) => {
       maxY: 0,
       isWrap: false,
       selectedRegion: state.regions.selectedRegion,
-      zoom: state.regions.zoom
+      zoom: state.regions.zoom,
+      level: 0
     };
   }
   return {
@@ -117,7 +146,8 @@ const mapStateToProps = (state: ICombinedReducersState) => {
     maxY: currentLevelData.maxY,
     isWrap: currentLevelData.isWrap,
     selectedRegion: state.regions.selectedRegion,
-    zoom: state.regions.zoom
+    zoom: state.regions.zoom,
+    level: state.regions.currentLevel
   };
 };
 

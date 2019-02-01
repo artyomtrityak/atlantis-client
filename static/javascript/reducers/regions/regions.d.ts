@@ -21,6 +21,7 @@ interface ILevel {
   maxY: number;
   isWrap: boolean;
   regions: IRegions;
+  level: number;
 }
 
 export interface IState {

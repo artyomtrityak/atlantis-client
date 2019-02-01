@@ -1,35 +1,31 @@
+import { IHexPosition } from "./map.d";
+
 export const regionWidth = 100;
 export const regionHeight = 90;
 
-interface IHexPosition {
-  x: number;
-  y: number;
-  zoom: number;
-}
-
 export function calculateHexPosition({ x, y, zoom }: IHexPosition) {
   let offsetX = 0;
-  if (y !== 0) {
-    offsetX = (-52 * y) / 2;
+  if (x !== 0) {
+    offsetX = (-52 * x) / 2;
   }
-  if (y % 2 === 1) {
-    offsetX = -26 * y;
+  if (x % 2 === 1) {
+    offsetX = -26 * x;
   }
 
-  // TODO: -50 fix remove?
-  const posX = regionWidth * y * zoom + offsetX * zoom;
-  const posY = (regionHeight / 2) * x * zoom;
+  const posX = regionWidth * x * zoom + offsetX * zoom;
+  const posY = (regionHeight / 2) * y * zoom;
   return { x: posX, y: posY };
 }
 
 export function calculateMapPositions(params: IHexPosition) {
   const { zoom } = params;
   let { x, y } = params;
-  x += 1; // because regions start with 0
-  y += 1; // because regions start with 0
+
+  x += 1;
+  y += 1;
 
   const position = calculateHexPosition({ x, y, zoom });
-  const svgWidth = position.x + (regionWidth * zoom) / 2 - 74 * zoom;
-  const svgHeight = position.y + (regionHeight * zoom) / 2;
+  const svgWidth = position.x;
+  const svgHeight = position.y;
   return { svgWidth, svgHeight };
 }

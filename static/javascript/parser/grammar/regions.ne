@@ -1,7 +1,7 @@
 @{%
   const regionExitProcessor = (d) => {
     return {
-      id: `region_${d[8].x}_${d[8].y}_${d[8].z}`,
+      id: `${d[8].x}_${d[8].y}_${d[8].z}`,
       title: array2String(d.slice(6)),
       coordinates: d[8],
       type: d[6],
@@ -17,7 +17,7 @@
     }, {});
 
     return {
-      id: `region_${d[2].x}_${d[2].y}_${d[2].z}`,
+      id: `${d[2].x}_${d[2].y}_${d[2].z}`,
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
       details: d[8],

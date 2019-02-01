@@ -86,12 +86,12 @@ REGION_Z_LEVEL ->
 
   #Underworld
   | ",underworld" {% (d) => ({ title: d[0], z: 2 }) %}
-  | "," INT NL:? _ "<underworld>" {% (d) => ({ title: array2String(d), z: String(2) + String(d[1])}) %}
+  | "," INT NL:? _ "<underworld>" {% (d) => ({ title: array2String(d), z: parseInt(String(2) + String(d[1]), 10)}) %}
 
   #Underdeep
   | ",underdeep" {% (d) => ({ title: d[0], z: 3 }) %}
-  | "," INT NL:? _ "<underdeep>" {% (d) => ({ title: array2String(d), z: String(3) + String(d[1])}) %}
+  | "," INT NL:? _ "<underdeep>" {% (d) => ({ title: array2String(d), z: parseInt(String(3) + String(d[1]), 10)}) %}
 
   #Abyss
   | ",abyss" {% (d) => ({ title: d[0], z: 4 }) %}
-  | "," INT NL:? _ "<abyss>" {% (d) => ({ title: array2String(d), z: String(4) + String(d[1])}) %}
+  | "," INT NL:? _ "<abyss>" {% (d) => ({ title: array2String(d), z: parseInt(String(4) + String(d[1]), 10)}) %}
