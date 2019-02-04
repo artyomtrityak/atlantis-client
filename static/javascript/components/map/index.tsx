@@ -127,7 +127,8 @@ class Map extends React.PureComponent<IMapProps> {
 }
 
 const mapStateToProps = (state: ICombinedReducersState) => {
-  const currentLevelData = state.regions.levels.find(r => r.level === state.regions.currentLevel);
+  // TODO: do another solution about mapLevel, make it same as real level?
+  const currentLevelData = state.regions.levels[state.regions.mapLevel];
   if (!currentLevelData) {
     return {
       regions: {},
@@ -146,7 +147,7 @@ const mapStateToProps = (state: ICombinedReducersState) => {
     isWrap: currentLevelData.isWrap,
     selectedRegion: state.regions.selectedRegion,
     zoom: state.regions.zoom,
-    level: state.regions.currentLevel
+    level: currentLevelData.level
   };
 };
 

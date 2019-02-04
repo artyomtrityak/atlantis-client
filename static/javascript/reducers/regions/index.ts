@@ -1,16 +1,16 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
-import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, IActions as IRegionActions } from "../../actions/regions-actions";
-import { IReport, IReportItemRegions } from "../../parser";
+import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
+import { IReport } from "../../parser";
 import { IState, ILevel, IRegion, IRegions } from "./regions.d";
 
 export { IState, ILevel, IRegion, IRegions };
 
 const initialState: IState = {
   levels: [],
-  currentLevel: 1, // TODO: parse and find level where there is at least 1 region
+  mapLevel: 0,
   zoom: 0.1,
-  selectedRegion: undefined
+  selectedRegion: undefined // TODO: move selected region inside level
 };
 
 const parseRegion = (result: ILevel[], region: IRegion) => {
@@ -132,12 +132,26 @@ function regionsReducer(state: IState = initialState, action: IRegionActions | I
   switch (action.type) {
     case REPORT_LOADED:
       console.log("REPORT_LOADED ACTION:", action.payload, parseRegions(action.payload));
-      state = { ...state, selectedRegion: undefined, zoom: 0.1, levels: parseRegions(action.payload) };
+      state = { ...state, selectedRegion: undefined, mapLevel: 0, zoom: 0.1, levels: parseRegions(action.payload) };
       console.log(state);
       break;
 
     case SELECT_REGION:
       state = { ...state, selectedRegion: action.payload };
+      break;
+
+    case LEVEL_DOWN:
+      if (state.levels.length === state.mapLevel + 1) {
+        return state;
+      }
+      state = { ...state, selectedRegion: undefined, mapLevel: state.mapLevel + 1 };
+      break;
+
+    case LEVEL_UP:
+      if (state.mapLevel === 0) {
+        return state;
+      }
+      state = { ...state, selectedRegion: undefined, mapLevel: state.mapLevel - 1 };
       break;
 
     case ZOOM_IN:

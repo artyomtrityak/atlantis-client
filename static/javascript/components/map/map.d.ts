@@ -28,6 +28,8 @@ export interface IPoint {
 
 export interface IControlProps {
   zoom: number;
+  levelsLen: number;
+  mapLevel: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onCenter: () => void;

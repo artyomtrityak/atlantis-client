@@ -26,7 +26,7 @@ interface ILevel {
 
 export interface IState {
   readonly levels: ReadonlyArray<ILevel>;
-  readonly currentLevel: number;
+  readonly mapLevel: number;
   readonly zoom: number;
   readonly selectedRegion?: string;
 }
