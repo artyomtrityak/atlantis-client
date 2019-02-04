@@ -30,16 +30,16 @@ class Map extends React.PureComponent<IMapProps> {
       dragClickables: true,
       type: "x,y",
       bounds: this.containerRef.current,
-      overshootTolerance: 0,
-      onDragEnd: () => {
-        // console.log(this, arguments);
-        // console.log(this.draggableIns.endX, this.draggableIns.endY);
-      }
+      overshootTolerance: 0
     });
   }
 
   componentDidUpdate(prevProps: IMapProps) {
     if (prevProps.zoom !== this.props.zoom) {
+      this.onCenter();
+    }
+
+    if (prevProps.level !== this.props.level) {
       this.onCenter();
     }
   }

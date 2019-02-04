@@ -13,22 +13,14 @@ import { IControlProps } from "./map.d";
 
 class MapControls extends React.Component<IControlProps> {
   render() {
-    const props = this.props;
-    console.log(props.zoom, props.zoom >= 1);
-
+    const { zoom, onZoomIn, onZoomOut, onCenter, onLevelUp, onLevelDown } = this.props;
     return (
       <div className="map-controls">
-        <Icon {...zoomInIcon} onClick={props.onZoomIn} className="map-controls__icon" disabled={props.zoom >= 1} title="Zoom In" />
-        <Icon
-          {...zoomOutIcon}
-          onClick={props.onZoomOut}
-          className="map-controls__icon mt-1"
-          title="Zoom Out"
-          disabled={props.zoom <= 0.1}
-        />
-        <Icon {...centerIcon} onClick={props.onCenter} className="map-controls__icon mt-1" title="Center Map" />
-        <Icon {...upLevelIcon} onClick={props.onLevelUp} className="map-controls__icon mt-3" title="Level Up" />
-        <Icon {...downLevelIcon} onClick={props.onLevelDown} className="map-controls__icon mt-1" title="Level Down" />
+        <Icon {...zoomInIcon} onClick={onZoomIn} className="map-controls__icon" disabled={zoom >= 1} title="Zoom In" />
+        <Icon {...zoomOutIcon} onClick={onZoomOut} className="map-controls__icon mt-1" title="Zoom Out" disabled={zoom <= 0.1} />
+        <Icon {...centerIcon} onClick={onCenter} className="map-controls__icon mt-1" title="Center Map" />
+        <Icon {...upLevelIcon} onClick={onLevelUp} className="map-controls__icon mt-3" title="Level Up" />
+        <Icon {...downLevelIcon} onClick={onLevelDown} className="map-controls__icon mt-1" title="Level Down" />
       </div>
     );
   }
