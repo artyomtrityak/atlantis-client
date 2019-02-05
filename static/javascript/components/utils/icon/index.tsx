@@ -15,7 +15,6 @@ interface IProps {
 
 export default (props: IProps) => {
   const styles = { width: props.width, height: props.height, ...props.style };
-  console.log(props);
 
   return (
     <svg

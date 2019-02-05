@@ -22,11 +22,11 @@ interface ILevel {
   isWrap: boolean;
   regions: IRegions;
   level: number;
+  selectedRegion: string;
 }
 
 export interface IState {
-  readonly levels: ReadonlyArray<ILevel>;
-  readonly mapLevel: number;
-  readonly zoom: number;
-  readonly selectedRegion?: string;
+  levels: ReadonlyArray<ILevel>;
+  mapLevel: number;
+  zoom: number;
 }

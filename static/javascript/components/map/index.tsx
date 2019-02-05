@@ -135,7 +135,7 @@ const mapStateToProps = (state: ICombinedReducersState) => {
       maxX: 0,
       maxY: 0,
       isWrap: false,
-      selectedRegion: state.regions.selectedRegion,
+      selectedRegion: undefined,
       zoom: state.regions.zoom,
       level: 0
     };
@@ -145,7 +145,7 @@ const mapStateToProps = (state: ICombinedReducersState) => {
     maxX: currentLevelData.maxX,
     maxY: currentLevelData.maxY,
     isWrap: currentLevelData.isWrap,
-    selectedRegion: state.regions.selectedRegion,
+    selectedRegion: currentLevelData.selectedRegion,
     zoom: state.regions.zoom,
     level: currentLevelData.level
   };

@@ -26,6 +26,8 @@ class Hex extends React.PureComponent<IHexProps> {
 
   render() {
     const { x, y, zoom, isSelected, region } = this.props;
+
+    // TODO: use https://www.quora.com/How-can-you-find-the-coordinates-in-a-hexagon
     const points = [
       { x: 0, y: 0.5 * regionHeight },
       { x: 0.25 * regionWidth, y: 0 },

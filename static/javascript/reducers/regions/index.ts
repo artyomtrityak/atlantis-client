@@ -3,21 +3,19 @@ import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
 import { IReport } from "../../parser";
 import { IState, ILevel, IRegion, IRegions } from "./regions.d";
-
 export { IState, ILevel, IRegion, IRegions };
 
 const initialState: IState = {
   levels: [],
   mapLevel: 0,
-  zoom: 0.1,
-  selectedRegion: undefined // TODO: move selected region inside level
+  zoom: 0.1
 };
 
-const parseRegion = (result: ILevel[], region: IRegion) => {
+function parseRegion(result: ILevel[], region: IRegion) {
   const { x, y, z } = region.coordinates;
 
   if (!result[z]) {
-    result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z };
+    result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z, selectedRegion: `${x}_${y}_${z}` };
   }
   const regions = result[z].regions;
   regions[`${x}_${y}_${z}`] = region;
@@ -35,9 +33,9 @@ const parseRegion = (result: ILevel[], region: IRegion) => {
     }
   }
   return result;
-};
+}
 
-const parseLevel = (level: ILevel) => {
+function parseLevel(level: ILevel) {
   let maxX = 0;
   let maxY = 0;
   let isWrap = false;
@@ -60,9 +58,9 @@ const parseLevel = (level: ILevel) => {
   level.isWrap = isWrap;
   // TODO: add isTop/BottonEdge check
   return level;
-};
+}
 
-const addShadowRegions = (level: ILevel) => {
+function addShadowRegions(level: ILevel) {
   for (const locator in level.regions) {
     if (!level.regions.hasOwnProperty(locator)) {
       continue;
@@ -103,9 +101,9 @@ const addShadowRegions = (level: ILevel) => {
     });
   }
   return level;
-};
+}
 
-const parseRegions = (report: IReport) => {
+function parseRegions(report: IReport) {
   const reportData = report.find(d => {
     return d.type === "REGIONS";
   });
@@ -122,7 +120,17 @@ const parseRegions = (report: IReport) => {
     .map(addShadowRegions)
     .map(parseLevel)
     .value();
-};
+}
+
+function selectRegion(state: IState, regionId: string) {
+  const levels = state.levels.map((level, index) => {
+    if (index !== state.mapLevel) {
+      return level;
+    }
+    return { ...level, selectedRegion: regionId };
+  });
+  return { ...state, levels };
+}
 
 // -------------------
 // Regions Reducer
@@ -131,27 +139,25 @@ const parseRegions = (report: IReport) => {
 function regionsReducer(state: IState = initialState, action: IRegionActions | IReportActions): IState {
   switch (action.type) {
     case REPORT_LOADED:
-      console.log("REPORT_LOADED ACTION:", action.payload, parseRegions(action.payload));
-      state = { ...state, selectedRegion: undefined, mapLevel: 0, zoom: 0.1, levels: parseRegions(action.payload) };
-      console.log(state);
+      state = { ...state, mapLevel: 0, zoom: 0.1, levels: parseRegions(action.payload) };
       break;
 
     case SELECT_REGION:
-      state = { ...state, selectedRegion: action.payload };
+      state = selectRegion(state, action.payload);
       break;
 
     case LEVEL_DOWN:
       if (state.levels.length === state.mapLevel + 1) {
         return state;
       }
-      state = { ...state, selectedRegion: undefined, mapLevel: state.mapLevel + 1 };
+      state = { ...state, mapLevel: state.mapLevel + 1 };
       break;
 
     case LEVEL_UP:
       if (state.mapLevel === 0) {
         return state;
       }
-      state = { ...state, selectedRegion: undefined, mapLevel: state.mapLevel - 1 };
+      state = { ...state, mapLevel: state.mapLevel - 1 };
       break;
 
     case ZOOM_IN:
