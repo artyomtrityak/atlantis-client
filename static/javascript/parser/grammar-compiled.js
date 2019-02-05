@@ -167,7 +167,8 @@
       coordinates: d[8],
       type: d[6],
       direction: d[2],
-      isExit: true
+      isExit: true,
+      details: []
     };
   };
 
@@ -183,6 +184,7 @@
       coordinates: d[2],
       details: d[8],
       exits: exits,
+      gate: d[14],
       unitsAndObjects: d[15],
       type: d[0][0],
       isExit: false
@@ -1432,7 +1434,8 @@
       },
       {
         name: "FACTION_REGION_GATE",
-        symbols: ["FACTION_REGION_GATE$string$1", "INT", "FACTION_REGION_GATE$string$2", "INT", "FACTION_REGION_GATE$string$3", "NL_"]
+        symbols: ["FACTION_REGION_GATE$string$1", "INT", "FACTION_REGION_GATE$string$2", "INT", "FACTION_REGION_GATE$string$3", "NL_"],
+        postprocess: array2String
       },
       { name: "FACTION_REGION_UNIT", symbols: [/[*+\-]/, "_", "TEXT", { literal: "." }, "NL_"], postprocess: array2String },
       { name: "REGION_SENTENCE", symbols: ["WORD", /[.!]/] },

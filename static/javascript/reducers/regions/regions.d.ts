@@ -7,6 +7,8 @@ export interface IRegion {
     z: number;
   };
   type: string;
+  details: string[];
+  gate?: string;
   exits?: {
     [key: string]: IRegion;
   };

@@ -6,7 +6,8 @@
       coordinates: d[8],
       type: d[6],
       direction: d[2],
-      isExit: true
+      isExit: true,
+      details: []
     };
   };
 
@@ -22,6 +23,7 @@
       coordinates: d[2],
       details: d[8],
       exits: exits,
+      gate: d[14],
       unitsAndObjects: d[15],
       type: d[0][0],
       isExit: false
@@ -66,7 +68,7 @@ FACTION_REGION_EXIT ->
 
 
 FACTION_REGION_GATE ->
-  "There is a Gate here (Gate " INT " of " INT ")." NL_
+  "There is a Gate here (Gate " INT " of " INT ")." NL_ {% array2String %}
 
 
 # TODO: different parser for * my faction

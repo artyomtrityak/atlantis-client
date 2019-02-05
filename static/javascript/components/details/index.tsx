@@ -6,7 +6,7 @@ import { ICombinedReducersState } from "../../reducers";
 import { TABS, ITabs } from "../../reducers/details";
 import { activateTab } from "../../actions/details-actions";
 import "./styles/index.scss";
-import Region from "./region";
+import Region from "../details-region";
 import Unit from "../details-unit";
 import Events from "./events";
 import Battles from "./battles";
@@ -19,7 +19,7 @@ class DetailsComponent extends React.Component<IDetailsProps> {
   }
 
   render() {
-    const { onActivateTab, activeTab } = this.props;
+    const { activeTab } = this.props;
     const items = [
       { text: "Region", tabName: TABS.region },
       { text: "Unut", tabName: TABS.unit },

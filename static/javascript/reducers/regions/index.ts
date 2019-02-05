@@ -101,7 +101,8 @@ function addShadowRegions(level: ILevel) {
         id: `${d.x}_${d.y}_${z}`,
         coordinates: { x: d.x, y: d.y, z },
         title: "Unknown",
-        type: "unknown"
+        type: "unknown",
+        details: []
       };
     });
   }
