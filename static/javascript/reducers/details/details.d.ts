@@ -1,5 +1,12 @@
-//TODO: add one of values for activeTab
+export declare enum TABS {
+  region = "region",
+  unit = "unit",
+  events = "events",
+  battles = "battles"
+}
+
+export type ITabs = keyof typeof TABS;
 
 export interface IState {
-  readonly activeTab: string;
+  activeTab: ITabs;
 }

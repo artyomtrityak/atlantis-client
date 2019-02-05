@@ -86,6 +86,7 @@ class Map extends React.PureComponent<IMapProps> {
               {this.renderMap()}
             </g>
           ))}
+          {/* TODO: Create 3 region selectors to put them on top of svg regions */}
         </svg>
       </div>
     );

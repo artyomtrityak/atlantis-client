@@ -17,8 +17,13 @@ function parseRegion(result: ILevel[], region: IRegion) {
   if (!result[z]) {
     result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z, selectedRegion: `${x}_${y}_${z}` };
   }
+
   const regions = result[z].regions;
   regions[`${x}_${y}_${z}`] = region;
+
+  if (!region.exits) {
+    return result;
+  }
 
   // Exits
   for (const dir in region.exits) {
