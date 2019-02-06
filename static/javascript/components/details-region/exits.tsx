@@ -8,12 +8,16 @@ export default function renderExits({ region }: { region: IRegion }) {
   return (
     <React.Fragment>
       <div className="card-text">Exits:</div>
-      <div className="card-text ml-3">North: wasteland (13,19) in Zarka.</div>
-      <div className="card-text ml-3">Northeast: wasteland (14,20) in Zarka.</div>
-      <div className="card-text ml-3">Southeast: swamp (14,22) in Zarka.</div>
-      <div className="card-text ml-3">South: swamp (13,23) in Zarka.</div>
-      <div className="card-text ml-3">Southwest: wasteland (12,22) in Zarka.</div>
-      <div className="card-text ml-3">Northwest: ocean (22,20) in Zarka Ocean.</div>
+      {Object.keys(region.exits).map(dir => {
+        if (!region.exits || !region.exits[dir]) {
+          return null;
+        }
+        return (
+          <div key={dir} className="card-text ml-3 atl-region__exit">
+            {dir}: {region.exits[dir].title}
+          </div>
+        );
+      })}
     </React.Fragment>
   );
 }

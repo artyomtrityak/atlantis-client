@@ -1,23 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
 import { ICombinedReducersState } from "../../reducers";
 import { IRegion } from "../../reducers/regions";
 import Gate from "./gate";
 import Exists from "./exits";
-
+import Details from "./details";
 import "./styles/index.scss";
 
 interface IRegionDetailsProps {
   region?: IRegion;
-}
-
-function renderDetail(detail: string, i: number) {
-  return (
-    <div className="card-text" key={i}>
-      {detail}
-    </div>
-  );
 }
 
 const Region = ({ region }: IRegionDetailsProps) => {
@@ -25,14 +16,10 @@ const Region = ({ region }: IRegionDetailsProps) => {
     return <div className="card-body" />;
   }
 
-  console.log(region);
-
   return (
-    <div className="card-body">
-      <h5 className="card-title region-header">{region.title}</h5>
-      <div className="dropdown-divider" />
-      {region.details.map(renderDetail)}
-      <div className="dropdown-divider" />
+    <div className="card-body atl-region">
+      <h5 className="card-title atl-region__header">{region.title}</h5>
+      <Details region={region} />
       <Gate region={region} />
       <Exists region={region} />
     </div>

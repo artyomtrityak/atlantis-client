@@ -1,4 +1,19 @@
-.region-header {
-  font-size: 16px;
-  margin-bottom: 0;
+.atl-region {
+  .atl-region__header {
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  .atl-region__detail {
+    &:first-child {
+      margin-top: 0px;
+    }
+    margin-top: 2px;
+  }
+
+  .atl-region__exit {
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
 }
