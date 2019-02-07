@@ -8,23 +8,17 @@ interface IProps {
   loading: boolean;
 }
 
-class Loading extends React.PureComponent<IProps> {
-  constructor(props: IProps) {
-    super(props);
+const Loading: React.FunctionComponent<IProps> = props => {
+  if (!props.loading) {
+    return null;
   }
-
-  render() {
-    if (!this.props.loading) {
-      return null;
-    }
-    return (
-      <div className="atl-loader">
-        <div className="atl-loader__backdrop" />
-        <img className="atl-loader__loader" src="/static/assets/images/loader.gif" />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="atl-loader">
+      <div className="atl-loader__backdrop" />
+      <img className="atl-loader__loader" src="/static/assets/images/loader.gif" />
+    </div>
+  );
+};
 
 const mapStateToProps = (state: ICombinedReducersState) => {
   return {
@@ -32,11 +26,4 @@ const mapStateToProps = (state: ICombinedReducersState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(React.memo(Loading));
+export default connect(mapStateToProps)(React.memo(Loading));
