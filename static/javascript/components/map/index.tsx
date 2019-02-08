@@ -1,6 +1,6 @@
 import Draggable from "gsap/Draggable";
 import TweenLite from "gsap/TweenLite";
-import React from "react";
+import React, { useRef, useEffect, useLayoutEffect, RefObject } from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import _ from "lodash";
@@ -14,117 +14,89 @@ import { IMapProps } from "./map.d";
 
 import "./styles/index.scss";
 
-class Map extends React.PureComponent<IMapProps> {
-  private containerRef = React.createRef<HTMLDivElement>();
-  private mapSvgRef = React.createRef<SVGSVGElement>();
-  private draggableIns: any;
+function onCenter(props: IMapProps, mapSvgRef: RefObject<SVGSVGElement>) {
+  const { maxX, maxY, zoom, regions, width, height } = props;
+  if (Object.keys(regions).length === 0) {
+    return;
+  }
+  let { selectedRegion } = props;
+  let { svgWidth } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+  svgWidth = props.width > svgWidth ? props.width : svgWidth;
 
-  constructor(props: IMapProps) {
-    super(props);
-    this.renderHex = this.renderHex.bind(this);
-    this.onCenter = this.onCenter.bind(this);
+  if (!selectedRegion) {
+    selectedRegion = Object.keys(regions)[0];
   }
 
-  componentDidMount() {
-    this.draggableIns = Draggable.create(this.mapSvgRef.current, {
+  const {
+    coordinates: { x, y }
+  } = regions[selectedRegion];
+  const position = calculateHexPosition({ x, y, zoom });
+
+  // TODO: limit x,y offset if zoom is minimum
+  TweenLite.set(mapSvgRef.current, {
+    x: -1 * svgWidth - position.x + width / 2,
+    y: -1 * position.y + height / 2
+  });
+}
+
+const Map = (props: IMapProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapSvgRef = useRef<SVGSVGElement>(null);
+  const { maxX, maxY, zoom } = props;
+
+  useEffect(() => {
+    const draggableIns = Draggable.create(mapSvgRef.current, {
       dragClickables: true,
       type: "x,y",
-      bounds: this.containerRef.current,
+      bounds: containerRef.current,
       overshootTolerance: 0
     });
-  }
+    return () => draggableIns.kill();
+  }, []);
 
-  componentDidUpdate(prevProps: IMapProps) {
-    if (prevProps.zoom !== this.props.zoom) {
-      this.onCenter();
-    }
+  useLayoutEffect(
+    () => {
+      onCenter(props, mapSvgRef);
+    },
+    [props.zoom, props.level]
+  );
 
-    if (prevProps.level !== this.props.level) {
-      this.onCenter();
-    }
-  }
+  const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
+  const svgHeightFit = props.height > svgHeight ? props.height : svgHeight;
 
-  componentWillUnmont() {
-    this.draggableIns.kill();
-  }
+  return (
+    <div ref={containerRef} className="map" style={{ width: props.width - 30, height: props.height - 10 }}>
+      <Controls onCenter={() => onCenter(props, mapSvgRef)} />
+      <svg ref={mapSvgRef} style={{ width: svgWidth * 3, height: svgHeightFit }}>
+        <rect width="100%" height="100%" fill="lightgray" />
+        {_.range(3).map((i: number) => (
+          <g key={`map_${i}`} transform={`translate(${svgWidth * i} , 0)`}>
+            {renderMap(props)}
+          </g>
+        ))}
+        {/* TODO: Create 3 region selectors to put them on top of svg regions */}
+      </svg>
+    </div>
+  );
+};
 
-  onCenter() {
-    const { maxX, maxY, zoom, regions, width, height } = this.props;
-    let { selectedRegion } = this.props;
-    let { svgWidth } = calculateMapPositions({ x: maxX, y: maxY, zoom });
-    svgWidth = this.props.width > svgWidth ? this.props.width : svgWidth;
+function renderMap(props: IMapProps) {
+  const { maxX, maxY, regions, zoom, selectedRegion, level } = props;
+  const regionsHexes = [];
 
-    if (!selectedRegion) {
-      selectedRegion = Object.keys(regions)[0];
-    }
-
-    const {
-      coordinates: { x, y }
-    } = regions[selectedRegion];
-    const position = calculateHexPosition({ x, y, zoom });
-
-    // TODO: limit x,y offset if zoom is minimum
-
-    TweenLite.set(this.mapSvgRef.current, {
-      x: -1 * svgWidth - position.x + width / 2,
-      y: -1 * position.y + height / 2
-    });
-  }
-
-  render() {
-    const { maxX, maxY, zoom } = this.props;
-    const { svgWidth, svgHeight } = calculateMapPositions({ x: maxX, y: maxY, zoom });
-    const svgHeightFit = this.props.height > svgHeight ? this.props.height : svgHeight;
-
-    return (
-      <div ref={this.containerRef} className="map" style={{ width: this.props.width - 30, height: this.props.height - 10 }}>
-        <Controls onCenter={this.onCenter} />
-        <svg ref={this.mapSvgRef} style={{ width: svgWidth * 3, height: svgHeightFit }}>
-          <rect width="100%" height="100%" fill="lightgray" />
-          {_.range(3).map((i: number) => (
-            <g key={`map_${i}`} transform={`translate(${svgWidth * i} , 0)`}>
-              {this.renderMap()}
-            </g>
-          ))}
-          {/* TODO: Create 3 region selectors to put them on top of svg regions */}
-        </svg>
-      </div>
-    );
-  }
-
-  renderMap() {
-    const { maxX, maxY } = this.props;
-
-    const regionsHexes = [];
-    for (let x = 0; x <= maxX; x++) {
-      for (let y = 0; y <= maxY; y++) {
-        regionsHexes.push(this.renderHex(x, y));
+  for (let x = 0; x <= maxX; x++) {
+    for (let y = 0; y <= maxY; y++) {
+      const regionKey = `${x}_${y}_${level}`;
+      const region = regions[regionKey];
+      if (!region) {
+        continue;
       }
+      regionsHexes.push(
+        <Hex key={regionKey} x={x} y={y} region={region} onSelect={props.onSelect} isSelected={region.id === selectedRegion} zoom={zoom} />
+      );
     }
-    return regionsHexes;
   }
-
-  renderHex(x: number, y: number) {
-    const { regions, zoom, selectedRegion, level } = this.props;
-    const regionKey = `${x}_${y}_${level}`;
-    const region = regions[regionKey];
-
-    if (!region) {
-      return null;
-    }
-
-    return (
-      <Hex
-        key={regionKey}
-        x={x}
-        y={y}
-        region={region}
-        onSelect={this.props.onSelect}
-        isSelected={region.id === selectedRegion}
-        zoom={zoom}
-      />
-    );
-  }
+  return regionsHexes;
 }
 
 const mapStateToProps = (state: ICombinedReducersState) => {
