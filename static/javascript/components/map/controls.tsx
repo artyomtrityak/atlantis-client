@@ -11,26 +11,24 @@ import { Icon } from "../utils";
 import { zoomIn, zoomOut, levelDown, levelUp } from "../../actions/regions-actions";
 import { IControlProps } from "./map.d";
 
-class MapControls extends React.Component<IControlProps> {
-  render() {
-    const { zoom, onZoomIn, onZoomOut, onCenter, onLevelUp, onLevelDown, levelsLen, mapLevel } = this.props;
-    return (
-      <div className="map-controls">
-        <Icon {...zoomInIcon} onClick={onZoomIn} className="map-controls__icon" disabled={zoom >= 1} title="Zoom In" />
-        <Icon {...zoomOutIcon} onClick={onZoomOut} className="map-controls__icon mt-1" title="Zoom Out" disabled={zoom <= 0.1} />
-        <Icon {...centerIcon} onClick={onCenter} className="map-controls__icon mt-1" title="Center Map" />
-        <Icon {...upLevelIcon} onClick={onLevelUp} className="map-controls__icon mt-3" disabled={mapLevel === 0} title="Level Up" />
-        <Icon
-          {...downLevelIcon}
-          onClick={onLevelDown}
-          className="map-controls__icon mt-1"
-          disabled={levelsLen === mapLevel + 1}
-          title="Level Down"
-        />
-      </div>
-    );
-  }
-}
+const MapControls = (props: IControlProps) => {
+  const { zoom, onZoomIn, onZoomOut, onCenter, onLevelUp, onLevelDown, levelsLen, mapLevel } = props;
+  return (
+    <div className="map-controls">
+      <Icon {...zoomInIcon} onClick={onZoomIn} className="map-controls__icon" disabled={zoom >= 1} title="Zoom In" />
+      <Icon {...zoomOutIcon} onClick={onZoomOut} className="map-controls__icon mt-1" title="Zoom Out" disabled={zoom <= 0.1} />
+      <Icon {...centerIcon} onClick={onCenter} className="map-controls__icon mt-1" title="Center Map" />
+      <Icon {...upLevelIcon} onClick={onLevelUp} className="map-controls__icon mt-3" disabled={mapLevel === 0} title="Level Up" />
+      <Icon
+        {...downLevelIcon}
+        onClick={onLevelDown}
+        className="map-controls__icon mt-1"
+        disabled={levelsLen === mapLevel + 1}
+        title="Level Down"
+      />
+    </div>
+  );
+};
 
 const mapStateToProps = (state: ICombinedReducersState) => {
   return {

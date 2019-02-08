@@ -8,7 +8,7 @@ interface IProps {
   loading: boolean;
 }
 
-const Loading: React.FunctionComponent<IProps> = props => {
+const Loading = (props: IProps) => {
   if (!props.loading) {
     return null;
   }

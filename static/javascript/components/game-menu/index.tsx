@@ -1,78 +1,71 @@
-import React from "react";
+import React, { useState, useEffect, useRef, RefObject } from "react";
 import cn from "classnames";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import menuIcon from "../../../assets/svg/menu.svg";
-import { openGameMenu, closeGameMenu } from "../../actions/navigation-actions";
 import { ICombinedReducersState } from "../../reducers";
 import { Icon } from "../utils";
 import "./game-menu-styles.scss";
 import GameMenu from "./game-menu";
 import { IGameMenuIconProps } from "./game-menu.d";
 
-class GameMenuIcon extends React.PureComponent<IGameMenuIconProps> {
-  private elRef = React.createRef<HTMLDivElement>();
+type IUseGlobalClick = [RefObject<HTMLDivElement>, boolean, React.Dispatch<React.SetStateAction<boolean>>];
 
-  constructor(props: IGameMenuIconProps) {
-    super(props);
-    this.onGlobalClick = this.onGlobalClick.bind(this);
-    this.onClick = this.onClick.bind(this);
-  }
+const useGlobalClick = (): IUseGlobalClick => {
+  const elRef = useRef<HTMLDivElement>(null);
+  const isOpenRef = useRef(false);
+  const [isOpen, setOpen] = useState(false);
 
-  componentDidMount() {
-    window.addEventListener("click", this.onGlobalClick);
-  }
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener("click", this.onGlobalClick);
-  }
+  useEffect(() => {
+    function onGlobalClick(e: MouseEvent) {
+      if (!isOpenRef.current) {
+        return;
+      }
 
-  onGlobalClick(e: MouseEvent) {
-    if (!this.props.isOpen) {
-      return;
+      if (!(e.target instanceof Element)) {
+        return;
+      }
+
+      if (!elRef.current || elRef.current.contains(e.target)) {
+        return;
+      }
+      setOpen(false);
     }
 
-    if (!(e.target instanceof Element)) {
-      return;
-    }
+    window.addEventListener("click", onGlobalClick);
+    return () => window.removeEventListener("click", onGlobalClick);
+  }, []);
 
-    if (!this.elRef.current || this.elRef.current.contains(e.target)) {
-      return;
-    }
-    this.props.close();
-  }
+  return [elRef, isOpen, setOpen];
+};
 
-  onClick() {
-    const { isOpen, close, open } = this.props;
-    if (isOpen) {
-      close();
-    } else {
-      open();
-    }
-  }
+const GameMenuIcon = () => {
+  const [elRef, isOpen, setOpen] = useGlobalClick();
 
-  render() {
-    const { isOpen } = this.props;
-    return (
-      <div ref={this.elRef}>
-        <Icon {...menuIcon} className={cn("game-menu-icon", { "game-menu-icon--expanded": isOpen })} onClick={this.onClick} />
-        <GameMenu isOpen={isOpen} />
-      </div>
-    );
-  }
-}
+  return (
+    <div ref={elRef}>
+      <Icon
+        {...menuIcon}
+        className={cn("game-menu-icon", {
+          "game-menu-icon--expanded": isOpen
+        })}
+        onClick={() => setOpen(!isOpen)}
+      />
+      <GameMenu isOpen={isOpen} />
+    </div>
+  );
+};
 
 const mapStateToProps = (state: ICombinedReducersState) => {
-  return {
-    isOpen: state.navigations.isGameMenuOpen
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    open: () => dispatch(openGameMenu()),
-    close: () => dispatch(closeGameMenu())
-  };
+  return {};
 };
 
 export default connect(

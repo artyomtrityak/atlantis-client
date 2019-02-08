@@ -17,10 +17,10 @@ enum DROPDOWNS {
 
 type IDropdowns = keyof typeof DROPDOWNS | null;
 
-type IUseDropdown = [RefObject<HTMLInputElement>, IDropdowns, React.Dispatch<React.SetStateAction<IDropdowns>>];
+type IUseDropdown = [RefObject<HTMLDivElement>, IDropdowns, React.Dispatch<React.SetStateAction<IDropdowns>>];
 
 const useDropdowns = (): IUseDropdown => {
-  const headerRef = useRef<HTMLInputElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const openDropdownVarRef = useRef<IDropdowns>(null);
   const [openDropdownName, setOpenDropdownName] = useState<IDropdowns>(null);
 

@@ -7,7 +7,7 @@ interface IProps {
   isOpen: boolean;
 }
 
-export default function ReportsAndOrdersMenu(props: IProps) {
+export default function ReportsAndOrdersMenuItem(props: IProps) {
   const { isOpen, showLoadReport, onOpen } = props;
   return (
     <li className="nav-item dropdown">
