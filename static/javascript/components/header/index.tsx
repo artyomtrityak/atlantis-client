@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, RefObject } from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { showLoadReportModal } from "../../actions/navigation-actions";
@@ -14,40 +14,45 @@ enum DROPDOWNS {
   REPORT = "REPORT",
   USER = "USER"
 }
-type IDropdowns = keyof typeof DROPDOWNS;
 
-const useDropdowns = () => {
+type IDropdowns = keyof typeof DROPDOWNS | null;
+
+type IUseDropdown = [RefObject<HTMLInputElement>, IDropdowns, React.Dispatch<React.SetStateAction<IDropdowns>>];
+
+const useDropdowns = (): IUseDropdown => {
   const headerRef = useRef<HTMLInputElement>(null);
-  const [openDropdownName, setOpenDropdownName] = useState<IDropdowns | null>(null);
+  const openDropdownVarRef = useRef<IDropdowns>(null);
+  const [openDropdownName, setOpenDropdownName] = useState<IDropdowns>(null);
 
-  useEffect(
-    () => {
-      function onGlobalClick(e: MouseEvent) {
-        if (!openDropdownName) {
-          return;
-        }
-        if (!(e.target instanceof Element)) {
-          return;
-        }
-        if (!headerRef.current || headerRef.current.contains(e.target)) {
-          return;
-        }
-        setOpenDropdownName(null);
+  useEffect(() => {
+    openDropdownVarRef.current = openDropdownName;
+  });
+
+  useEffect(() => {
+    function onGlobalClick(e: MouseEvent) {
+      if (!openDropdownVarRef.current) {
+        return;
       }
+      if (!(e.target instanceof Element)) {
+        return;
+      }
+      if (!headerRef.current || headerRef.current.contains(e.target)) {
+        return;
+      }
+      setOpenDropdownName(null);
+    }
 
-      window.addEventListener("click", onGlobalClick);
-      return () => {
-        return window.removeEventListener("click", onGlobalClick);
-      };
-    },
-    [openDropdownName]
-  );
+    window.addEventListener("click", onGlobalClick);
+    return () => {
+      return window.removeEventListener("click", onGlobalClick);
+    };
+  }, []);
 
-  return { headerRef, openDropdownName, setOpenDropdownName };
+  return [headerRef, openDropdownName, setOpenDropdownName];
 };
 
 function Header(props: IHeaderProps) {
-  const { headerRef, openDropdownName, setOpenDropdownName } = useDropdowns();
+  const [headerRef, openDropdownName, setOpenDropdownName] = useDropdowns();
 
   return (
     <nav className="navbar navbar-expand-lg header" ref={headerRef}>
