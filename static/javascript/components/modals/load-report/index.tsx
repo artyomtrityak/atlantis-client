@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import _ from "lodash";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
@@ -14,25 +14,49 @@ interface IProps {
   showLoader: () => void;
 }
 
-interface IState {
-  reportData: string | ArrayBuffer | null;
-}
+const LoadReportModal = (props: IProps) => {
+  const [onFileSelect, onSubmit] = useReportData(props);
 
-class LoadReportModal extends React.PureComponent<IProps, IState> {
-  state = {
-    reportData: ""
-  };
+  return (
+    <React.Fragment>
+      <div className="modal fade show" tabIndex={-1} role="dialog" style={{ display: "block" }}>
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Load Report</h5>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="form-group">
+                  <label>Select Report File</label>
+                  <input type="file" className="form-control-file" onChange={onFileSelect} />
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={props.closeModal}>
+                Cancel
+              </button>
+              <button type="button" className="btn btn-primary" onClick={onSubmit}>
+                Load
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="modal-backdrop fade show" />
+    </React.Fragment>
+  );
+};
 
-  constructor(props: IProps) {
-    super(props);
-    this.onFileSelect = this.onFileSelect.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
+type IUseReporData = [(e: ChangeEvent<HTMLInputElement>) => void, () => void];
+const useReportData = (props: IProps): IUseReporData => {
+  const [reportData, setReportData] = useState<string | ArrayBuffer | null>("");
 
-  onFileSelect(e: ChangeEvent<HTMLInputElement>) {
+  function onFileSelect(e: ChangeEvent<HTMLInputElement>) {
     const reader = new FileReader();
     reader.onload = () => {
-      this.setState({ reportData: reader.result });
+      setReportData(reader.result);
     };
     if (e.target.files) {
       reader.readAsText(e.target.files[0]);
@@ -42,55 +66,24 @@ class LoadReportModal extends React.PureComponent<IProps, IState> {
     }
   }
 
-  async onSubmit() {
+  async function onSubmit() {
     try {
-      this.props.showLoader();
-      const parsedReport = await parse(this.state.reportData);
-      this.props.hideLoader();
+      props.showLoader();
+      const parsedReport = await parse(String(reportData));
+      props.hideLoader();
       if (!parsedReport) {
         return;
       }
-      this.props.reportLoaded(parsedReport);
-      this.props.closeModal();
+      props.reportLoaded(parsedReport);
+      props.closeModal();
     } catch (err) {
-      this.props.hideLoader();
+      props.hideLoader();
       console.error(err);
     }
   }
 
-  render() {
-    return (
-      <React.Fragment>
-        <div className="modal fade show" tabIndex={-1} role="dialog" style={{ display: "block" }}>
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Load Report</h5>
-              </div>
-              <div className="modal-body">
-                <form>
-                  <div className="form-group">
-                    <label>Select Report File</label>
-                    <input type="file" className="form-control-file" onChange={this.onFileSelect} />
-                  </div>
-                </form>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={this.props.closeModal}>
-                  Cancel
-                </button>
-                <button type="button" className="btn btn-primary" onClick={this.onSubmit}>
-                  Load
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="modal-backdrop fade show" />
-      </React.Fragment>
-    );
-  }
-}
+  return [onFileSelect, onSubmit];
+};
 
 const mapStateToProps = (state: ICombinedReducersState) => {
   return {};
