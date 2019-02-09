@@ -1,13 +1,16 @@
 import _ from "lodash";
 import React from "react";
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import ReactDataGrid from "react-data-grid";
+import { ICombinedReducersState } from "../../reducers";
 import { activateTab } from "../../actions/details-actions";
 import { selectUnit } from "../../actions/units-actions";
 import { withSize } from "../utils";
+import { IUnitListsProps } from "./units-list.d";
 import Toolbar from "./toolbar";
 
-const getColumns = width => {
+const getColumns = (width: number) => {
   const dynamicWidth = width - 50 - 70 - 60;
 
   return [
@@ -81,9 +84,9 @@ function onGridSort() {
   console.log("SORT", arguments);
 }
 
-const rowGetter = i => rows[i];
+const rowGetter = (i: number) => rows[i];
 
-const UnitsList = props => {
+const UnitsList = (props: IUnitListsProps) => {
   const { onRowClick, selectedUnitId } = props;
   let selectedIndex;
   if (selectedUnitId) {
@@ -108,7 +111,7 @@ const UnitsList = props => {
         rowSelection={{
           showCheckbox: false,
           selectBy: {
-            indexes: [selectedIndex]
+            //indexes: [selectedIndex]
           }
         }}
       />
@@ -116,15 +119,15 @@ const UnitsList = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
   return {
     selectedUnitId: state.units.selectedUnitId
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    onRowClick: unitId => {
+    onRowClick: (unitId: string) => {
       dispatch(selectUnit(unitId));
       dispatch(activateTab("unit"));
     }
