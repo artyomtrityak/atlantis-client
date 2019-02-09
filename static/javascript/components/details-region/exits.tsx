@@ -1,8 +1,8 @@
 import React from "react";
-import { IRegion } from "../../reducers/regions";
+import { IRegionDetailsProps } from "./details-region.d";
 
-export default function renderExits({ region }: { region: IRegion }) {
-  if (!region.exits) {
+export default function renderExits({ region }: IRegionDetailsProps) {
+  if (!region || !region.exits) {
     return null;
   }
   return (

@@ -1,8 +1,8 @@
 import React from "react";
-import { IRegion } from "../../reducers/regions";
+import { IRegionDetailsProps } from "./details-region.d";
 
-export default function renderDetails({ region }: { region: IRegion }) {
-  if (region.details.length === 0) {
+export default function renderDetails({ region }: IRegionDetailsProps) {
+  if (!region || region.details.length === 0) {
     return null;
   }
 

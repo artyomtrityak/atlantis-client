@@ -1,8 +1,8 @@
 import React from "react";
-import { IRegion } from "../../reducers/regions";
+import { IRegionDetailsProps } from "./details-region.d";
 
-export default function renderGate({ region }: { region: IRegion }) {
-  if (!region.gate) {
+export default function renderGate({ region }: IRegionDetailsProps) {
+  if (!region || !region.gate) {
     return null;
   }
   return (

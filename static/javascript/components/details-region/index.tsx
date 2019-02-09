@@ -1,15 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
-import { IRegion } from "../../reducers/regions";
 import Gate from "./gate";
 import Exists from "./exits";
 import Details from "./details";
+import { IRegionDetailsProps } from "./details-region.d";
 import "./styles/index.scss";
-
-interface IRegionDetailsProps {
-  region?: IRegion;
-}
 
 const Region = ({ region }: IRegionDetailsProps) => {
   if (!region) {

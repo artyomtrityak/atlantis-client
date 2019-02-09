@@ -5,12 +5,12 @@ import { Dispatch } from "redux";
 import { ICombinedReducersState } from "../../reducers";
 import { TABS, ITabs } from "../../reducers/details";
 import { activateTab } from "../../actions/details-actions";
-import "./styles/index.scss";
 import Region from "../details-region";
 import Unit from "../details-unit";
 import Events from "./events";
 import Battles from "./battles";
 import { IDetailsProps } from "./details.d";
+import "./styles/index.scss";
 
 interface IDetailsItem {
   tabName: ITabs;
