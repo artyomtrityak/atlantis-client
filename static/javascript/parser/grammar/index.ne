@@ -1,4 +1,4 @@
-@include "./shared.ne"
+@include "../grammar-shared/index.ne"
 @include "./general.ne"
 @include "./errors.ne"
 @include "./battles.ne"

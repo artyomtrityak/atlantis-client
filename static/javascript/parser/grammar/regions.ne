@@ -71,8 +71,6 @@ FACTION_REGION_GATE ->
   "There is a Gate here (Gate " INT " of " INT ")." NL_ {% array2String %}
 
 
-# TODO: different parser for * my faction
-# TODO: different parser for - + buildings and other factions
 FACTION_REGION_UNIT ->
   [*+\-] _ TEXT "." NL_ {% array2String %}
 

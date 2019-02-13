@@ -120,6 +120,8 @@ const UnitsList = (props: IUnitListsProps) => {
 };
 
 const mapStateToProps = (state: ICombinedReducersState) => {
+  console.log(state);
+
   return {
     selectedUnitId: state.units.selectedUnitId
   };
