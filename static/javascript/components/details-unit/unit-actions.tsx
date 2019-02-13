@@ -163,7 +163,7 @@ class UnitActions extends React.PureComponent {
   }
 
   onGlobalClick(e) {
-    if (!this.state.expanded || this.elRef.current.contains(e.target)) {
+    if (this.elRef.current.contains(e.target)) {
       return;
     }
     this.setState({ expanded: false, extended: false });

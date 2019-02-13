@@ -129,7 +129,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onRowClick: (unitId: string) => {
       dispatch(selectUnit(unitId));
-      dispatch(activateTab("unit"));
+      dispatch(activateTab("UNIT"));
     }
   };
 };

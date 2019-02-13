@@ -1,4 +1,4 @@
 export interface IState {
-  activeModalName?: string;
-  loading: boolean;
+  readonly activeModalName?: string;
+  readonly loading: boolean;
 }

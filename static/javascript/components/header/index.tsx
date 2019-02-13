@@ -10,19 +10,14 @@ import TurnMenu from "./turn-menu";
 import { IHeaderProps } from "./header.d";
 import "./header-styles.scss";
 
-enum DROPDOWNS {
-  REPORT = "REPORT",
-  USER = "USER"
-}
-
-type IDropdowns = keyof typeof DROPDOWNS | null;
-
-type IUseDropdown = [RefObject<HTMLDivElement>, IDropdowns, React.Dispatch<React.SetStateAction<IDropdowns>>];
+type IDropdown = "REPORT" | "USER";
+type IDropdownsNullable = IDropdown | null;
+type IUseDropdown = [RefObject<HTMLDivElement>, IDropdownsNullable, React.Dispatch<React.SetStateAction<IDropdownsNullable>>];
 
 const useDropdowns = (): IUseDropdown => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const openDropdownVarRef = useRef<IDropdowns>(null);
-  const [openDropdownName, setOpenDropdownName] = useState<IDropdowns>(null);
+  const openDropdownVarRef = useRef<IDropdownsNullable>(null);
+  const [openDropdownName, setOpenDropdownName] = useState<IDropdownsNullable>(null);
 
   useEffect(() => {
     openDropdownVarRef.current = openDropdownName;
@@ -60,7 +55,7 @@ function Header(props: IHeaderProps) {
       <ul className="navbar-nav">
         <ReportsAndOrdersMenu
           onOpen={() => setOpenDropdownName("REPORT")}
-          isOpen={openDropdownName === DROPDOWNS.REPORT}
+          isOpen={openDropdownName === "REPORT"}
           showLoadReport={() => {
             setOpenDropdownName(null);
             props.showLoadReport();
@@ -84,7 +79,7 @@ function Header(props: IHeaderProps) {
 
         <TurnMenu />
 
-        <UserMenu onOpen={() => setOpenDropdownName(DROPDOWNS.USER)} isOpen={openDropdownName === DROPDOWNS.USER} />
+        <UserMenu onOpen={() => setOpenDropdownName("USER")} isOpen={openDropdownName === "USER"} />
       </ul>
     </nav>
   );

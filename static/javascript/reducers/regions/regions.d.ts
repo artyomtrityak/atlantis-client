@@ -1,34 +1,34 @@
 export interface IRegion {
-  id: string;
-  title: string;
-  coordinates: {
+  readonly id: string;
+  readonly title: string;
+  readonly coordinates: {
     x: number;
     y: number;
     z: number;
   };
-  type: string;
-  details: string[];
-  gate?: string;
-  exits?: {
+  readonly type: string;
+  readonly details: string[];
+  readonly gate?: string;
+  readonly exits?: {
     [key: string]: IRegion;
   };
 }
 
 export interface IRegions {
-  [key: string]: IRegion;
+  readonly [key: string]: IRegion;
 }
 
 interface ILevel {
-  maxX: number;
-  maxY: number;
-  isWrap: boolean;
-  regions: IRegions;
-  level: number;
-  selectedRegion: string;
+  readonly maxX: number;
+  readonly maxY: number;
+  readonly isWrap: boolean;
+  readonly regions: IRegions;
+  readonly level: number;
+  readonly selectedRegion: string;
 }
 
 export interface IState {
-  levels: ReadonlyArray<ILevel>;
-  mapLevel: number;
-  zoom: number;
+  readonly levels: ReadonlyArray<ILevel>;
+  readonly mapLevel: number;
+  readonly zoom: number;
 }

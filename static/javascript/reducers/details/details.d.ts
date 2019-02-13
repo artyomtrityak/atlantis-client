@@ -1,11 +1,4 @@
-export declare enum TABS {
-  region = "region",
-  unit = "unit",
-  events = "events",
-  battles = "battles"
-}
-
-export type ITabs = keyof typeof TABS;
+export type ITabs = "REGION" | "UNIT" | "EVENTS" | "BATTLES";
 
 export interface IState {
   activeTab: ITabs;

@@ -2,15 +2,8 @@ import { ACTIVATE_TAB, IActions as IDetailsActions } from "../../actions/details
 import { IState, ITabs } from "./details.d";
 export { IState, ITabs };
 
-export enum TABS {
-  region = "region",
-  unit = "unit",
-  events = "events",
-  battles = "battles"
-}
-
 const initialState: IState = {
-  activeTab: TABS.region
+  activeTab: "REGION"
 };
 
 // -------------------

@@ -3,7 +3,7 @@ import cn from "classnames";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ICombinedReducersState } from "../../reducers";
-import { TABS, ITabs } from "../../reducers/details";
+import { ITabs } from "../../reducers/details";
 import { activateTab } from "../../actions/details-actions";
 import Region from "../details-region";
 import Unit from "../details-unit";
@@ -19,11 +19,11 @@ interface IDetailsItem {
 
 const DetailsComponent = (props: IDetailsProps) => {
   const { activeTab } = props;
-  const items = [
-    { text: "Region", tabName: TABS.region },
-    { text: "Unut", tabName: TABS.unit },
-    { text: "Events", tabName: TABS.events },
-    { text: "Battles", tabName: TABS.battles }
+  const items: IDetailsItem[] = [
+    { text: "Region", tabName: "REGION" },
+    { text: "Unut", tabName: "UNIT" },
+    { text: "Events", tabName: "EVENTS" },
+    { text: "Battles", tabName: "BATTLES" }
   ];
 
   return (
@@ -60,13 +60,13 @@ function renderMenuItem(props: IDetailsProps, item: IDetailsItem) {
 
 function renderDetails(activeTab: ITabs) {
   switch (activeTab) {
-    case TABS.region:
+    case "REGION":
       return <Region />;
-    case TABS.unit:
+    case "UNIT":
       return <Unit />;
-    case TABS.events:
+    case "EVENTS":
       return <Events />;
-    case TABS.battles:
+    case "BATTLES":
       return <Battles />;
   }
 }
