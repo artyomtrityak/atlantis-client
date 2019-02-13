@@ -1,6 +1,6 @@
 import nearley from "nearley";
 import { diff } from "deep-diff";
-import grammarBasic from "./grammar-compiled";
+import grammarBasic from "./grammar-base-compiled";
 import grammarUnit from "./grammar-unit-compiled";
 
 import { IReport, IReportItemRegions } from "./parser.d";
