@@ -5,9 +5,28 @@
     console.log("U1", d);
     return d;
   }
+
+  const objectParser = (d) => {
+    console.log("O1", d);
+    return d;
+  }
 %}
 
-
-
 UNIT_PARSER ->
-  [*+\-] _ TEXT "." {% unitParser %}
+  UNIT_PARSER_ITEMS {% unitParser %}
+  | [+] _ TEXT "." {% objectParser %}
+
+UNIT_PARSER_ITEMS ->
+  [*-] _ UNIT_NAME UNIT_SECTION:+ {% (d) => {
+    console.log("SECTION:", d);
+    return d;
+  } %}
+
+UNIT_SECTION ->
+  [^,.]:+ [.,] {% array2String %}
+
+UNIT_NAME ->
+  [^,.()]:+ _ "(" INT ")" [.,] {% array2String %}
+
+UNIT_FACTION_NAME ->
+  [^,.()]:+ _ "(" INT ")" [.,] {% array2String %}

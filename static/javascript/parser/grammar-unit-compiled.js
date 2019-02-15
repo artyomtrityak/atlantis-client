@@ -52,6 +52,11 @@
     console.log("U1", d);
     return d;
   };
+
+  const objectParser = d => {
+    console.log("O1", d);
+    return d;
+  };
   var grammar = {
     Lexer: undefined,
     ParserRules: [
@@ -271,7 +276,76 @@
         symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$3", "_", "REGION_Z_LEVEL$string$7"],
         postprocess: d => ({ title: array2String(d), z: parseInt(String(4) + String(d[1]), 10) })
       },
-      { name: "UNIT_PARSER", symbols: [/[*+\-]/, "_", "TEXT", { literal: "." }], postprocess: unitParser }
+      { name: "UNIT_PARSER", symbols: ["UNIT_PARSER_ITEMS"], postprocess: unitParser },
+      { name: "UNIT_PARSER", symbols: ["NPC_PARSER_ITEMS"], postprocess: unitParser },
+      { name: "UNIT_PARSER", symbols: [/[+]/, "_", "TEXT", { literal: "." }], postprocess: objectParser },
+      { name: "UNIT_PARSER_ITEMS$ebnf$1", symbols: ["UNIT_SECTION"] },
+      {
+        name: "UNIT_PARSER_ITEMS$ebnf$1",
+        symbols: ["UNIT_PARSER_ITEMS$ebnf$1", "UNIT_SECTION"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "UNIT_PARSER_ITEMS",
+        symbols: [/[*-]/, "_", "UNIT_NAME", "UNIT_FACTION_NAME", "UNIT_PARSER_ITEMS$ebnf$1"],
+        postprocess: d => {
+          console.log("SECTION:", d);
+          return d;
+        }
+      },
+      { name: "NPC_PARSER_ITEMS$ebnf$1", symbols: ["UNIT_SECTION"] },
+      {
+        name: "NPC_PARSER_ITEMS$ebnf$1",
+        symbols: ["NPC_PARSER_ITEMS$ebnf$1", "UNIT_SECTION"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "NPC_PARSER_ITEMS",
+        symbols: [/[-]/, "_", "UNIT_NAME", "NPC_PARSER_ITEMS$ebnf$1"],
+        postprocess: d => {
+          console.log("SECTION:", d);
+          return d;
+        }
+      },
+      { name: "UNIT_SECTION$ebnf$1", symbols: [/[^,.]/] },
+      {
+        name: "UNIT_SECTION$ebnf$1",
+        symbols: ["UNIT_SECTION$ebnf$1", /[^,.]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "UNIT_SECTION", symbols: ["UNIT_SECTION$ebnf$1", /[.,]/], postprocess: array2String },
+      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,.()]/] },
+      {
+        name: "UNIT_NAME$ebnf$1",
+        symbols: ["UNIT_NAME$ebnf$1", /[^,.()]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "UNIT_NAME",
+        symbols: ["UNIT_NAME$ebnf$1", "_", { literal: "(" }, "INT", { literal: ")" }, /[.,]/],
+        postprocess: array2String
+      },
+      { name: "UNIT_FACTION_NAME$ebnf$1", symbols: [/[^,.()]/] },
+      {
+        name: "UNIT_FACTION_NAME$ebnf$1",
+        symbols: ["UNIT_FACTION_NAME$ebnf$1", /[^,.()]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "UNIT_FACTION_NAME",
+        symbols: ["UNIT_FACTION_NAME$ebnf$1", "_", { literal: "(" }, "INT", { literal: ")" }, /[.,]/],
+        postprocess: array2String
+      }
     ],
     ParserStart: "UNIT_PARSER"
   };
