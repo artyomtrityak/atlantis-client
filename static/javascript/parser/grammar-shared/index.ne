@@ -43,42 +43,63 @@
   };
 %}
 
+
 NL ->
   [\n] {% noop %}
+
 
 NL_ ->
   NL:+
 
+
 INT ->
   [0-9]:+ {% (d) => parseInt(d[0].join("")) %}
+
 
 _ ->
   [ ] {% id %}
 
+
 __ ->
   _:+ {% id %}
 
+
 __AND_NL ->
   [ \n]:+ {% id %}
+
 
 SENTENCE ->
   WORD [.!]
   | WORD __ SENTENCE {% array2String %}
   | WORD NL __ SENTENCE {% array2String %}
 
+
 TEXT ->
   WORD
   | WORD __ TEXT {% array2String %}
   | WORD NL __ TEXT {% array2String %}
 
+
 WORD ->
   [^\n\r ]:+ {% array2String %}
+
 
 BLOB ->
   [^\n\r]:+ {% array2String %}
 
+
 REGION_COORDINATES ->
   "(" INT "," INT REGION_Z_LEVEL ")" {% parseRegionCoordinates  %}
+
+
+LC_WORDS ->
+  LC_WORD
+  | LC_WORD __ LC_WORDS
+
+
+LC_WORD ->
+  [a-z\-]:+
+
 
 REGION_Z_LEVEL ->
   ",nexus" {% (d) => ({ title: d[0], z: 0 }) %}

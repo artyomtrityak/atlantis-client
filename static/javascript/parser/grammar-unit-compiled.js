@@ -65,6 +65,7 @@
   };
 
   const unitSkills = d => {
+    // TODO: comments!!!
     return {
       type: "SKILLS",
       skills: array2String(d)
@@ -88,6 +89,7 @@
   };
 
   const unitFlags = d => {
+    // TODO: comments!!!
     return {
       type: "UNIT_FLAG",
       flag: d[1].name
@@ -95,6 +97,7 @@
   };
 
   const unitItems = d => {
+    // TODO: comments!!!
     return {
       type: "UNIT_ITEM",
       item: d[1]
@@ -126,6 +129,12 @@
   };
 
   const unitCanStudy = d => {
+    // TODO: comments!!!
+    return d;
+  };
+
+  const unitCombatSpell = d => {
+    // TODO: comments!!!
     return d;
   };
   var grammar = {
@@ -198,6 +207,17 @@
         symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_Z_LEVEL", { literal: ")" }],
         postprocess: parseRegionCoordinates
       },
+      { name: "LC_WORDS", symbols: ["LC_WORD"] },
+      { name: "LC_WORDS", symbols: ["LC_WORD", "__", "LC_WORDS"] },
+      { name: "LC_WORD$ebnf$1", symbols: [/[a-z\-]/] },
+      {
+        name: "LC_WORD$ebnf$1",
+        symbols: ["LC_WORD$ebnf$1", /[a-z\-]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
       {
         name: "REGION_Z_LEVEL$string$1",
         symbols: [{ literal: "," }, { literal: "n" }, { literal: "e" }, { literal: "x" }, { literal: "u" }, { literal: "s" }],
@@ -363,8 +383,8 @@
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitSkills },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: "." }], postprocess: unitCanStudy },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCanStudy },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: "." }] },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: ";" }, "UNIT_COMMENT"] },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: "." }], postprocess: unitCombatSpell },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: ";" }], postprocess: unitCombatSpell },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FACTION_NAME"], postprocess: d => d[1] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", /[.,]/], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitFlags },
@@ -927,24 +947,7 @@
         }
       },
       { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT", /[.;]/], postprocess: unitUpkeep },
-      {
-        name: "UNIT_COMMENT",
-        symbols: ["BLOB"],
-        postprocess: d => {
-          return d;
-        }
-      },
-      { name: "LC_WORDS", symbols: ["LC_WORD"] },
-      { name: "LC_WORDS", symbols: ["LC_WORD", "__", "LC_WORDS"] },
-      { name: "LC_WORD$ebnf$1", symbols: [/[a-z\-]/] },
-      {
-        name: "LC_WORD$ebnf$1",
-        symbols: ["LC_WORD$ebnf$1", /[a-z\-]/],
-        postprocess: function arrpush(d) {
-          return d[0].concat([d[1]]);
-        }
-      },
-      { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] }
+      { name: "UNIT_COMMENT", symbols: ["BLOB"], postprocess: d => ({ type: "COMMENT", comment: array2String(d) }) }
     ],
     ParserStart: "UNIT_PARSER"
   };

@@ -18,6 +18,7 @@
   }
 
   const unitSkills = (d) => {
+    // TODO: comments!!!
     return {
       type: "SKILLS",
       skills: array2String(d)
@@ -41,6 +42,7 @@
   }
 
   const unitFlags = (d) => {
+    // TODO: comments!!!
     return {
       type: "UNIT_FLAG",
       flag: d[1].name
@@ -48,6 +50,7 @@
   }
 
   const unitItems = (d) => {
+    // TODO: comments!!!
     return {
       type: "UNIT_ITEM",
       item: d[1]
@@ -79,8 +82,14 @@
   }
 
   const unitCanStudy = (d) => {
+    // TODO: comments!!!
     return d;
   }
+
+  const unitCombatSpell = (d) => {
+    // TODO: comments!!!
+    return d;
+  };
 %}
 
 
@@ -104,8 +113,8 @@ UNIT_SECTION_ITEM ->
   | __ UNIT_CAN_STUDY "." {% unitCanStudy %}
   | __ UNIT_CAN_STUDY ";" UNIT_COMMENT {% unitCanStudy %}
 
-  | __ UNIT_COMBAT_SPELL "."
-  | __ UNIT_COMBAT_SPELL ";" UNIT_COMMENT
+  | __ UNIT_COMBAT_SPELL "." {% unitCombatSpell %}
+  | __ UNIT_COMBAT_SPELL ";" UNIT_COMMENT {% unitCombatSpell %}
 
   | __ UNIT_FACTION_NAME {% (d) => d[1] %}
   
@@ -115,6 +124,7 @@ UNIT_SECTION_ITEM ->
   | __ UNIT_ITEM [.,] {% unitItems %}
   | __ UNIT_ITEM ";" UNIT_COMMENT {% unitItems %}
 
+  # Add UNIT_COMMENT
   | __ UNIT_WEIGHT {% (d) => d[1] %}
   | __ UNIT_CAPACITY {% (d) => d[1] %}
   | __ UNIT_UPKEEP {% (d) => d[1] %}
@@ -176,15 +186,4 @@ UNIT_UPKEEP ->
 
 
 UNIT_COMMENT ->
-  BLOB {% (d) => {
-    return d;
-  } %}
-
-
-LC_WORDS ->
-  LC_WORD
-  | LC_WORD __ LC_WORDS
-
-
-LC_WORD ->
-  [a-z\-]:+
+  BLOB {% (d) => ({ type: "COMMENT", comment: array2String(d) }) %}

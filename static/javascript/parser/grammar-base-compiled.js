@@ -276,6 +276,17 @@
         symbols: [{ literal: "(" }, "INT", { literal: "," }, "INT", "REGION_Z_LEVEL", { literal: ")" }],
         postprocess: parseRegionCoordinates
       },
+      { name: "LC_WORDS", symbols: ["LC_WORD"] },
+      { name: "LC_WORDS", symbols: ["LC_WORD", "__", "LC_WORDS"] },
+      { name: "LC_WORD$ebnf$1", symbols: [/[a-z\-]/] },
+      {
+        name: "LC_WORD$ebnf$1",
+        symbols: ["LC_WORD$ebnf$1", /[a-z\-]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
       {
         name: "REGION_Z_LEVEL$string$1",
         symbols: [{ literal: "," }, { literal: "n" }, { literal: "e" }, { literal: "x" }, { literal: "u" }, { literal: "s" }],
