@@ -49,38 +49,80 @@
   };
 
   const unitParser = d => {
-    // console.log("U1", d);
     return d;
   };
 
   const objectParser = d => {
-    // console.log("O1", d);
     return d;
+  };
+
+  const sectionParser = d => {
+    return {
+      unitName: d[2].unitName,
+      unitId: d[2].unitId,
+      unitDetails: d[3]
+    };
   };
 
   const unitSkills = d => {
-    console.log("SKILLS:", d);
-    return array2String(d);
+    return {
+      type: "SKILLS",
+      skills: array2String(d)
+    };
   };
 
   const unitFaction = d => {
-    return array2String(d);
+    return {
+      type: "FACTION",
+      factionName: array2String(d[0]),
+      factionId: d[3]
+    };
   };
 
   const unitName = d => {
-    return array2String(d);
+    return {
+      type: "UNIT_NAME",
+      unitName: array2String(d[0]),
+      unitId: d[3]
+    };
   };
 
   const unitFlags = d => {
-    return d;
+    return {
+      type: "UNIT_FLAG",
+      flag: d[1].name
+    };
   };
 
   const unitItems = d => {
-    return d;
+    return {
+      type: "UNIT_ITEM",
+      item: d[1]
+    };
   };
 
   const unitWeight = d => {
-    return d;
+    return {
+      type: "WEIGHT",
+      weight: d[2]
+    };
+  };
+
+  const unitCapacity = d => {
+    return {
+      type: "CAPACITY",
+      walk: d[2],
+      ride: d[4],
+      fly: d[6],
+      swim: d[8]
+    };
+  };
+
+  const unitUpkeep = d => {
+    return {
+      type: "UPKEEP",
+      upkeep: d[3]
+    };
   };
 
   const unitCanStudy = d => {
@@ -315,29 +357,22 @@
           return d[0].concat([d[1]]);
         }
       },
-      {
-        name: "UNIT_PARSER_ITEMS",
-        symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1"],
-        postprocess: d => {
-          // console.log("SECTION:", d);
-          return d;
-        }
-      },
-      { name: "UNIT_SECTION", symbols: ["UNIT_SECTION_ITEM"] },
+      { name: "UNIT_PARSER_ITEMS", symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1"], postprocess: sectionParser },
+      { name: "UNIT_SECTION", symbols: ["UNIT_SECTION_ITEM"], postprocess: d => d[0] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: "." }], postprocess: unitSkills },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitSkills },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: "." }], postprocess: unitCanStudy },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCanStudy },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: "." }] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: ";" }, "UNIT_COMMENT"] },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FACTION_NAME"] },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FACTION_NAME"], postprocess: d => d[1] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", /[.,]/], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_ITEM", /[.,]/], postprocess: unitItems },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_ITEM", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitItems },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_WEIGHT"], postprocess: unitWeight },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY"] },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP"] },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_WEIGHT"], postprocess: d => d[1] },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY"], postprocess: d => d[1] },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP"], postprocess: d => d[1] },
       { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
       {
         name: "UNIT_NAME$ebnf$1",
@@ -476,7 +511,7 @@
       {
         name: "UNIT_FLAGS",
         symbols: ["UNIT_FLAGS$string$7", "__", "UNIT_FLAGS$string$8", "__", "UNIT_FLAGS$string$9"],
-        postprocess: () => ({ type: "FLAG", name: "consuming", subtype: "faction" })
+        postprocess: () => ({ type: "FLAG", name: "consuming_faction" })
       },
       {
         name: "UNIT_FLAGS$string$10",
@@ -512,7 +547,7 @@
       {
         name: "UNIT_FLAGS",
         symbols: ["UNIT_FLAGS$string$10", "__", "UNIT_FLAGS$string$11", "__", "UNIT_FLAGS$string$12"],
-        postprocess: () => ({ type: "FLAG", name: "consuming", subtype: "unit" })
+        postprocess: () => ({ type: "FLAG", name: "consuming_unit" })
       },
       {
         name: "UNIT_FLAGS$string$13",
@@ -565,10 +600,39 @@
       {
         name: "UNIT_FLAGS",
         symbols: ["UNIT_FLAGS$string$14", "__", "UNIT_FLAGS$string$15"],
-        postprocess: () => ({ type: "FLAG", name: "visibility", subtype: "reveal_faction" })
+        postprocess: () => ({ type: "FLAG", name: "visibility_reveal_faction" })
       },
       {
         name: "UNIT_FLAGS$string$16",
+        symbols: [
+          { literal: "r" },
+          { literal: "e" },
+          { literal: "v" },
+          { literal: "e" },
+          { literal: "a" },
+          { literal: "l" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "g" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS$string$17",
+        symbols: [{ literal: "u" }, { literal: "n" }, { literal: "i" }, { literal: "t" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS",
+        symbols: ["UNIT_FLAGS$string$16", "__", "UNIT_FLAGS$string$17"],
+        postprocess: () => ({ type: "FLAG", name: "visibility_reveal_unit" })
+      },
+      {
+        name: "UNIT_FLAGS$string$18",
         symbols: [
           { literal: "w" },
           { literal: "a" },
@@ -583,14 +647,14 @@
         }
       },
       {
-        name: "UNIT_FLAGS$string$17",
+        name: "UNIT_FLAGS$string$19",
         symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
         postprocess: function joiner(d) {
           return d.join("");
         }
       },
       {
-        name: "UNIT_FLAGS$string$18",
+        name: "UNIT_FLAGS$string$20",
         symbols: [{ literal: "s" }, { literal: "p" }, { literal: "o" }, { literal: "i" }, { literal: "l" }, { literal: "s" }],
         postprocess: function joiner(d) {
           return d.join("");
@@ -598,11 +662,11 @@
       },
       {
         name: "UNIT_FLAGS",
-        symbols: ["UNIT_FLAGS$string$16", "__", "UNIT_FLAGS$string$17", "__", "UNIT_FLAGS$string$18"],
-        postprocess: () => ({ type: "FLAG", name: "spoils", subtype: "walking" })
+        symbols: ["UNIT_FLAGS$string$18", "__", "UNIT_FLAGS$string$19", "__", "UNIT_FLAGS$string$20"],
+        postprocess: () => ({ type: "FLAG", name: "spoils_walking" })
       },
       {
-        name: "UNIT_FLAGS$string$19",
+        name: "UNIT_FLAGS$string$21",
         symbols: [
           { literal: "w" },
           { literal: "e" },
@@ -620,40 +684,14 @@
         }
       },
       {
-        name: "UNIT_FLAGS$string$20",
-        symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      {
-        name: "UNIT_FLAGS$string$21",
-        symbols: [{ literal: "s" }, { literal: "p" }, { literal: "o" }, { literal: "i" }, { literal: "l" }, { literal: "s" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      {
-        name: "UNIT_FLAGS",
-        symbols: ["UNIT_FLAGS$string$19", "__", "UNIT_FLAGS$string$20", "__", "UNIT_FLAGS$string$21"],
-        postprocess: () => ({ type: "FLAG", name: "spoils", subtype: "weightless" })
-      },
-      {
         name: "UNIT_FLAGS$string$22",
-        symbols: [{ literal: "r" }, { literal: "i" }, { literal: "d" }, { literal: "i" }, { literal: "n" }, { literal: "g" }],
+        symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
         postprocess: function joiner(d) {
           return d.join("");
         }
       },
       {
         name: "UNIT_FLAGS$string$23",
-        symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      {
-        name: "UNIT_FLAGS$string$24",
         symbols: [{ literal: "s" }, { literal: "p" }, { literal: "o" }, { literal: "i" }, { literal: "l" }, { literal: "s" }],
         postprocess: function joiner(d) {
           return d.join("");
@@ -661,25 +699,25 @@
       },
       {
         name: "UNIT_FLAGS",
-        symbols: ["UNIT_FLAGS$string$22", "__", "UNIT_FLAGS$string$23", "__", "UNIT_FLAGS$string$24"],
-        postprocess: () => ({ type: "FLAG", name: "spoils", subtype: "riding" })
+        symbols: ["UNIT_FLAGS$string$21", "__", "UNIT_FLAGS$string$22", "__", "UNIT_FLAGS$string$23"],
+        postprocess: () => ({ type: "FLAG", name: "spoils_weightless" })
+      },
+      {
+        name: "UNIT_FLAGS$string$24",
+        symbols: [{ literal: "r" }, { literal: "i" }, { literal: "d" }, { literal: "i" }, { literal: "n" }, { literal: "g" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
       },
       {
         name: "UNIT_FLAGS$string$25",
-        symbols: [{ literal: "f" }, { literal: "l" }, { literal: "y" }, { literal: "i" }, { literal: "n" }, { literal: "g" }],
+        symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
         postprocess: function joiner(d) {
           return d.join("");
         }
       },
       {
         name: "UNIT_FLAGS$string$26",
-        symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
-        postprocess: function joiner(d) {
-          return d.join("");
-        }
-      },
-      {
-        name: "UNIT_FLAGS$string$27",
         symbols: [{ literal: "s" }, { literal: "p" }, { literal: "o" }, { literal: "i" }, { literal: "l" }, { literal: "s" }],
         postprocess: function joiner(d) {
           return d.join("");
@@ -687,11 +725,37 @@
       },
       {
         name: "UNIT_FLAGS",
-        symbols: ["UNIT_FLAGS$string$25", "__", "UNIT_FLAGS$string$26", "__", "UNIT_FLAGS$string$27"],
-        postprocess: () => ({ type: "FLAG", name: "spoils", subtype: "flying" })
+        symbols: ["UNIT_FLAGS$string$24", "__", "UNIT_FLAGS$string$25", "__", "UNIT_FLAGS$string$26"],
+        postprocess: () => ({ type: "FLAG", name: "spoils_riding" })
+      },
+      {
+        name: "UNIT_FLAGS$string$27",
+        symbols: [{ literal: "f" }, { literal: "l" }, { literal: "y" }, { literal: "i" }, { literal: "n" }, { literal: "g" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
       },
       {
         name: "UNIT_FLAGS$string$28",
+        symbols: [{ literal: "b" }, { literal: "a" }, { literal: "t" }, { literal: "t" }, { literal: "l" }, { literal: "e" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS$string$29",
+        symbols: [{ literal: "s" }, { literal: "p" }, { literal: "o" }, { literal: "i" }, { literal: "l" }, { literal: "s" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS",
+        symbols: ["UNIT_FLAGS$string$27", "__", "UNIT_FLAGS$string$28", "__", "UNIT_FLAGS$string$29"],
+        postprocess: () => ({ type: "FLAG", name: "spoils_flying" })
+      },
+      {
+        name: "UNIT_FLAGS$string$30",
         symbols: [
           { literal: "r" },
           { literal: "e" },
@@ -708,14 +772,14 @@
         }
       },
       {
-        name: "UNIT_FLAGS$string$29",
+        name: "UNIT_FLAGS$string$31",
         symbols: [{ literal: "n" }, { literal: "o" }],
         postprocess: function joiner(d) {
           return d.join("");
         }
       },
       {
-        name: "UNIT_FLAGS$string$30",
+        name: "UNIT_FLAGS$string$32",
         symbols: [{ literal: "a" }, { literal: "i" }, { literal: "d" }],
         postprocess: function joiner(d) {
           return d.join("");
@@ -723,7 +787,7 @@
       },
       {
         name: "UNIT_FLAGS",
-        symbols: ["UNIT_FLAGS$string$28", "__", "UNIT_FLAGS$string$29", "__", "UNIT_FLAGS$string$30"],
+        symbols: ["UNIT_FLAGS$string$30", "__", "UNIT_FLAGS$string$31", "__", "UNIT_FLAGS$string$32"],
         postprocess: () => ({ type: "FLAG", name: "noaid" })
       },
       {
@@ -824,7 +888,7 @@
           return d.join("");
         }
       },
-      { name: "UNIT_WEIGHT", symbols: ["UNIT_WEIGHT$string$1", "__", "INT", /[.;]/] },
+      { name: "UNIT_WEIGHT", symbols: ["UNIT_WEIGHT$string$1", "__", "INT", /[.;]/], postprocess: unitWeight },
       {
         name: "UNIT_CAPACITY$string$1",
         symbols: [
@@ -844,7 +908,8 @@
       },
       {
         name: "UNIT_CAPACITY",
-        symbols: ["UNIT_CAPACITY$string$1", "__", "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", /[.;]/]
+        symbols: ["UNIT_CAPACITY$string$1", "__", "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", /[.;]/],
+        postprocess: unitCapacity
       },
       {
         name: "UNIT_UPKEEP$string$1",
@@ -861,12 +926,11 @@
           return d.join("");
         }
       },
-      { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT", /[.;]/] },
+      { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT", /[.;]/], postprocess: unitUpkeep },
       {
         name: "UNIT_COMMENT",
         symbols: ["BLOB"],
         postprocess: d => {
-          console.log("COMMENT:", d);
           return d;
         }
       },
