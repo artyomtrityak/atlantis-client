@@ -49,6 +49,9 @@ const parseUnits = async (item: IReportItemRegions) => {
       console.log(unitOrObject);
       parser.feed(unitOrObject);
       console.log("RESULTS111:", parser.results);
+      if (parser.results && parser.results.length > 1) {
+        console.log("DIFF:", diff(parser.results[0], parser.results[1]));
+      }
     });
   });
 };
