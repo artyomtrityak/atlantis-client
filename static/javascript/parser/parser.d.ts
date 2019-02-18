@@ -47,4 +47,4 @@ export interface IReportItemRegions extends IReportItemBase {
 
 export type IReportItem = IReportItemRegions | IReportItemFactionInfo | IReportItemDate | IReportItemVersions | IReportItemFactionStatus;
 
-export type IReport = Array<IReportItem>;
+export type IReport = IReportItem[];
