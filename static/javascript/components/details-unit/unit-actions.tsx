@@ -185,7 +185,7 @@ class UnitActions extends React.PureComponent {
         </button>
         <div
           className={cn("dropdown-menu", "actions-menu__menu", {
-            show: this.state.expanded,
+            "show": this.state.expanded,
             "actions-menu__menu--extended": this.state.extended
           })}
         >
