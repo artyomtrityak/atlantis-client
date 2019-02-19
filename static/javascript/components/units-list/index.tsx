@@ -111,7 +111,7 @@ const UnitsList = (props: IUnitListsProps) => {
         rowSelection={{
           showCheckbox: false,
           selectBy: {
-            //indexes: [selectedIndex]
+            // indexes: [selectedIndex]
           }
         }}
       />

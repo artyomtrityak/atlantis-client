@@ -16,7 +16,7 @@
 		"no-submodule-imports": false,
 		"arrow-parens": false,
 		"jsx-no-multiline-js": false,
-		"jsx-no-lambda": false,
+		"jsx-no-lambda": false
 	},
 	"rulesDirectory": [],
 	"linterOptions": {
