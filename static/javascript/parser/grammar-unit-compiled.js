@@ -107,35 +107,46 @@
   const unitWeight = d => {
     return {
       type: "WEIGHT",
-      weight: d[2]
+      weight: d[1][2]
     };
   };
 
   const unitCapacity = d => {
     return {
       type: "CAPACITY",
-      walk: d[2],
-      ride: d[4],
-      fly: d[6],
-      swim: d[8]
+      walk: d[1][2],
+      ride: d[1][4],
+      fly: d[1][6],
+      swim: d[1][8]
+    };
+  };
+
+  const unitCanStudy = d => {
+    return {
+      type: "CAN_STUDY",
+      text: array2String(d)
+    };
+  };
+
+  const unitCombatSpell = d => {
+    return {
+      type: "COMBAT_SPELL",
+      spell: array2String(d[3])
+    };
+  };
+
+  const commentParser = d => {
+    return {
+      type: "COMMENT",
+      text: array2String(d)
     };
   };
 
   const unitUpkeep = d => {
     return {
       type: "UPKEEP",
-      upkeep: d[3]
+      value: d[1][3]
     };
-  };
-
-  const unitCanStudy = d => {
-    // TODO: comments!!!
-    return d;
-  };
-
-  const unitCombatSpell = d => {
-    // TODO: comments!!!
-    return d;
   };
   var grammar = {
     Lexer: undefined,
@@ -384,15 +395,18 @@
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: "." }], postprocess: unitCanStudy },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCanStudy },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: "." }], postprocess: unitCombatSpell },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: ";" }], postprocess: unitCombatSpell },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCombatSpell },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FACTION_NAME"], postprocess: d => d[1] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", /[.,]/], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_ITEM", /[.,]/], postprocess: unitItems },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_ITEM", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitItems },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_WEIGHT"], postprocess: d => d[1] },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY"], postprocess: d => d[1] },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP"], postprocess: d => d[1] },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_WEIGHT", { literal: "." }], postprocess: unitWeight },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_WEIGHT", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitWeight },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY", { literal: "." }], postprocess: unitCapacity },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCapacity },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP", { literal: "." }], postprocess: unitUpkeep },
+      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitUpkeep },
       { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
       {
         name: "UNIT_NAME$ebnf$1",
@@ -908,7 +922,7 @@
           return d.join("");
         }
       },
-      { name: "UNIT_WEIGHT", symbols: ["UNIT_WEIGHT$string$1", "__", "INT", /[.;]/], postprocess: unitWeight },
+      { name: "UNIT_WEIGHT", symbols: ["UNIT_WEIGHT$string$1", "__", "INT"] },
       {
         name: "UNIT_CAPACITY$string$1",
         symbols: [
@@ -928,8 +942,7 @@
       },
       {
         name: "UNIT_CAPACITY",
-        symbols: ["UNIT_CAPACITY$string$1", "__", "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", /[.;]/],
-        postprocess: unitCapacity
+        symbols: ["UNIT_CAPACITY$string$1", "__", "INT", { literal: "/" }, "INT", { literal: "/" }, "INT", { literal: "/" }, "INT"]
       },
       {
         name: "UNIT_UPKEEP$string$1",
@@ -946,7 +959,7 @@
           return d.join("");
         }
       },
-      { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT", /[.;]/], postprocess: unitUpkeep },
+      { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT"] },
       { name: "UNIT_COMMENT", symbols: ["BLOB"], postprocess: d => ({ type: "COMMENT", comment: array2String(d) }) }
     ],
     ParserStart: "UNIT_PARSER"

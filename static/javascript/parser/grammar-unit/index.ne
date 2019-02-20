@@ -60,36 +60,47 @@
   const unitWeight = (d) => {
     return {
       type: "WEIGHT",
-      weight: d[2]
+      weight: d[1][2]
     };
   }
 
   const unitCapacity = (d) => {
     return {
       type: "CAPACITY",
-      walk: d[2],
-      ride: d[4],
-      fly: d[6],
-      swim: d[8]
-    };
-  }
-
-  const unitUpkeep = (d) => {
-    return {
-      type: "UPKEEP",
-      upkeep: d[3]
+      walk: d[1][2],
+      ride: d[1][4],
+      fly: d[1][6],
+      swim: d[1][8]
     };
   }
 
   const unitCanStudy = (d) => {
-    // TODO: comments!!!
-    return d;
+    return {
+      type: "CAN_STUDY",
+      text: array2String(d)
+    };
   }
 
   const unitCombatSpell = (d) => {
-    // TODO: comments!!!
-    return d;
+    return {
+      type: "COMBAT_SPELL",
+      spell: array2String(d[3])
+    };
   };
+
+  const commentParser = (d) => {
+    return {
+      type: "COMMENT",
+      text: array2String(d)
+    }
+  };
+  
+  const unitUpkeep = (d) => {
+    return {
+      type: "UPKEEP",
+      value: d[1][3]
+    };
+  }
 %}
 
 
@@ -124,10 +135,14 @@ UNIT_SECTION_ITEM ->
   | __ UNIT_ITEM [.,] {% unitItems %}
   | __ UNIT_ITEM ";" UNIT_COMMENT {% unitItems %}
 
-  # Add UNIT_COMMENT
-  | __ UNIT_WEIGHT {% (d) => d[1] %}
-  | __ UNIT_CAPACITY {% (d) => d[1] %}
-  | __ UNIT_UPKEEP {% (d) => d[1] %}
+  | __ UNIT_WEIGHT "." {% unitWeight %}
+  | __ UNIT_WEIGHT ";" UNIT_COMMENT {% unitWeight %}
+
+  | __ UNIT_CAPACITY "." {% unitCapacity %}
+  | __ UNIT_CAPACITY ";" UNIT_COMMENT {% unitCapacity %}
+
+  | __ UNIT_UPKEEP "." {% unitUpkeep %}
+  | __ UNIT_UPKEEP ";" UNIT_COMMENT {% unitUpkeep %}
 
 
 UNIT_NAME ->
@@ -174,15 +189,15 @@ UNIT_ITEM ->
 
 
 UNIT_WEIGHT ->
-  "Weight:" __ INT [.;] {% unitWeight %}
+  "Weight:" __ INT
 
 
 UNIT_CAPACITY ->
-  "Capacity:" __ INT "/" INT "/" INT "/" INT [.;] {% unitCapacity %}
+  "Capacity:" __ INT "/" INT "/" INT "/" INT
 
 
 UNIT_UPKEEP ->
-  "Upkeep:" __ "$" INT [.;] {% unitUpkeep %}
+  "Upkeep:" __ "$" INT
 
 
 UNIT_COMMENT ->
