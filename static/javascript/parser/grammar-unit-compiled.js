@@ -48,15 +48,7 @@
     };
   };
 
-  const unitParser = d => {
-    return d;
-  };
-
-  const objectParser = d => {
-    return d;
-  };
-
-  const sectionParser = d => {
+  const sectionUnitParser = d => {
     return {
       unitName: d[2].unitName,
       unitId: d[2].unitId,
@@ -68,7 +60,16 @@
     // TODO: comments!!!
     return {
       type: "SKILLS",
-      skills: array2String(d)
+      skills: d[1][2]
+    };
+  };
+
+  const unitSkill = d => {
+    return {
+      skill: array2String(d[0]),
+      code: d[3],
+      level: d[6],
+      exp: d[9]
     };
   };
 
@@ -114,9 +115,9 @@
   const unitCapacity = d => {
     return {
       type: "CAPACITY",
-      walk: d[1][2],
+      fly: d[1][2],
       ride: d[1][4],
-      fly: d[1][6],
+      walk: d[1][6],
       swim: d[1][8]
     };
   };
@@ -147,6 +148,18 @@
       type: "UPKEEP",
       value: d[1][3]
     };
+  };
+
+  const sectionObjectParser = d => {
+    return d;
+  };
+
+  const unitParser = d => {
+    return d;
+  };
+
+  const objectParser = d => {
+    return d;
   };
   var grammar = {
     Lexer: undefined,
@@ -378,8 +391,6 @@
         symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$3", "_", "REGION_Z_LEVEL$string$7"],
         postprocess: d => ({ title: array2String(d), z: parseInt(String(4) + String(d[1]), 10) })
       },
-      { name: "UNIT_PARSER", symbols: ["UNIT_PARSER_ITEMS"], postprocess: unitParser },
-      { name: "UNIT_PARSER", symbols: [/[+]/, "__", "TEXT", { literal: "." }], postprocess: objectParser },
       { name: "UNIT_PARSER_ITEMS$ebnf$1", symbols: ["UNIT_SECTION"] },
       {
         name: "UNIT_PARSER_ITEMS$ebnf$1",
@@ -388,7 +399,7 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "UNIT_PARSER_ITEMS", symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1"], postprocess: sectionParser },
+      { name: "UNIT_PARSER_ITEMS", symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1"], postprocess: sectionUnitParser },
       { name: "UNIT_SECTION", symbols: ["UNIT_SECTION_ITEM"], postprocess: d => d[0] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: "." }], postprocess: unitSkills },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitSkills },
@@ -839,15 +850,49 @@
           return d.join("");
         }
       },
-      { name: "UNIT_SKILLS$ebnf$1", symbols: [/[^.;]/] },
+      { name: "UNIT_SKILLS$ebnf$1", symbols: ["UNIT_SKILL"] },
       {
         name: "UNIT_SKILLS$ebnf$1",
-        symbols: ["UNIT_SKILLS$ebnf$1", /[^.;]/],
+        symbols: ["UNIT_SKILLS$ebnf$1", "UNIT_SKILL"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
-      { name: "UNIT_SKILLS", symbols: ["UNIT_SKILLS$string$1", "UNIT_SKILLS$ebnf$1"], postprocess: array2String },
+      { name: "UNIT_SKILLS", symbols: ["UNIT_SKILLS$string$1", "__", "UNIT_SKILLS$ebnf$1"] },
+      {
+        name: "UNIT_SKILL$string$1",
+        symbols: [{ literal: "n" }, { literal: "o" }, { literal: "n" }, { literal: "e" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "UNIT_SKILL", symbols: ["UNIT_SKILL$string$1"] },
+      { name: "UNIT_SKILL$ebnf$1", symbols: [/[,]/], postprocess: id },
+      {
+        name: "UNIT_SKILL$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "UNIT_SKILL",
+        symbols: [
+          "LC_WORDS",
+          "__",
+          { literal: "[" },
+          "WORD",
+          { literal: "]" },
+          "__",
+          "INT",
+          "__",
+          { literal: "(" },
+          "INT",
+          { literal: ")" },
+          "UNIT_SKILL$ebnf$1"
+        ],
+        postprocess: unitSkill
+      },
       {
         name: "UNIT_CAN_STUDY$string$1",
         symbols: [{ literal: "C" }, { literal: "a" }, { literal: "n" }],
@@ -960,9 +1005,12 @@
         }
       },
       { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT"] },
-      { name: "UNIT_COMMENT", symbols: ["BLOB"], postprocess: d => ({ type: "COMMENT", comment: array2String(d) }) }
+      { name: "UNIT_COMMENT", symbols: ["BLOB"], postprocess: d => ({ type: "COMMENT", comment: array2String(d) }) },
+      { name: "OBJECT_PARSER_ITEMS", symbols: [/[+]/, "__", "TEXT", { literal: "." }], postprocess: sectionObjectParser },
+      { name: "PARSER", symbols: ["UNIT_PARSER_ITEMS"], postprocess: unitParser },
+      { name: "PARSER", symbols: ["OBJECT_PARSER_ITEMS"], postprocess: objectParser }
     ],
-    ParserStart: "UNIT_PARSER"
+    ParserStart: "PARSER"
   };
   if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = grammar;

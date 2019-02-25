@@ -25,6 +25,7 @@ const parseReport = async (reportData: string): Promise<IReport | undefined> => 
         report.forEach(item => {
           switch (item.type) {
             case "REGIONS":
+              // TODO: extend unit / object and add region ID it belongs to
               parseUnits(item);
               break;
           }
