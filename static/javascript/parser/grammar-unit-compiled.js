@@ -52,7 +52,8 @@
     return {
       unitName: d[2].unitName,
       unitId: d[2].unitId,
-      unitDetails: d[3]
+      faction: d[4],
+      unitDetails: d[5]
     };
   };
 
@@ -60,24 +61,24 @@
     // TODO: comments!!!
     return {
       type: "SKILLS",
-      skills: d[1][2]
+      skills: d[1][1]
     };
   };
 
   const unitSkill = d => {
     return {
-      skill: array2String(d[0]),
-      code: d[3],
-      level: d[6],
-      exp: d[9]
+      skill: array2String(d[1]),
+      code: d[4],
+      level: d[7],
+      exp: d[10]
     };
   };
 
   const unitFaction = d => {
     return {
       type: "FACTION",
-      factionName: array2String(d[0]),
-      factionId: d[3]
+      factionName: array2String(d[1]),
+      factionId: d[4]
     };
   };
 
@@ -151,7 +152,13 @@
   };
 
   const sectionObjectParser = d => {
-    return d;
+    console.log("OBJ !!!! ! ! !", d);
+    return {
+      objectName: d[1],
+      objectId: d[4],
+      objectType: d[9],
+      objectUnits: d[11]
+    };
   };
 
   const unitParser = d => {
@@ -391,15 +398,35 @@
         symbols: [{ literal: "," }, "INT", "REGION_Z_LEVEL$ebnf$3", "_", "REGION_Z_LEVEL$string$7"],
         postprocess: d => ({ title: array2String(d), z: parseInt(String(4) + String(d[1]), 10) })
       },
-      { name: "UNIT_PARSER_ITEMS$ebnf$1", symbols: ["UNIT_SECTION"] },
+      { name: "UNIT_PARSER_ITEMS$ebnf$1", symbols: ["UNIT_FLAGS_ONGUARD"], postprocess: id },
       {
         name: "UNIT_PARSER_ITEMS$ebnf$1",
-        symbols: ["UNIT_PARSER_ITEMS$ebnf$1", "UNIT_SECTION"],
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "UNIT_PARSER_ITEMS$ebnf$2", symbols: ["UNIT_FACTION_NAME"], postprocess: id },
+      {
+        name: "UNIT_PARSER_ITEMS$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "UNIT_PARSER_ITEMS$ebnf$3", symbols: ["UNIT_SECTION"] },
+      {
+        name: "UNIT_PARSER_ITEMS$ebnf$3",
+        symbols: ["UNIT_PARSER_ITEMS$ebnf$3", "UNIT_SECTION"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
-      { name: "UNIT_PARSER_ITEMS", symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1"], postprocess: sectionUnitParser },
+      {
+        name: "UNIT_PARSER_ITEMS",
+        symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1", "UNIT_PARSER_ITEMS$ebnf$2", "UNIT_PARSER_ITEMS$ebnf$3"],
+        postprocess: sectionUnitParser
+      },
       { name: "UNIT_SECTION", symbols: ["UNIT_SECTION_ITEM"], postprocess: d => d[0] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: "." }], postprocess: unitSkills },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_SKILLS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitSkills },
@@ -407,7 +434,6 @@
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAN_STUDY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCanStudy },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: "." }], postprocess: unitCombatSpell },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_COMBAT_SPELL", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCombatSpell },
-      { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FACTION_NAME"], postprocess: d => d[1] },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", /[.,]/], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_FLAGS", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitFlags },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_ITEM", /[.,]/], postprocess: unitItems },
@@ -441,7 +467,7 @@
       },
       {
         name: "UNIT_FACTION_NAME",
-        symbols: ["UNIT_FACTION_NAME$ebnf$1", "__", { literal: "(" }, "INT", { literal: ")" }, { literal: "," }],
+        symbols: ["__", "UNIT_FACTION_NAME$ebnf$1", "__", { literal: "(" }, "INT", { literal: ")" }, { literal: "," }],
         postprocess: unitFaction
       },
       {
@@ -836,6 +862,25 @@
         postprocess: () => ({ type: "FLAG", name: "noaid" })
       },
       {
+        name: "UNIT_FLAGS_ONGUARD$string$1",
+        symbols: [{ literal: "o" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS_ONGUARD$string$2",
+        symbols: [{ literal: "g" }, { literal: "u" }, { literal: "a" }, { literal: "r" }, { literal: "d" }, { literal: "," }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS_ONGUARD",
+        symbols: ["__", "UNIT_FLAGS_ONGUARD$string$1", "__", "UNIT_FLAGS_ONGUARD$string$2"],
+        postprocess: () => ({ type: "FLAG", name: "guard" })
+      },
+      {
         name: "UNIT_SKILLS$string$1",
         symbols: [
           { literal: "S" },
@@ -858,7 +903,15 @@
           return d[0].concat([d[1]]);
         }
       },
-      { name: "UNIT_SKILLS", symbols: ["UNIT_SKILLS$string$1", "__", "UNIT_SKILLS$ebnf$1"] },
+      { name: "UNIT_SKILLS", symbols: ["UNIT_SKILLS$string$1", "UNIT_SKILLS$ebnf$1"] },
+      { name: "UNIT_SKILL$ebnf$1", symbols: [] },
+      {
+        name: "UNIT_SKILL$ebnf$1",
+        symbols: ["UNIT_SKILL$ebnf$1", "_"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
       {
         name: "UNIT_SKILL$string$1",
         symbols: [{ literal: "n" }, { literal: "o" }, { literal: "n" }, { literal: "e" }],
@@ -866,10 +919,18 @@
           return d.join("");
         }
       },
-      { name: "UNIT_SKILL", symbols: ["UNIT_SKILL$string$1"] },
-      { name: "UNIT_SKILL$ebnf$1", symbols: [/[,]/], postprocess: id },
+      { name: "UNIT_SKILL", symbols: ["UNIT_SKILL$ebnf$1", "UNIT_SKILL$string$1"] },
+      { name: "UNIT_SKILL$ebnf$2", symbols: [] },
       {
-        name: "UNIT_SKILL$ebnf$1",
+        name: "UNIT_SKILL$ebnf$2",
+        symbols: ["UNIT_SKILL$ebnf$2", "_"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "UNIT_SKILL$ebnf$3", symbols: [/[,]/], postprocess: id },
+      {
+        name: "UNIT_SKILL$ebnf$3",
         symbols: [],
         postprocess: function(d) {
           return null;
@@ -878,6 +939,7 @@
       {
         name: "UNIT_SKILL",
         symbols: [
+          "UNIT_SKILL$ebnf$2",
           "LC_WORDS",
           "__",
           { literal: "[" },
@@ -889,7 +951,7 @@
           { literal: "(" },
           "INT",
           { literal: ")" },
-          "UNIT_SKILL$ebnf$1"
+          "UNIT_SKILL$ebnf$3"
         ],
         postprocess: unitSkill
       },
@@ -1006,7 +1068,51 @@
       },
       { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT"] },
       { name: "UNIT_COMMENT", symbols: ["BLOB"], postprocess: d => ({ type: "COMMENT", comment: array2String(d) }) },
-      { name: "OBJECT_PARSER_ITEMS", symbols: [/[+]/, "__", "TEXT", { literal: "." }], postprocess: sectionObjectParser },
+      { name: "OBJECT_PARSER_ITEMS$ebnf$1", symbols: [] },
+      {
+        name: "OBJECT_PARSER_ITEMS$ebnf$1",
+        symbols: ["OBJECT_PARSER_ITEMS$ebnf$1", "OBJECT_UNIT"],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      {
+        name: "OBJECT_PARSER_ITEMS",
+        symbols: [
+          /[+]/,
+          "OBJECT_NAME",
+          "__",
+          { literal: "[" },
+          "INT",
+          { literal: "]" },
+          "__",
+          { literal: ":" },
+          "__",
+          "OBJECT_DESC",
+          { literal: "." },
+          "OBJECT_PARSER_ITEMS$ebnf$1"
+        ],
+        postprocess: sectionObjectParser
+      },
+      { name: "OBJECT_NAME$ebnf$1", symbols: [/[^:.\[\]]/] },
+      {
+        name: "OBJECT_NAME$ebnf$1",
+        symbols: ["OBJECT_NAME$ebnf$1", /[^:.\[\]]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "OBJECT_NAME", symbols: ["OBJECT_NAME$ebnf$1"], postprocess: array2String },
+      { name: "OBJECT_DESC$ebnf$1", symbols: [/[^.;]/] },
+      {
+        name: "OBJECT_DESC$ebnf$1",
+        symbols: ["OBJECT_DESC$ebnf$1", /[^.;]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "OBJECT_DESC", symbols: ["OBJECT_DESC$ebnf$1"], postprocess: array2String },
+      { name: "OBJECT_UNIT", symbols: ["__", "UNIT_PARSER_ITEMS"] },
       { name: "PARSER", symbols: ["UNIT_PARSER_ITEMS"], postprocess: unitParser },
       { name: "PARSER", symbols: ["OBJECT_PARSER_ITEMS"], postprocess: objectParser }
     ],

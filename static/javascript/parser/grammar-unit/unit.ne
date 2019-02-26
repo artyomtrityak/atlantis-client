@@ -3,7 +3,8 @@
     return {
       unitName: d[2].unitName,
       unitId: d[2].unitId,
-      unitDetails: d[3]
+      faction: d[4],
+      unitDetails: d[5]
     }
   }
 
@@ -11,24 +12,24 @@
     // TODO: comments!!!
     return {
       type: "SKILLS",
-      skills: d[1][2]
+      skills: d[1][1]
     };
   }
 
   const unitSkill = (d) => {
     return {
-      skill: array2String(d[0]),
-      code: d[3],
-      level: d[6],
-      exp: d[9]
+      skill: array2String(d[1]),
+      code: d[4],
+      level: d[7],
+      exp: d[10]
     };
   }
 
   const unitFaction = (d) => {
     return {
       type: "FACTION",
-      factionName: array2String(d[0]),
-      factionId: d[3]
+      factionName: array2String(d[1]),
+      factionId: d[4]
     };
   }
 
@@ -104,7 +105,7 @@
 
 
 UNIT_PARSER_ITEMS ->
-  [*-] __ UNIT_NAME UNIT_SECTION:+ {% sectionUnitParser %}
+  [*-] __ UNIT_NAME UNIT_FLAGS_ONGUARD:? UNIT_FACTION_NAME:? UNIT_SECTION:+ {% sectionUnitParser %}
 
 
 UNIT_SECTION ->
@@ -120,8 +121,6 @@ UNIT_SECTION_ITEM ->
 
   | __ UNIT_COMBAT_SPELL "." {% unitCombatSpell %}
   | __ UNIT_COMBAT_SPELL ";" UNIT_COMMENT {% unitCombatSpell %}
-
-  | __ UNIT_FACTION_NAME {% (d) => d[1] %}
   
   | __ UNIT_FLAGS [.,] {% unitFlags %}
   | __ UNIT_FLAGS ";" UNIT_COMMENT {% unitFlags %}
@@ -144,7 +143,7 @@ UNIT_NAME ->
 
 
 UNIT_FACTION_NAME ->
-  [^,.():;]:+ __ "(" INT ")" "," {% unitFaction %}
+  __ [^,.():;]:+ __ "(" INT ")" "," {% unitFaction %}
 
 
 UNIT_FLAGS ->
@@ -164,13 +163,16 @@ UNIT_FLAGS ->
   | "flying" __ "battle" __ "spoils" {% () => ({ type: "FLAG", name: "spoils_flying" }) %}
   | "receiving" __ "no" __ "aid" {% () => ({ type: "FLAG", name: "noaid" }) %}
 
+UNIT_FLAGS_ONGUARD ->
+  __ "on" __ "guard," {% () => ({ type: "FLAG", name: "guard" }) %}
+
 
 UNIT_SKILLS ->
-  "Skills:" __ UNIT_SKILL:+
+  "Skills:" UNIT_SKILL:+
 
 UNIT_SKILL ->
-  "none"
-  | LC_WORDS __ "[" WORD "]" __ INT __ "(" INT ")" [,]:? {% unitSkill %}
+  _:* "none"
+  | _:* LC_WORDS __ "[" WORD "]" __ INT __ "(" INT ")" [,]:? {% unitSkill %}
 
 
 UNIT_CAN_STUDY ->
