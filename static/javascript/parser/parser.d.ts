@@ -22,6 +22,23 @@ export interface IReportItemFactionStatus extends IReportItemBase {
   type: "FACTION_STATUS";
 }
 
+export interface IReportObject {
+  objectId: number;
+  objectName: string;
+  objectType: string;
+  objectUnits: IReportUnit[];
+}
+
+export interface IReportUnit {
+  unitName: string;
+  unitId: number;
+  faction: {
+    factionId: number;
+    factionName: string; // TODO: one of key
+  };
+  unitDetails: object[];
+}
+
 // TODO: remove IRegion from reducers and use this one
 export interface IRegion {
   readonly id: string;
@@ -38,6 +55,7 @@ export interface IRegion {
     [key: string]: IRegion;
   };
   readonly unitsAndObjects?: string[];
+  unitsAndObjectsParsed: Array<IReportObject | IReportUnit>;
 }
 
 export interface IReportItemRegions extends IReportItemBase {

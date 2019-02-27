@@ -25,9 +25,10 @@ const parseReport = async (reportData: string): Promise<IReport | undefined> => 
         report.forEach(item => {
           switch (item.type) {
             case "REGIONS":
-              // TODO: extend unit / object and add region ID it belongs to
               parseUnits(item);
               break;
+            // TODO: for orders template
+            // TODO: for events to add them to each unit
           }
         });
         resolve(parser.results[0]);
@@ -45,14 +46,16 @@ const parseUnits = async (item: IReportItemRegions) => {
     if (!region.unitsAndObjects) {
       return;
     }
+    region.unitsAndObjectsParsed = [];
     region.unitsAndObjects.forEach(unitOrObject => {
       const parser = new nearley.Parser(grammarUnitCompiled);
-      console.log(unitOrObject);
+      // console.log(unitOrObject);
       parser.feed(unitOrObject);
-      console.log("RESULTS111:", parser.results);
-      if (parser.results && parser.results.length > 1) {
-        console.log("DIFF:", diff(parser.results[0], parser.results[1]));
-      }
+      // console.log("RESULTS111:", parser.results);
+      // if (parser.results && parser.results.length > 1) {
+      //   console.log("DIFF:", diff(parser.results[0], parser.results[1]));
+      // }
+      region.unitsAndObjectsParsed.push(parser.results[0]);
     });
   });
 };

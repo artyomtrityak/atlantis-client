@@ -152,7 +152,6 @@
   };
 
   const sectionObjectParser = d => {
-    console.log("OBJ !!!! ! ! !", d);
     return {
       objectName: d[1],
       objectId: d[4],
