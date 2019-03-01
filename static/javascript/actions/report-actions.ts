@@ -1,4 +1,3 @@
-import { IReport } from "../parser";
 import { IActionWithPayload } from "./actions.d";
 
 type IReportLoadedAction = IActionWithPayload<"REPORT_LOADED", IReport>;

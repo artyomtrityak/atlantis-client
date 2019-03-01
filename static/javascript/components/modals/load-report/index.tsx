@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState, useEffect } from "react";
 import _ from "lodash";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
-import parse, { IReport } from "../../../parser";
+import parse from "../../../parser";
 import { ICombinedReducersState } from "../../../reducers";
 import { closeModal, showLoader, hideLoader } from "../../../actions/navigation-actions";
 import { reportLoaded } from "../../../actions/report-actions";

@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
-import { IReport } from "../../parser";
 import { IState, ILevel, IRegion, IRegions } from "./regions.d";
 export { IState, ILevel, IRegion, IRegions };
 
