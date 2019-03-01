@@ -1,3 +1,3 @@
 export interface IHeaderProps {
-  showLoadReport: () => void;
+  readonly showLoadReport: () => void;
 }

@@ -1,9 +1,9 @@
 export interface IGameMenuProps {
-  isOpen: boolean;
+  readonly isOpen: boolean;
 }
 
 export interface IGameMenuIconProps {
-  isOpen: boolean;
-  open: () => void;
-  close: () => void;
+  readonly isOpen: boolean;
+  readonly open: () => void;
+  readonly close: () => void;
 }

@@ -5,7 +5,7 @@ import { ICombinedReducersState } from "../../reducers";
 import "./loader-styles.scss";
 
 interface IProps {
-  loading: boolean;
+  readonly loading: boolean;
 }
 
 const Loading = (props: IProps) => {

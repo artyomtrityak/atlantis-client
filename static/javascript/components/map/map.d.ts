@@ -1,40 +1,40 @@
 import { IRegion, IRegions } from "../../reducers/regions";
 
 export interface IMapProps {
-  maxX: number;
-  maxY: number;
-  zoom: number;
-  width: number;
-  height: number;
-  level: number;
-  selectedRegion?: string;
-  onSelect: (regionId: string) => void;
-  regions: IRegions;
+  readonly maxX: number;
+  readonly maxY: number;
+  readonly zoom: number;
+  readonly width: number;
+  readonly height: number;
+  readonly level: number;
+  readonly selectedRegion?: string;
+  readonly onSelect: (regionId: string) => void;
+  readonly regions: IRegions;
 }
 
 export interface IHexProps {
-  isSelected: boolean;
-  zoom: number;
-  x: number;
-  y: number;
-  onSelect: (regionId: string) => void;
-  region: IRegion;
+  readonly isSelected: boolean;
+  readonly zoom: number;
+  readonly x: number;
+  readonly y: number;
+  readonly onSelect: (regionId: string) => void;
+  readonly region: IRegion;
 }
 
 export interface IPoint {
-  x: number;
-  y: number;
+  readonly x: number;
+  readonly y: number;
 }
 
 export interface IControlProps {
-  zoom: number;
-  levelsLen: number;
-  mapLevel: number;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onCenter: () => void;
-  onLevelUp: () => void;
-  onLevelDown: () => void;
+  readonly zoom: number;
+  readonly levelsLen: number;
+  readonly mapLevel: number;
+  readonly onZoomIn: () => void;
+  readonly onZoomOut: () => void;
+  readonly onCenter: () => void;
+  readonly onLevelUp: () => void;
+  readonly onLevelDown: () => void;
 }
 
 export interface IHexPosition {

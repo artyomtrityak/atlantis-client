@@ -4,7 +4,8 @@ import { IState } from "./units.d";
 export { IState };
 
 const initialState: IState = {
-  selectedUnitId: undefined
+  selectedUnitId: undefined,
+  units: {}
 };
 
 // -------------------

@@ -18,12 +18,8 @@ function parseRegion(result: ILevel[], region: IRegion) {
     result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z, selectedRegion: `${x}_${y}_${z}` };
   }
 
-  const regions = result[z].regions;
+  const regions = { ...result[z].regions };
   regions[`${x}_${y}_${z}`] = region;
-
-  if (!region.exits) {
-    return result;
-  }
 
   // Exits
   for (const dir in region.exits) {
@@ -37,6 +33,7 @@ function parseRegion(result: ILevel[], region: IRegion) {
       regions[`${exitX}_${exitY}_${z}`] = region.exits[dir];
     }
   }
+  result[z] = { ...result[z], regions };
   return result;
 }
 
@@ -58,21 +55,20 @@ function parseLevel(level: ILevel) {
       isWrap = true;
     }
   }
-  level.maxX = maxX;
-  level.maxY = maxY;
-  level.isWrap = isWrap;
+  level = { ...level, maxX, maxY, isWrap };
   // TODO: add isTop/BottonEdge check
   return level;
 }
 
 function addShadowRegions(level: ILevel) {
+  const regions = { ...level.regions };
   for (const locator in level.regions) {
     if (!level.regions.hasOwnProperty(locator)) {
       continue;
     }
     const {
       coordinates: { x, y, z }
-    } = level.regions[locator];
+    } = regions[locator];
 
     // Shadow regions
     [
@@ -84,7 +80,7 @@ function addShadowRegions(level: ILevel) {
       { x: x - 1, y: y + 1 }
     ].forEach(d => {
       // If region exist
-      if (level.regions[`${d.x}_${d.y}_${z}`]) {
+      if (regions[`${d.x}_${d.y}_${z}`]) {
         return;
       }
 
@@ -97,7 +93,7 @@ function addShadowRegions(level: ILevel) {
       if (level.isWrap && x === level.maxX && x < d.x) {
         return;
       }
-      level.regions[`${d.x}_${d.y}_${z}`] = {
+      regions[`${d.x}_${d.y}_${z}`] = {
         id: `${d.x}_${d.y}_${z}`,
         coordinates: { x: d.x, y: d.y, z },
         title: "Unknown",
@@ -106,7 +102,7 @@ function addShadowRegions(level: ILevel) {
       };
     });
   }
-  return level;
+  return { ...level, regions };
 }
 
 function parseRegions(report: IReport) {

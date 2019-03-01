@@ -22,6 +22,7 @@ export interface IReportItemFactionStatus extends IReportItemBase {
   type: "FACTION_STATUS";
 }
 
+// TODO: use it from reducer or in reducer from parser?
 export interface IReportObject {
   objectId: number;
   objectName: string;

@@ -8,10 +8,10 @@ import { closeModal, showLoader, hideLoader } from "../../../actions/navigation-
 import { reportLoaded } from "../../../actions/report-actions";
 
 interface IProps {
-  reportLoaded: (report: IReport) => void;
-  closeModal: () => void;
-  hideLoader: () => void;
-  showLoader: () => void;
+  readonly reportLoaded: (report: IReport) => void;
+  readonly closeModal: () => void;
+  readonly hideLoader: () => void;
+  readonly showLoader: () => void;
 }
 
 const LoadReportModal = (props: IProps) => {
