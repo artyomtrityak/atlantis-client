@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
-import { IState, ILevel, IRegion, IRegions } from "./regions.d";
-export { IState, ILevel, IRegion, IRegions };
+import { IState, ILevel } from "./regions.d";
+export { IState };
 
 const initialState: IState = {
   levels: [],
@@ -97,7 +97,8 @@ function addShadowRegions(level: ILevel) {
         coordinates: { x: d.x, y: d.y, z },
         title: "Unknown",
         type: "unknown",
-        details: []
+        details: [],
+        unitsAndObjectsParsed: []
       };
     });
   }

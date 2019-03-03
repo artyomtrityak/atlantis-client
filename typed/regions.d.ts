@@ -16,6 +16,10 @@ interface IRegion {
   unitsAndObjectsParsed: Array<IReportObject | IReportUnit>; // TODO: make readonly?
 }
 
+interface IRegions {
+  readonly [key: string]: IRegion;
+}
+
 interface IReportItemRegions extends IReportItemBase {
   readonly type: "REGIONS";
   readonly regions: IRegion[];
