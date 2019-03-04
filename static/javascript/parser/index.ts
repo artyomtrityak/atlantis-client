@@ -39,12 +39,12 @@ const parseReport = async (reportData: string): Promise<IReport | undefined> => 
 const parseUnits = async (item: IReportItemRegions) => {
   const grammarUnitCompiled = nearley.Grammar.fromCompiled(grammarUnit);
   item.regions.forEach(region => {
-    if (!region.unitsAndObjects) {
+    if (!region.unitsAndObjectsRaw) {
       return;
     }
-    region.unitsAndObjectsParsed = region.unitsAndObjects.map(unitOrObject => {
+    region.unitsAndObjects = region.unitsAndObjectsRaw.map(unitOrObjectRaw => {
       const parser = new nearley.Parser(grammarUnitCompiled);
-      parser.feed(unitOrObject);
+      parser.feed(unitOrObjectRaw);
       // console.log("DEBUG: INPUT UNIT:" unitOrObject);
       // console.log("DEBUG: OUTPUT UNIT::", parser.results);
       // if (parser.results && parser.results.length > 1) {

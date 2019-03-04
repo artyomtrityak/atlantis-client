@@ -1,6 +1,7 @@
 @{%
   const sectionUnitParser = (d) => {
     return {
+      type: "UNIT",
       unitName: d[2].unitName,
       unitId: d[2].unitId,
       faction: d[4],

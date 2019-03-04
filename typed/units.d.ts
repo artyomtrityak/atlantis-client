@@ -65,6 +65,7 @@ type unitDetailsType =
   | IReportUnitUpkeep;
 
 interface IReportObject {
+  readonly type: "OBJECT";
   readonly objectId: number;
   readonly objectName: string;
   readonly objectType: string;
@@ -72,6 +73,7 @@ interface IReportObject {
 }
 
 interface IReportUnit {
+  readonly type: "UNIT";
   readonly unitName: string;
   readonly unitId: number;
   readonly faction: {

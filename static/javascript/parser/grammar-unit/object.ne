@@ -1,6 +1,7 @@
 @{%
   const sectionObjectParser = (d) => {
     return {
+      type: "OBJECT",
       objectName: d[1],
       objectId: d[4],
       objectType: d[9],

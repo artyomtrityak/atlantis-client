@@ -4,11 +4,11 @@
 
 @{%
   const unitParser = (d) => {
-    return d;
+    return d[0];
   }
 
   const objectParser = (d) => {
-    return d;
+    return d[0];
   }
 %}
 

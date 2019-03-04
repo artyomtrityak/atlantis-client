@@ -185,7 +185,7 @@
       details: d[8],
       exits: exits,
       gate: d[14],
-      unitsAndObjects: d[15],
+      unitsAndObjectsRaw: d[15],
       type: d[0][0],
       isExit: false
     };

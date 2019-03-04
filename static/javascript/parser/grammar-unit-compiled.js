@@ -50,6 +50,7 @@
 
   const sectionUnitParser = d => {
     return {
+      type: "UNIT",
       unitName: d[2].unitName,
       unitId: d[2].unitId,
       faction: d[4],
@@ -153,6 +154,7 @@
 
   const sectionObjectParser = d => {
     return {
+      type: "OBJECT",
       objectName: d[1],
       objectId: d[4],
       objectType: d[9],
@@ -161,11 +163,11 @@
   };
 
   const unitParser = d => {
-    return d;
+    return d[0];
   };
 
   const objectParser = d => {
-    return d;
+    return d[0];
   };
   var grammar = {
     Lexer: undefined,

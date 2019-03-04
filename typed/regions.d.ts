@@ -12,8 +12,8 @@ interface IRegion {
   readonly exits?: {
     [key: string]: IRegion;
   };
-  readonly unitsAndObjects?: string[];
-  unitsAndObjectsParsed: Array<IReportObject | IReportUnit>; // TODO: make readonly?
+  readonly unitsAndObjectsRaw?: string[];
+  unitsAndObjects: Array<IReportObject | IReportUnit>; // TODO: make readonly?
 }
 
 interface IRegions {
