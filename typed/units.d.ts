@@ -1,6 +1,6 @@
 interface IReportUnitFlag {
-  readonly type: "FLAG";
-  readonly name: string;
+  readonly type: "UNIT_FLAG";
+  readonly flag: string;
 }
 
 interface IReportUnitSkills {
