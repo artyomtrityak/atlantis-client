@@ -13,7 +13,8 @@ interface IRegion {
     [key: string]: IRegion;
   };
   readonly unitsAndObjectsRaw?: string[];
-  unitsAndObjects: Array<IReportObject | IReportUnit>;
+  readonly unitsAndObjects: Array<IReportObject | IReportUnit>;
+  readonly units: Array<IReportObject | IReportUnit>;
 }
 
 interface IRegions {
