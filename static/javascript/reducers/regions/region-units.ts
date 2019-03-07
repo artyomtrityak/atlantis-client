@@ -1,9 +1,45 @@
 import _ from "lodash";
+import { RACES } from "../../config";
 import { IParsedRegionUnitRW, IParsedRegionUnit } from "./regions.d";
 export { IParsedRegionUnit };
 
+function parseSkills(unit: IParsedRegionUnitRW, d: IReportUnitSkills) {
+  unit.skills = [...d.skills];
+  return unit;
+}
+
+function parseCapacity(unit: IParsedRegionUnitRW, d: IReportUnitCapacity) {
+  unit.capacity = {
+    walk: d.walk,
+    ride: d.ride,
+    fly: d.fly,
+    swim: d.swim
+  };
+  return unit;
+}
+
+function parseItem(unit: IParsedRegionUnitRW, d: IReportUnitItem) {
+  unit.items.push({
+    itemKey: d.item.key,
+    text: d.item.text,
+    amount: d.item.amount,
+    isRace: RACES.includes(d.item.key)
+  });
+  return unit;
+}
+
+function parseCombatSpell(unit: IParsedRegionUnitRW, d: IReportUnitCombatSpell) {
+  unit.combatSpell = d.spell;
+  return unit;
+}
+
 function parseWeight(unit: IParsedRegionUnitRW, d: IReportUnitWeight) {
   unit.weight = d.weight;
+  return unit;
+}
+
+function parseUpkeep(unit: IParsedRegionUnitRW, d: IReportUnitUpkeep) {
+  unit.upkeep = d.value;
   return unit;
 }
 
@@ -65,6 +101,18 @@ function parseUnit(regionUnit: IReportUnit) {
     name: regionUnit.unitName,
     faction: regionUnit.faction,
     weight: 0,
+    upkeep: 0,
+    combatSpell: undefined,
+    items: [],
+    capacity: {
+      walk: 0,
+      ride: 0,
+      fly: 0,
+      swim: 0
+    },
+    skills: [],
+    // TODO: Can study
+    // TODO: comment
 
     // Flags defaults
     flags: {
@@ -83,20 +131,33 @@ function parseUnit(regionUnit: IReportUnit) {
       spoilsWeightless: false,
       spoilsRiding: false,
       spoilsFlying: false
-    },
-
-    // Unit items
-    items: []
+    }
   };
 
   if (regionUnit.unitDetails && Array.isArray(regionUnit.unitDetails)) {
     regionUnit.unitDetails.forEach(d => {
       switch (d.type) {
-        case "UNIT_FLAG":
+        case "FLAG":
           parseFlag(unit, d);
           break;
         case "WEIGHT":
           parseWeight(unit, d);
+          break;
+        case "UPKEEP":
+          parseUpkeep(unit, d);
+          break;
+        case "COMBAT_SPELL":
+          parseCombatSpell(unit, d);
+          break;
+        case "ITEM":
+          parseItem(unit, d);
+          break;
+        case "CAPACITY":
+          parseCapacity(unit, d);
+          break;
+        case "SKILLS":
+          parseSkills(unit, d);
+          break;
       }
     });
   }
@@ -105,7 +166,6 @@ function parseUnit(regionUnit: IReportUnit) {
 }
 
 export default function parseRegionUnits(region: IRegion) {
-  console.log(region.unitsAndObjects);
   const units = _.chain(region.unitsAndObjects)
     .map(d => {
       if (d.type === "UNIT") {

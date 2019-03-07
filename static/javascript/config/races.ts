@@ -1,0 +1,41 @@
+type IRaces = ReadonlyArray<string>;
+
+export default function getRaces(): IRaces {
+  return [
+    "LEAD",
+    "VIKI",
+    "BARB",
+    "PLAI",
+    "ESKI",
+    "NOMA",
+    "TMAN",
+    "DMAN",
+    "WELF",
+    "SELF",
+    "HELF",
+    "TELF",
+    "IDWA",
+    "HDWA",
+    "UDWA",
+    "DDWA",
+    "ORC",
+    "GNOM",
+    "CTAU",
+    "PEAS",
+    "MAN",
+    "FAIR",
+    "LIZA",
+    "URUK",
+    "GBLN",
+    "HOBB",
+    "GNOL",
+    "DRLF",
+    "MERC",
+    "TITA",
+    "AMAZ",
+    "OGER",
+    "HILA",
+    "MINO, GELF",
+    "HUMN"
+  ];
+}

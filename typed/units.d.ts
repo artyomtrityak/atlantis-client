@@ -1,5 +1,5 @@
 interface IReportUnitFlag {
-  readonly type: "UNIT_FLAG";
+  readonly type: "FLAG";
   readonly flag: string;
 }
 
@@ -16,8 +16,12 @@ interface IReportUnitSkill {
 }
 
 interface IReportUnitItem {
-  readonly type: "UNIT_ITEM";
-  readonly item: string;
+  readonly type: "ITEM";
+  readonly item: {
+    key: string;
+    amount: number;
+    text: string;
+  };
 }
 
 interface IReportUnitWeight {

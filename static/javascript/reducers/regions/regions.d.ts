@@ -13,13 +13,28 @@ export interface IState {
   readonly zoom: number;
 }
 
+export interface IParseRegionUnitItem {
+  itemKey: string;
+  text: string;
+  amount: number;
+  isRace: boolean;
+}
+
 export interface IParsedRegionUnitRW {
   id: number;
   name: string;
   weight: number;
+  upkeep: number;
+  combatSpell?: string;
   faction: {
     factionId: number;
     factionName: string;
+  };
+  capacity: {
+    walk: number;
+    ride: number;
+    fly: number;
+    swim: number;
   };
   flags: {
     noaid: boolean;
@@ -38,6 +53,7 @@ export interface IParsedRegionUnitRW {
     visibilityRevealFaction: boolean;
     visibilityRevealUnit: boolean;
   };
-  items: object[];
+  items: IParseRegionUnitItem[];
+  skills: IReportUnitSkill[];
 }
 export type IParsedRegionUnit = Readonly<IParsedRegionUnitRW>;

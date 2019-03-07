@@ -45,7 +45,7 @@
   const unitFlags = (d) => {
     // TODO: comments!!!
     return {
-      type: "UNIT_FLAG",
+      type: "FLAG",
       flag: d[1].name
     };
   }
@@ -53,10 +53,26 @@
   const unitItems = (d) => {
     // TODO: comments!!!
     return {
-      type: "UNIT_ITEM",
+      type: "ITEM",
       item: d[1]
     };
   }
+
+  const unitItemWithAmount = (d) => {
+    return {
+      text: array2String(d),
+      amount: d[0],
+      key: d[5]
+    };
+  };
+
+  const unitItemWithoutAmount = (d) => {
+    return {
+      text: array2String(d),
+      amount: 1,
+      key: d[3]
+    };
+  };
 
   const unitWeight = (d) => {
     return {
@@ -164,12 +180,14 @@ UNIT_FLAGS ->
   | "flying" __ "battle" __ "spoils" {% () => ({ type: "FLAG", name: "spoils_flying" }) %}
   | "receiving" __ "no" __ "aid" {% () => ({ type: "FLAG", name: "noaid" }) %}
 
+
 UNIT_FLAGS_ONGUARD ->
   __ "on" __ "guard," {% () => ({ type: "FLAG", name: "guard" }) %}
 
 
 UNIT_SKILLS ->
   "Skills:" UNIT_SKILL:+
+
 
 UNIT_SKILL ->
   _:* "none"
@@ -185,8 +203,8 @@ UNIT_COMBAT_SPELL ->
 
 
 UNIT_ITEM ->
-  INT __ LC_WORDS __ "[" WORD "]" {% array2String %}
-  | LC_WORDS __ "[" WORD "]" {% array2String %}
+  INT __ LC_WORDS __ "[" WORD "]" {% unitItemWithAmount %}
+  | LC_WORDS __ "[" WORD "]" {% unitItemWithoutAmount %}
 
 
 UNIT_WEIGHT ->

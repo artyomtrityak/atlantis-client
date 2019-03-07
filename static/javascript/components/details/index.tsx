@@ -21,7 +21,7 @@ const DetailsComponent = (props: IDetailsProps) => {
   const { activeTab } = props;
   const items: IDetailsItem[] = [
     { text: "Region", tabName: "REGION" },
-    { text: "Unut", tabName: "UNIT" },
+    { text: "Unit", tabName: "UNIT" },
     { text: "Events", tabName: "EVENTS" },
     { text: "Battles", tabName: "BATTLES" }
   ];

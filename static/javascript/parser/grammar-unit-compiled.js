@@ -94,7 +94,7 @@
   const unitFlags = d => {
     // TODO: comments!!!
     return {
-      type: "UNIT_FLAG",
+      type: "FLAG",
       flag: d[1].name
     };
   };
@@ -102,8 +102,24 @@
   const unitItems = d => {
     // TODO: comments!!!
     return {
-      type: "UNIT_ITEM",
+      type: "ITEM",
       item: d[1]
+    };
+  };
+
+  const unitItemWithAmount = d => {
+    return {
+      text: array2String(d),
+      amount: d[0],
+      key: d[5]
+    };
+  };
+
+  const unitItemWithoutAmount = d => {
+    return {
+      text: array2String(d),
+      amount: 1,
+      key: d[3]
     };
   };
 
@@ -1012,9 +1028,9 @@
       {
         name: "UNIT_ITEM",
         symbols: ["INT", "__", "LC_WORDS", "__", { literal: "[" }, "WORD", { literal: "]" }],
-        postprocess: array2String
+        postprocess: unitItemWithAmount
       },
-      { name: "UNIT_ITEM", symbols: ["LC_WORDS", "__", { literal: "[" }, "WORD", { literal: "]" }], postprocess: array2String },
+      { name: "UNIT_ITEM", symbols: ["LC_WORDS", "__", { literal: "[" }, "WORD", { literal: "]" }], postprocess: unitItemWithoutAmount },
       {
         name: "UNIT_WEIGHT$string$1",
         symbols: [
