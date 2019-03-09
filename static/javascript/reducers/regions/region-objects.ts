@@ -1,19 +1,21 @@
 import _ from "lodash";
-import { IParsedRegionUnitRW, IParsedRegionUnit } from "./regions.d";
-export { IParsedRegionUnit };
+import { parseRegionUnit } from "./region-units";
 
-function parseObject(regionObject: IReportObject) {
-  console.log("I am object:", regionObject);
-  // TODO: call unit parser for units inside
+function parseObject(regionObject: IReportObject, region: IRegion) {
+  const units = regionObject.objectUnits.map(d => parseRegionUnit(d));
+  // Add units from objects to region units list
+  units.forEach(unit => {
+    unit = { ...unit, inObject: regionObject.objectId };
+    region.units.push(unit as IParsedRegionUnit);
+  });
   return regionObject;
 }
 
-export default function parseRegionUnits(region: IRegion) {
-  console.log(region.unitsAndObjects);
+export function parseRegionObjects(region: IRegion) {
   const objects = _.chain(region.unitsAndObjects)
     .map(d => {
       if (d.type === "OBJECT") {
-        return parseObject(d);
+        return parseObject(d, region);
       }
     })
     .compact()

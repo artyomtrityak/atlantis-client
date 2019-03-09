@@ -20,4 +20,4 @@ OBJECT_DESC ->
   [^.;]:+ {% array2String %}
 
 OBJECT_UNIT ->
-  __ UNIT_PARSER_ITEMS
+  __ UNIT_PARSER_ITEMS {% (d) => d[1] %}

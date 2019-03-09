@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
-import parseRegionUnits from "./region-units";
-import parseRegionObjects from "./region-objects";
+import { parseRegionUnits } from "./region-units";
+import { parseRegionObjects } from "./region-objects";
 import { IState, ILevel } from "./regions.d";
 export { IState };
 
@@ -100,7 +100,8 @@ function addShadowRegions(level: ILevel) {
         title: "Unknown",
         type: "unknown",
         details: [],
-        unitsAndObjects: []
+        unitsAndObjects: [],
+        units: []
       };
     });
   }

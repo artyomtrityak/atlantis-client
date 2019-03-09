@@ -1129,7 +1129,7 @@
         }
       },
       { name: "OBJECT_DESC", symbols: ["OBJECT_DESC$ebnf$1"], postprocess: array2String },
-      { name: "OBJECT_UNIT", symbols: ["__", "UNIT_PARSER_ITEMS"] },
+      { name: "OBJECT_UNIT", symbols: ["__", "UNIT_PARSER_ITEMS"], postprocess: d => d[1] },
       { name: "PARSER", symbols: ["UNIT_PARSER_ITEMS"], postprocess: unitParser },
       { name: "PARSER", symbols: ["OBJECT_PARSER_ITEMS"], postprocess: objectParser }
     ],

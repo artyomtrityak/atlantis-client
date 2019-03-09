@@ -1,7 +1,10 @@
 import _ from "lodash";
 import { RACES } from "../../config";
-import { IParsedRegionUnitRW, IParsedRegionUnit } from "./regions.d";
-export { IParsedRegionUnit };
+
+function parseCanStudy(unit: IParsedRegionUnitRW, d: IReportUnitCanStudy) {
+  console.log("CAN STUDY:", d);
+  return unit;
+}
 
 function parseSkills(unit: IParsedRegionUnitRW, d: IReportUnitSkills) {
   unit.skills = [...d.skills];
@@ -95,7 +98,7 @@ function parseFlag(unit: IParsedRegionUnitRW, d: IReportUnitFlag) {
 }
 
 function parseUnit(regionUnit: IReportUnit) {
-  console.log("I am unit:", regionUnit);
+  // console.log("I am unit:", regionUnit);
   const unit: IParsedRegionUnitRW = {
     id: regionUnit.unitId,
     name: regionUnit.unitName,
@@ -158,6 +161,9 @@ function parseUnit(regionUnit: IReportUnit) {
         case "SKILLS":
           parseSkills(unit, d);
           break;
+        case "CAN_STUDY":
+          parseCanStudy(unit, d);
+          break;
       }
     });
   }
@@ -165,7 +171,7 @@ function parseUnit(regionUnit: IReportUnit) {
   return unit;
 }
 
-export default function parseRegionUnits(region: IRegion) {
+export function parseRegionUnits(region: IRegion) {
   const units = _.chain(region.unitsAndObjects)
     .map(d => {
       if (d.type === "UNIT") {
@@ -175,4 +181,8 @@ export default function parseRegionUnits(region: IRegion) {
     .compact()
     .value();
   return { ...region, units };
+}
+
+export function parseRegionUnit(unit: IReportUnit) {
+  return parseUnit(unit);
 }

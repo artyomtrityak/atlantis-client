@@ -38,7 +38,7 @@ const getColumns = (width: number) => {
     {
       key: "men",
       name: "Men",
-      width: (dynamicWidth * 10) / 100,
+      width: 60,
       sortable: true,
       filterable: true
     },
@@ -50,15 +50,23 @@ const getColumns = (width: number) => {
       filterable: true
     },
     {
-      key: "skills",
-      name: "Skills",
-      width: (dynamicWidth * 15) / 100,
+      key: "weapons",
+      name: "Weapons",
+      width: 60,
       sortable: true,
       filterable: true
     },
     {
-      key: "orders",
-      name: "Orders",
+      key: "armor",
+      name: "Armor",
+      width: 60,
+      sortable: true,
+      filterable: true
+    },
+    {
+      key: "mounts",
+      name: "Mounts",
+      width: 60,
       sortable: true,
       filterable: true
     }
@@ -75,8 +83,10 @@ for (let i = 1; i < numberOfRows; i++) {
     unit: "My name",
     men: "5 orc",
     silver: "$500",
-    skills: "combat 3",
-    orders: "MOVE S W SW"
+    // skills: "combat 3",
+    armor: 6,
+    mounts: 5,
+    weapons: 4
   });
 }
 
