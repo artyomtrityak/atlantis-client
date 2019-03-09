@@ -1,8 +1,8 @@
 import _ from "lodash";
-import { RACES } from "../../config";
+import { RACES, WEAPONS, ARMORS, FOOD, MOUNTS } from "../../config";
 
 function parseCanStudy(unit: IParsedRegionUnitRW, d: IReportUnitCanStudy) {
-  console.log("CAN STUDY:", d);
+  unit.canStudy = d.text;
   return unit;
 }
 
@@ -26,7 +26,11 @@ function parseItem(unit: IParsedRegionUnitRW, d: IReportUnitItem) {
     itemKey: d.item.key,
     text: d.item.text,
     amount: d.item.amount,
-    isRace: RACES.includes(d.item.key)
+    isRace: RACES.includes(d.item.key),
+    isWeapon: WEAPONS.includes(d.item.key),
+    isArmor: ARMORS.includes(d.item.key),
+    isMount: MOUNTS.includes(d.item.key),
+    isFood: FOOD.includes(d.item.key)
   });
   return unit;
 }
@@ -106,6 +110,7 @@ function parseUnit(regionUnit: IReportUnit) {
     weight: 0,
     upkeep: 0,
     combatSpell: undefined,
+    canStudy: undefined,
     items: [],
     capacity: {
       walk: 0,
@@ -114,7 +119,6 @@ function parseUnit(regionUnit: IReportUnit) {
       swim: 0
     },
     skills: [],
-    // TODO: Can study
     // TODO: comment
 
     // Flags defaults

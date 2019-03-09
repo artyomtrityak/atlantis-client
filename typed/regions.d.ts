@@ -22,6 +22,10 @@ interface IParseRegionUnitItem {
   text: string;
   amount: number;
   isRace: boolean;
+  isWeapon: boolean;
+  isArmor: boolean;
+  isFood: boolean;
+  isMount: boolean;
 }
 
 interface IParsedRegionUnitRW {
@@ -60,6 +64,7 @@ interface IParsedRegionUnitRW {
   items: IParseRegionUnitItem[];
   skills: IReportUnitSkill[];
   inObject?: number;
+  canStudy?: string; // TOOD: parse it later
 }
 type IParsedRegionUnit = Readonly<IParsedRegionUnitRW>;
 

@@ -1,4 +1,13 @@
 import getRaces from "./races";
-const RACES = getRaces();
+import getArmors from "./armors";
+import getMounts from "./mounts";
+import getWeapons from "./weapons";
+import getFood from "./food";
 
-export { RACES };
+const RACES = getRaces();
+const ARMORS = getArmors();
+const MOUNTS = getMounts();
+const WEAPONS = getWeapons();
+const FOOD = getFood();
+
+export { RACES, ARMORS, MOUNTS, WEAPONS, FOOD };
