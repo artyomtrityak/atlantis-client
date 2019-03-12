@@ -1,17 +1,17 @@
 import _ from "lodash";
 import { RACES, WEAPONS, ARMORS, FOOD, MOUNTS } from "../../config";
 
-function parseCanStudy(unit: IParsedRegionUnitRW, d: IReportUnitCanStudy) {
+function parseCanStudy(unit: IUnit, d: IReportUnitCanStudy) {
   unit.canStudy = d.text;
   return unit;
 }
 
-function parseSkills(unit: IParsedRegionUnitRW, d: IReportUnitSkills) {
+function parseSkills(unit: IUnit, d: IReportUnitSkills) {
   unit.skills = [...d.skills];
   return unit;
 }
 
-function parseCapacity(unit: IParsedRegionUnitRW, d: IReportUnitCapacity) {
+function parseCapacity(unit: IUnit, d: IReportUnitCapacity) {
   unit.capacity = {
     walk: d.walk,
     ride: d.ride,
@@ -21,7 +21,7 @@ function parseCapacity(unit: IParsedRegionUnitRW, d: IReportUnitCapacity) {
   return unit;
 }
 
-function parseItem(unit: IParsedRegionUnitRW, d: IReportUnitItem) {
+function parseItem(unit: IUnit, d: IReportUnitItem) {
   unit.items.push({
     itemKey: d.item.key,
     text: d.item.text,
@@ -35,22 +35,22 @@ function parseItem(unit: IParsedRegionUnitRW, d: IReportUnitItem) {
   return unit;
 }
 
-function parseCombatSpell(unit: IParsedRegionUnitRW, d: IReportUnitCombatSpell) {
+function parseCombatSpell(unit: IUnit, d: IReportUnitCombatSpell) {
   unit.combatSpell = d.spell;
   return unit;
 }
 
-function parseWeight(unit: IParsedRegionUnitRW, d: IReportUnitWeight) {
+function parseWeight(unit: IUnit, d: IReportUnitWeight) {
   unit.weight = d.weight;
   return unit;
 }
 
-function parseUpkeep(unit: IParsedRegionUnitRW, d: IReportUnitUpkeep) {
+function parseUpkeep(unit: IUnit, d: IReportUnitUpkeep) {
   unit.upkeep = d.value;
   return unit;
 }
 
-function parseFlag(unit: IParsedRegionUnitRW, d: IReportUnitFlag) {
+function parseFlag(unit: IUnit, d: IReportUnitFlag) {
   switch (d.flag) {
     case "behind":
       unit.flags.flagBehind = true;
@@ -103,7 +103,7 @@ function parseFlag(unit: IParsedRegionUnitRW, d: IReportUnitFlag) {
 
 function parseUnit(regionUnit: IReportUnit) {
   // console.log("I am unit:", regionUnit);
-  const unit: IParsedRegionUnitRW = {
+  const unit: IUnit = {
     id: regionUnit.unitId,
     name: regionUnit.unitName,
     faction: regionUnit.faction,
@@ -175,18 +175,6 @@ function parseUnit(regionUnit: IReportUnit) {
   return unit;
 }
 
-export function parseRegionUnits(region: IRegion) {
-  const units = _.chain(region.unitsAndObjects)
-    .map(d => {
-      if (d.type === "UNIT") {
-        return parseUnit(d);
-      }
-    })
-    .compact()
-    .value();
-  return { ...region, units };
-}
-
-export function parseRegionUnit(unit: IReportUnit) {
+export default function parseRegionUnit(unit: IReportUnit) {
   return parseUnit(unit);
 }

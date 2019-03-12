@@ -7,6 +7,7 @@
 	"jsRules": {},
 	"rules": {
 		"no-console": false,
+		"prefer-for-of": false,
 		"ordered-imports": false,
 		"no-consecutive-blank-lines": false,
 		"trailing-comma": false,

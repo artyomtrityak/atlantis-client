@@ -1,8 +1,6 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
-import { parseRegionUnits } from "./region-units";
-import { parseRegionObjects } from "./region-objects";
 import { IState, ILevel } from "./regions.d";
 export { IState };
 
@@ -100,8 +98,7 @@ function addShadowRegions(level: ILevel) {
         title: "Unknown",
         type: "unknown",
         details: [],
-        unitsAndObjects: [],
-        units: []
+        unitsAndObjects: []
       };
     });
   }
@@ -111,21 +108,18 @@ function addShadowRegions(level: ILevel) {
 function parseRegions(report: IReport) {
   const reportData = report.find(d => {
     return d.type === "REGIONS";
-  });
+  }) as IReportItemRegions;
 
-  if (!reportData || reportData.type !== "REGIONS") {
-    // typescript wtf
+  if (!reportData) {
     return [];
   }
 
   return _.chain(reportData.regions)
-    .map(parseRegionUnits)
-    .map(parseRegionObjects)
-    .reduce(parseRegion, [])
-    .compact()
-    .map(parseLevel)
-    .map(addShadowRegions)
-    .map(parseLevel)
+    .reduce(parseRegion, []) // transform regions to levels
+    .compact() // cleanup
+    .map(parseLevel) // find max min positions
+    .map(addShadowRegions) // fill with empty regions around existing
+    .map(parseLevel) // find max min positions
     .value();
 }
 

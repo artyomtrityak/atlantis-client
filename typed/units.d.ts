@@ -1,88 +1,51 @@
-interface IReportUnitFlag {
-  readonly type: "FLAG";
-  readonly flag: string;
+interface IUnitItem {
+  itemKey: string;
+  text: string;
+  amount: number;
+  isRace: boolean;
+  isWeapon: boolean;
+  isArmor: boolean;
+  isFood: boolean;
+  isMount: boolean;
 }
 
-interface IReportUnitSkills {
-  readonly type: "SKILLS";
-  readonly skills: IReportUnitSkill[];
-}
+interface IUnitSkill extends IReportUnitSkill {} // copy same for name convention
 
-interface IReportUnitSkill {
-  readonly skill: string;
-  readonly code: string;
-  readonly level: number;
-  readonly exp: number;
-}
-
-interface IReportUnitItem {
-  readonly type: "ITEM";
-  readonly item: {
-    key: string;
-    amount: number;
-    text: string;
+interface IUnit {
+  id: number;
+  name: string;
+  weight: number;
+  upkeep: number;
+  combatSpell?: string;
+  faction: {
+    factionId: number;
+    factionName: string;
   };
-}
-
-interface IReportUnitWeight {
-  readonly type: "WEIGHT";
-  readonly weight: number;
-}
-
-interface IReportUnitCapacity {
-  readonly type: "CAPACITY";
-  readonly fly: number;
-  readonly ride: number;
-  readonly walk: number;
-  readonly swim: number;
-}
-
-interface IReportUnitCanStudy {
-  readonly type: "CAN_STUDY";
-  readonly text: string;
-}
-
-interface IReportUnitCombatSpell {
-  readonly type: "COMBAT_SPELL";
-  readonly spell: string;
-}
-
-interface IReportUnitComment {
-  readonly type: "COMMENT";
-  readonly text: string;
-}
-
-interface IReportUnitUpkeep {
-  readonly type: "UPKEEP";
-  readonly value: number;
-}
-
-type unitDetailsType =
-  | IReportUnitFlag
-  | IReportUnitSkills
-  | IReportUnitItem
-  | IReportUnitWeight
-  | IReportUnitCapacity
-  | IReportUnitCanStudy
-  | IReportUnitCombatSpell
-  | IReportUnitComment
-  | IReportUnitUpkeep;
-
-interface IReportObject {
-  readonly type: "OBJECT";
-  readonly objectId: number;
-  readonly objectName: string;
-  readonly objectType: string;
-  readonly objectUnits: IReportUnit[];
-}
-
-interface IReportUnit {
-  readonly type: "UNIT";
-  readonly unitName: string;
-  readonly unitId: number;
-  readonly faction: {
-    readonly factionId: number;
-    readonly factionName: string;
+  capacity: {
+    walk: number;
+    ride: number;
+    fly: number;
+    swim: number;
   };
-  readonly unitDetails: unitDetailsType[];
+  flags: {
+    noaid: boolean;
+    flagBehind: boolean;
+    spoilsWalking: boolean;
+    spoilsWeightless: boolean;
+    spoilsRiding: boolean;
+    spoilsFlying: boolean;
+    avoiding: boolean;
+    taxing: boolean;
+    guard: boolean;
+    holding: boolean;
+    consumingFaction: boolean;
+    consumingUnit: boolean;
+    sharing: boolean;
+    visibilityRevealFaction: boolean;
+    visibilityRevealUnit: boolean;
+  };
+  items: IUnitItem[];
+  skills: IUnitSkill[];
+  inObject?: number;
+  canStudy?: string; // TODO: parse it later
 }

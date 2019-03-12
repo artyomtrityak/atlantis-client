@@ -15,8 +15,8 @@ const getColumns = (width: number) => {
 
   return [
     {
-      key: "unit_id",
-      name: "Unit #",
+      key: "id",
+      name: "Unit ID",
       width: 70,
       sortable: true,
       filterable: true
@@ -29,7 +29,7 @@ const getColumns = (width: number) => {
       filterable: true
     },
     {
-      key: "unit",
+      key: "unit_name",
       name: "Unit",
       width: (dynamicWidth * 25) / 100,
       sortable: true,
@@ -73,35 +73,55 @@ const getColumns = (width: number) => {
   ];
 };
 
-const rows = [];
-const numberOfRows = 500;
-for (let i = 1; i < numberOfRows; i++) {
-  rows.push({
-    id: i * 1000,
-    unitId: i * 1000,
-    faction: "#12112 Faction " + i,
-    unit: "My name",
-    men: "5 orc",
-    silver: "$500",
-    // skills: "combat 3",
-    armor: 6,
-    mounts: 5,
-    weapons: 4
-  });
-}
-
 function onGridSort() {
   console.log("SORT", arguments);
 }
 
-const rowGetter = (i: number) => rows[i];
+type IDataGridObject = {
+  id: number;
+  faction: string;
+  unit_name: string;
+  men: number;
+  silver: string;
+  weapons: number;
+  armor: number;
+  mounts: number;
+} | null;
 
 const UnitsList = (props: IUnitListsProps) => {
-  const { onRowClick, selectedUnitId } = props;
+  const { onRowClick, selectedUnitId, units } = props;
+
+  console.log("U:", units);
+
+  const rowGetter = (i: number): IDataGridObject => {
+    // TODO: create type
+    if (i < 0) {
+      return null;
+    }
+    const { id, faction, name } = units[i];
+    let factionStr = "";
+    if (faction) {
+      factionStr = `${faction.factionName} (${faction.factionId})`;
+    }
+
+    return {
+      id,
+      faction: factionStr,
+      unit_name: name,
+      men: 5,
+      silver: `$500`,
+      weapons: 15,
+      armor: 5,
+      mounts: 11
+    };
+  };
+
   let selectedIndex;
   if (selectedUnitId) {
-    selectedIndex = _.findIndex(rows, d => d.unitId === selectedUnitId);
+    selectedIndex = _.findIndex(units, d => d.id === selectedUnitId);
   }
+
+  console.log("PROPS:", props);
 
   return (
     <div style={{ fontSize: 12 }}>
@@ -109,10 +129,10 @@ const UnitsList = (props: IUnitListsProps) => {
         rowKey="id"
         onGridSort={onGridSort}
         enableCellSelect={false}
-        onRowClick={(i, d) => onRowClick(d.unitId)}
+        onRowClick={(i: number, d: IDataGridObject) => d && onRowClick(d.id)}
         columns={getColumns(props.width)}
-        rowGetter={rowGetter}
-        rowsCount={rows.length}
+        rowGetter={(i: number) => rowGetter(i)}
+        rowsCount={units.length}
         minHeight={props.height}
         headerRowHeight={30}
         // onFilter={onRowClick}
@@ -130,16 +150,25 @@ const UnitsList = (props: IUnitListsProps) => {
 };
 
 const mapStateToProps = (state: ICombinedReducersState) => {
-  console.log(state);
+  const currentLevelData = state.regions.levels[state.regions.mapLevel];
+  if (!currentLevelData || !currentLevelData.selectedRegion || !state.units.regions[currentLevelData.selectedRegion]) {
+    return {
+      selectedUnitId: undefined,
+      units: [],
+      objects: []
+    };
+  }
 
   return {
-    selectedUnitId: state.units.selectedUnitId
+    selectedUnitId: state.units.selectedUnitId,
+    units: state.units.regions[currentLevelData.selectedRegion].units,
+    objects: state.units.regions[currentLevelData.selectedRegion].objects
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    onRowClick: (unitId: string) => {
+    onRowClick: (unitId: number) => {
       dispatch(selectUnit(unitId));
       dispatch(activateTab("UNIT"));
     }

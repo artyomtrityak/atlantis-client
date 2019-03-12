@@ -1,6 +1,6 @@
 import React from "react";
 
-const Toolbar = props => {
+const Toolbar = () => {
   return null;
 };
 
