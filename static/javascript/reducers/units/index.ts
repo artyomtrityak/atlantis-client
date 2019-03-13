@@ -41,7 +41,6 @@ function parseObjectsAndUnits(report: IReport) {
     return result;
   }, {});
 
-  console.log("RERERE:", regions);
   return regions;
 }
 
