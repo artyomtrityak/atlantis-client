@@ -19,11 +19,11 @@ const App = () => {
       <Header />
       <GameMenu />
       <div className="container-fluid application" style={{ height: "calc(100vh - 42px)" }}>
-        <div className="row" style={{ height: "70%" }}>
+        <div className="row mt-1 mb-1" style={{ height: "68%" }}>
           <div className="col-6">
             <Map />
           </div>
-          <div className="col-6" style={{ height: "100%" }}>
+          <div className="col-6">
             <Details />
           </div>
         </div>

@@ -65,7 +65,7 @@ const Map = (props: IMapProps) => {
   const svgHeightFit = props.height > svgHeight ? props.height : svgHeight;
 
   return (
-    <div ref={containerRef} className="map" style={{ width: props.width - 30, height: props.height - 10 }}>
+    <div ref={containerRef} className="map" style={{ width: props.width, height: props.height }}>
       <Controls onCenter={() => onCenter(props, mapSvgRef)} />
       <svg ref={mapSvgRef} style={{ width: svgWidth * 3, height: svgHeightFit }}>
         <rect width="100%" height="100%" fill="lightgray" />

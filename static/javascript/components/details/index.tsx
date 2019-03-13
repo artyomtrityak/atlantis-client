@@ -12,56 +12,18 @@ import Battles from "./battles";
 import { IDetailsProps } from "./details.d";
 import "./styles/index.scss";
 
-interface IDetailsItem {
-  tabName: ITabs;
-  text: string;
-}
-
 const DetailsComponent = (props: IDetailsProps) => {
-  const { activeTab } = props;
-  const items: IDetailsItem[] = [
-    { text: "Region", tabName: "REGION" },
-    { text: "Unit", tabName: "UNIT" },
-    { text: "Events", tabName: "EVENTS" },
-    { text: "Battles", tabName: "BATTLES" }
-  ];
-
   return (
-    <div className="details-block">
-      <div className="row">
-        <div className="col-12">
-          <ul className="nav nav-tabs">{items.map(item => renderMenuItem(props, item))}</ul>
-        </div>
-      </div>
-      <div className="row details-block__details">
-        <div className="col-12 h-100per">
-          <div className="card details-block__details-subcontainer">{renderDetails(activeTab)}</div>
-        </div>
-      </div>
+    <div className="card details-block">
+      <Region />
     </div>
   );
 };
 
-function renderMenuItem(props: IDetailsProps, item: IDetailsItem) {
-  const { onActivateTab, activeTab } = props;
-
-  return (
-    <li className="nav-item" key={item.tabName}>
-      <a
-        className={cn("nav-link", "details-block__link", { active: activeTab === item.tabName })}
-        onClick={() => onActivateTab(item.tabName)}
-        href="#"
-      >
-        {item.text}
-      </a>
-    </li>
-  );
-}
-
 function renderDetails(activeTab: ITabs) {
   switch (activeTab) {
     case "REGION":
-      return <Region />;
+      return;
     case "UNIT":
       return <Unit />;
     case "EVENTS":
