@@ -4,22 +4,22 @@ import cn from "classnames";
 import { Icon } from "../utils";
 
 interface IProps {
-  items: IUnitItem[];
+  skills: IUnitSkill[];
 }
 
-function getItems(items: IUnitItem[]) {
-  return items.map(item => item.text).join(", ");
+function getSkills(skills: IUnitSkill[]) {
+  return skills.map(skill => skill.text).join(", ");
 }
 
-const UnitDetailsItems = (props: IProps) => {
+const UnitDetailsSkills = (props: IProps) => {
   return (
     <React.Fragment>
       <div className="dropdown-divider unit-details-divider" />
       <div className="card-text">
-        <b>Items</b>: {getItems(props.items)}.
+        <b>Skills</b>: {getSkills(props.skills)}.
       </div>
     </React.Fragment>
   );
 };
 
-export default UnitDetailsItems;
+export default UnitDetailsSkills;

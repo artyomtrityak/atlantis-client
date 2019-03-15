@@ -42,6 +42,7 @@ interface IReportUnitSkill {
   readonly code: string;
   readonly level: number;
   readonly exp: number;
+  readonly text: string;
 }
 
 interface IReportUnitItem {
@@ -109,7 +110,7 @@ interface IReportUnit {
   readonly type: "UNIT";
   readonly unitName: string;
   readonly unitId: number;
-  readonly faction: {
+  readonly faction?: {
     readonly factionId: number;
     readonly factionName: string;
   };

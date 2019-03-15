@@ -4,7 +4,9 @@ import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
 import UnitFlags from "./unit-flags";
 import UnitActionsMenu from "./unit-actions";
+import UnitTitle from "./unit-title";
 import UnitDetailsItems from "./unit-details-items";
+import UnitDetailsSkills from "./unit-details-skills";
 import { IDetailsProps } from "./details-unit.d";
 
 import "./styles/index.scss";
@@ -20,18 +22,14 @@ const Unit = (props: IDetailsProps) => {
   return (
     <div className="card-body detais-unit">
       <div className="dropdown-divider" />
-      <h5 className="card-title unit-header">
-        {unit.name} ({unit.id}
-        ), {unit.faction.factionName} ({unit.faction.factionId})
-      </h5>
+      <UnitTitle unit={unit} />
       <UnitActionsMenu />
       <div className="dropdown-divider" />
       <div className="row">
         <div className="col-7">
-          <UnitFlags />
+          <UnitFlags flags={unit.flags} />
           <UnitDetailsItems items={unit.items} />
-          <div className="dropdown-divider unit-details-divider" />
-          <div className="card-text">Skills: horse training [HORS] 1 (30).</div>
+          <UnitDetailsSkills skills={unit.skills} />
           <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">Weight: 30. Capacity: 0/0/45/0.</div>
           <div className="dropdown-divider unit-details-divider" />
@@ -47,8 +45,11 @@ const Unit = (props: IDetailsProps) => {
 
 const mapStateToProps = (state: ICombinedReducersState) => {
   const currentLevelData = state.regions.levels[state.regions.mapLevel];
+  if (!currentLevelData) {
+    return {};
+  }
   const region = state.units.regions[currentLevelData.selectedRegion];
-  if (!currentLevelData || !region) {
+  if (!region) {
     return {};
   }
   const unit = region.units.find(u => u.id === state.units.selectedUnitId);

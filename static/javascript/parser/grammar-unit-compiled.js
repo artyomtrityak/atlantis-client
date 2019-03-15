@@ -71,7 +71,8 @@
       skill: array2String(d[1]),
       code: d[4],
       level: d[7],
-      exp: d[10]
+      exp: d[10],
+      text: array2String(d)
     };
   };
 

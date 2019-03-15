@@ -17,7 +17,7 @@ interface IUnit {
   weight: number;
   upkeep: number;
   combatSpell?: string;
-  faction: {
+  faction?: {
     factionId: number;
     factionName: string;
   };
