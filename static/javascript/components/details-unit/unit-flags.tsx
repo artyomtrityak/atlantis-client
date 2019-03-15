@@ -56,14 +56,20 @@ const FLAGS = [
 
 const renderFlag = (d, i) => {
   return (
-    <button key={`flags_${d.name}`} type="button" className="btn btn-outline-secondary unit-flags__btn mr-2" title={d.title}>
+    <button key={`flags_${d.name}`} type="button" className="btn btn-light unit-flags__btn">
       <Icon {...d.icon} className="unit-flags__flag-icon" />
     </button>
   );
 };
 
 const UnitActionsMenu = props => {
-  return <div className="card-text">{FLAGS.map(renderFlag)}</div>;
+  return (
+    <div className="card-text">
+      <div className="btn-group btn-group-sm unit-flags" role="group" aria-label="Basic example">
+        {FLAGS.map(renderFlag)}
+      </div>
+    </div>
+  );
 };
 
 const mapStateToProps = state => {

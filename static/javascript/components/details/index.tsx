@@ -16,22 +16,10 @@ const DetailsComponent = (props: IDetailsProps) => {
   return (
     <div className="card details-block">
       <Region />
+      <Unit />
     </div>
   );
 };
-
-function renderDetails(activeTab: ITabs) {
-  switch (activeTab) {
-    case "REGION":
-      return;
-    case "UNIT":
-      return <Unit />;
-    case "EVENTS":
-      return <Events />;
-    case "BATTLES":
-      return <Battles />;
-  }
-}
 
 const mapStateToProps = (state: ICombinedReducersState) => {
   return {

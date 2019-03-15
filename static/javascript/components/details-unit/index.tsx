@@ -1,26 +1,40 @@
 import React from "react";
+import { Dispatch } from "redux";
 import { connect } from "react-redux";
+import { ICombinedReducersState } from "../../reducers";
 import UnitFlags from "./unit-flags";
 import UnitActionsMenu from "./unit-actions";
+import UnitDetailsItems from "./unit-details-items";
+import { IDetailsProps } from "./details-unit.d";
 
-import "./unit-styles.scss";
+import "./styles/index.scss";
 
-const Unit = props => {
+const Unit = (props: IDetailsProps) => {
+  const { unit } = props;
+  console.log(unit);
+  if (!unit) {
+    return null;
+  }
+
+  // TODO: sometimes no faction
   return (
-    <div className="card-body">
-      <h5 className="card-title unit-header">Magic Rider (502), School of Witchcraft and Wizardry (17)</h5>
+    <div className="card-body detais-unit">
+      <div className="dropdown-divider" />
+      <h5 className="card-title unit-header">
+        {unit.name} ({unit.id}
+        ), {unit.faction.factionName} ({unit.faction.factionId})
+      </h5>
       <UnitActionsMenu />
       <div className="dropdown-divider" />
       <div className="row">
         <div className="col-7">
           <UnitFlags />
-          <div className="dropdown-divider" />
-          <div className="card-text">18 silver [SILV], 3 orcs [ORC].</div>
-          <div className="dropdown-divider" />
+          <UnitDetailsItems items={unit.items} />
+          <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">Skills: horse training [HORS] 1 (30).</div>
-          <div className="dropdown-divider" />
+          <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">Weight: 30. Capacity: 0/0/45/0.</div>
-          <div className="dropdown-divider" />
+          <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">Upkeep: $30.</div>
         </div>
         <div className="col-5">
@@ -31,8 +45,23 @@ const Unit = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
+  const currentLevelData = state.regions.levels[state.regions.mapLevel];
+  const region = state.units.regions[currentLevelData.selectedRegion];
+  if (!currentLevelData || !region) {
+    return {};
+  }
+  const unit = region.units.find(u => u.id === state.units.selectedUnitId);
+  return {
+    unit
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {};
 };
 
-export default connect(mapStateToProps)(React.memo(Unit));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(React.memo(Unit));

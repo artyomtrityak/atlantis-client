@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
 import Gate from "./gate";
-import Exists from "./exits";
 import Details from "./details";
 import { IRegionDetailsProps } from "./details-region.d";
 import "./styles/index.scss";
@@ -17,7 +16,6 @@ const Region = ({ region }: IRegionDetailsProps) => {
       <h5 className="card-title atl-region__header">{region.title}</h5>
       <Details region={region} />
       <Gate region={region} />
-      <Exists region={region} />
     </div>
   );
 };
