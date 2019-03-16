@@ -1,14 +1,9 @@
 import React from "react";
-import cn from "classnames";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ICombinedReducersState } from "../../reducers";
-import { ITabs } from "../../reducers/details";
-import { activateTab } from "../../actions/details-actions";
-import Region from "../details-region";
-import Unit from "../details-unit";
-import Events from "./events";
-import Battles from "./battles";
+import Region from "../region-details";
+import Unit from "../unit-details";
 import { IDetailsProps } from "./details.d";
 import "./styles/index.scss";
 
@@ -22,15 +17,11 @@ const DetailsComponent = (props: IDetailsProps) => {
 };
 
 const mapStateToProps = (state: ICombinedReducersState) => {
-  return {
-    activeTab: state.details.activeTab
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    onActivateTab: (tabName: ITabs) => dispatch(activateTab(tabName))
-  };
+  return {};
 };
 
 export default connect(

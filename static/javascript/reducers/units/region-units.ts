@@ -53,7 +53,7 @@ function parseUpkeep(unit: IUnit, d: IReportUnitUpkeep) {
 function parseFlag(unit: IUnit, d: IReportUnitFlag) {
   switch (d.flag) {
     case "behind":
-      unit.flags.flagBehind = true;
+      unit.flags.behind = true;
       break;
     case "avoiding":
       unit.flags.avoiding = true;
@@ -97,6 +97,9 @@ function parseFlag(unit: IUnit, d: IReportUnitFlag) {
     case "noaid":
       unit.flags.noaid = true;
       break;
+    // case "noaid": no corss??? TODO:
+    //   unit.flags.noaid = true;
+    //   break;
   }
   return unit;
 }
@@ -123,7 +126,7 @@ function parseUnit(regionUnit: IReportUnit) {
 
     // Flags defaults
     flags: {
-      flagBehind: false,
+      behind: false,
       avoiding: false,
       noaid: false,
       taxing: false,

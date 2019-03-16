@@ -1,0 +1,18 @@
+.unit-flags {
+  height: 32px;
+}
+
+.unit-flags__btn {
+  padding: 0.1rem 0.3rem;
+  margin-right: 2px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.unit-flags__flag-icon {
+  padding: 0;
+  width: 24px;
+  height: 24px;
+}

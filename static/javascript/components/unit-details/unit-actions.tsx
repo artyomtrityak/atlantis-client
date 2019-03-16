@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import cn from "classnames";
+import { ICombinedReducersState } from "../../reducers";
 import { Icon } from "../utils";
 import attackIcon from "../../../assets/svg/battles.svg";
 import moneyIcon from "../../../assets/svg/money_bag.svg";
@@ -178,15 +179,17 @@ class UnitActions extends React.PureComponent {
   }
 
   render() {
+    // TODO: render menu as createPortal
+
     return (
-      <div className="btn-group dropleft actions-menu" ref={this.elRef}>
+      <div className="btn-group dropleft unit-actions-menu" ref={this.elRef}>
         <button type="button" className="btn btn-secondary btn-sm dropdown-toggle" onClick={this.toggleExpand}>
           Actions
         </button>
         <div
-          className={cn("dropdown-menu", "actions-menu__menu", {
-            "show": this.state.expanded,
-            "actions-menu__menu--extended": this.state.extended
+          className={cn("dropdown-menu", "unit-actions-menu__menu", {
+            show: this.state.expanded,
+            "unit-actions-menu__menu--extended": this.state.extended
           })}
         >
           <div className="row">
@@ -212,8 +215,8 @@ class UnitActions extends React.PureComponent {
 
   renderAction(d, i) {
     return (
-      <button key={`unit_action_${i}`} className="dropdown-item actions-menu__menu-item" type="button">
-        {d.icon && <Icon {...d.icon} className="actions-menu__icon" />}
+      <button key={`unit_action_${i}`} className="dropdown-item unit-actions-menu__menu-item" type="button">
+        {d.icon && <Icon {...d.icon} className="unit-actions-menu__icon" />}
         {d.name}
       </button>
     );

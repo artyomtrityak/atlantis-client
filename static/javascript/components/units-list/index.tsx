@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import ReactDataGrid from "react-data-grid";
 import { ICombinedReducersState } from "../../reducers";
-import { activateTab } from "../../actions/details-actions";
 import { selectUnit } from "../../actions/units-actions";
 import { withSize } from "../utils";
 import { IUnitListsProps, IDataGridObject } from "./units-list.d";
@@ -67,7 +66,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onRowClick: (unitId: number) => {
       dispatch(selectUnit(unitId));
-      dispatch(activateTab("UNIT"));
     }
   };
 };

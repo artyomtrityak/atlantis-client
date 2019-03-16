@@ -17,35 +17,39 @@
 }
 
 .hex--type-forest {
-  fill: green;
+  fill: #48c848;
 }
 
 .hex--type-jungle {
-  fill: rgb(23, 84, 27);
+  fill: #008000;
 }
 
 .hex--type-desert {
-  fill: yellow;
+  fill: #e0a438;
 }
 
 .hex--type-plain {
-  fill: lightgreen;
+  fill: #ffe8a8;
 }
 
 .hex--type-swamp {
-  fill: greenyellow;
+  fill: #a8a854;
 }
 
 .hex--type-mountain {
-  fill: brown;
+  fill: #bc6000;
 }
 
 .hex--type-hill {
-  fill: darkgreen;
+  fill: #0e461c;
 }
 
 .hex--type-wasteland {
-  fill: aquamarine;
+  fill: #36b5a0;
+}
+
+.hex--type-tundra {
+  fill: #ccf3ec;
 }
 
 .hex--type-ocean {

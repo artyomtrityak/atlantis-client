@@ -1,0 +1,27 @@
+.unit-actions-menu {
+  position: absolute;
+  top: -10px;
+  right: 10px;
+}
+
+// TODO: move inside wrapper class to give scope
+
+.unit-actions-menu__menu {
+  width: 400px;
+  top: -10px !important; //overriding bootstrap position
+}
+
+.unit-actions-menu__menu--extended {
+  width: 614px;
+}
+
+.unit-actions-menu__menu-item {
+  display: flex;
+  align-items: center;
+}
+
+.unit-actions-menu__icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+}

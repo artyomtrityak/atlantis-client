@@ -14,7 +14,7 @@ export const getColumns = (width: number) => {
     {
       key: "faction",
       name: "Faction",
-      width: (dynamicWidth * 50) / 100,
+      width: (dynamicWidth * 40) / 100,
       sortable: true,
       filterable: true
     },
@@ -73,7 +73,7 @@ export const getColumns = (width: number) => {
 export const useRowFactory = ({ units }: IUnitListsProps) => {
   // TODO: add useMemo if works slow
   const rowGetter = (i: number): IDataGridObject => {
-    if (i < 0) {
+    if (i < 0 || !units || !units[i]) {
       return null;
     }
     const { id, faction, name, items } = units[i];

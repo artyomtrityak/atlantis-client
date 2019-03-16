@@ -20,11 +20,10 @@ const Unit = (props: IDetailsProps) => {
 
   // TODO: sometimes no faction
   return (
-    <div className="card-body detais-unit">
-      <div className="dropdown-divider" />
+    <div className="card-body unit-details">
       <UnitTitle unit={unit} />
       <UnitActionsMenu />
-      <div className="dropdown-divider" />
+      <div className="dropdown-divider unit-details-divider" />
       <div className="row">
         <div className="col-7">
           <UnitFlags flags={unit.flags} />

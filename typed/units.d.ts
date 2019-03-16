@@ -11,6 +11,24 @@ interface IUnitItem {
 
 interface IUnitSkill extends IReportUnitSkill {} // copy same for name convention
 
+interface IUnitFlags {
+  noaid: boolean;
+  behind: boolean;
+  spoilsWalking: boolean;
+  spoilsWeightless: boolean;
+  spoilsRiding: boolean;
+  spoilsFlying: boolean;
+  avoiding: boolean;
+  taxing: boolean;
+  guard: boolean;
+  holding: boolean;
+  consumingFaction: boolean;
+  consumingUnit: boolean;
+  sharing: boolean;
+  visibilityRevealFaction: boolean;
+  visibilityRevealUnit: boolean;
+}
+
 interface IUnit {
   id: number;
   name: string;
@@ -27,23 +45,7 @@ interface IUnit {
     fly: number;
     swim: number;
   };
-  flags: {
-    noaid: boolean;
-    flagBehind: boolean;
-    spoilsWalking: boolean;
-    spoilsWeightless: boolean;
-    spoilsRiding: boolean;
-    spoilsFlying: boolean;
-    avoiding: boolean;
-    taxing: boolean;
-    guard: boolean;
-    holding: boolean;
-    consumingFaction: boolean;
-    consumingUnit: boolean;
-    sharing: boolean;
-    visibilityRevealFaction: boolean;
-    visibilityRevealUnit: boolean;
-  };
+  flags: IUnitFlags;
   items: IUnitItem[];
   skills: IUnitSkill[];
   inObject?: number;

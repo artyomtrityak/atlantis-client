@@ -1,0 +1,19 @@
+.unit-details {
+  position: relative;
+  font-size: 12px;
+  padding: 0 0.5rem;
+
+  .unit-header {
+    font-size: 14px;
+    margin-bottom: 0.5rem;
+  }
+
+  .unit-details-divider {
+    margin: 0.2rem 0;
+  }
+
+  @import "./unit-details.scss";
+  @import "./unit-flags.scss";
+}
+
+@import "./unit-actions.scss";

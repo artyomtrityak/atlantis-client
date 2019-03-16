@@ -8,6 +8,9 @@ interface IProps {
 }
 
 function getSkills(skills: IUnitSkill[]) {
+  if (!skills.length) {
+    return "none";
+  }
   return skills.map(skill => skill.text).join(", ");
 }
 

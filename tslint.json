@@ -16,8 +16,10 @@
 		"max-line-length": [true, 140],
 		"no-submodule-imports": false,
 		"arrow-parens": false,
+		"object-literal-key-quotes": false,
 		"jsx-no-multiline-js": false,
-		"jsx-no-lambda": false
+		"jsx-no-lambda": false,
+		"jsx-alignment": false
 	},
 	"rulesDirectory": [],
 	"linterOptions": {
