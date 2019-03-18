@@ -2,6 +2,7 @@ import nearley from "nearley";
 import { diff } from "deep-diff";
 import grammarBasic from "./grammar-base-compiled";
 import grammarUnit from "./grammar-unit-compiled";
+import grammarEvent from "./grammar-unit-event-compiled";
 
 const parseReport = async (reportData: string): Promise<IReport | undefined> => {
   return new Promise((resolve, reject) => {
@@ -22,6 +23,9 @@ const parseReport = async (reportData: string): Promise<IReport | undefined> => 
           switch (item.type) {
             case "REGIONS":
               parseUnits(item);
+              break;
+            case "EVENTS":
+              parseEvents(item);
               break;
             // TODO: for orders template
             // TODO: for events to add them to each unit
@@ -45,14 +49,35 @@ const parseUnits = async (item: IReportItemRegions) => {
     region.unitsAndObjects = region.unitsAndObjectsRaw.map(unitOrObjectRaw => {
       const parser = new nearley.Parser(grammarUnitCompiled);
       parser.feed(unitOrObjectRaw);
-      // console.log("DEBUG: INPUT UNIT:" unitOrObject);
-      // console.log("DEBUG: OUTPUT UNIT::", parser.results);
+      // console.log("DEBUG: INPUT UNIT:", unitOrObject);
+      // console.log("DEBUG: OUTPUT UNIT:", parser.results);
       // if (parser.results && parser.results.length > 1) {
       //   console.log("DIFF:", diff(parser.results[0], parser.results[1]));
       // }
       return parser.results[0];
     });
   });
+};
+
+const parseEvents = async (item: IReportItemEvents) => {
+  const grammarEventCompiled = nearley.Grammar.fromCompiled(grammarEvent);
+  const globalEvents: IReportItemGlobalEvent[] = [];
+  const unitsEvents: IReportItemUnitEvent[] = [];
+  item.events.forEach(eventRaw => {
+    const parser = new nearley.Parser(grammarEventCompiled);
+    try {
+      parser.feed(eventRaw);
+      if (parser.results[0]) {
+        unitsEvents.push(parser.results[0]);
+        return;
+      }
+    } catch (err) {
+      console.log("PARSE EVENT ERROR:", err, eventRaw);
+    }
+    globalEvents.push(eventRaw);
+  });
+  item.globalEvents = globalEvents;
+  item.unitsEvents = unitsEvents;
 };
 
 export default parseReport;

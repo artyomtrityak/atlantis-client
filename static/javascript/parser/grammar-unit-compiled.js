@@ -48,13 +48,21 @@
     };
   };
 
+  const parseUnitName = d => {
+    return {
+      type: "UNIT_NAME",
+      unitName: array2String(d[0]),
+      unitId: d[3]
+    };
+  };
+
   const sectionUnitParser = d => {
     return {
       type: "UNIT",
       unitName: d[2].unitName,
       unitId: d[2].unitId,
-      faction: d[4],
-      unitDetails: d[5]
+      faction: d[5],
+      unitDetails: d[6]
     };
   };
 
@@ -81,14 +89,6 @@
       type: "FACTION",
       factionName: array2String(d[1]),
       factionId: d[4]
-    };
-  };
-
-  const unitName = d => {
-    return {
-      type: "UNIT_NAME",
-      unitName: array2String(d[0]),
-      unitId: d[3]
     };
   };
 
@@ -267,6 +267,15 @@
         }
       },
       { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
+      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
+      {
+        name: "UNIT_NAME$ebnf$1",
+        symbols: ["UNIT_NAME$ebnf$1", /[^,():;]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "UNIT_NAME", symbols: ["UNIT_NAME$ebnf$1", "__", { literal: "(" }, "INT", { literal: ")" }], postprocess: parseUnitName },
       {
         name: "REGION_Z_LEVEL$string$1",
         symbols: [{ literal: "," }, { literal: "n" }, { literal: "e" }, { literal: "x" }, { literal: "u" }, { literal: "s" }],
@@ -442,7 +451,15 @@
       },
       {
         name: "UNIT_PARSER_ITEMS",
-        symbols: [/[*-]/, "__", "UNIT_NAME", "UNIT_PARSER_ITEMS$ebnf$1", "UNIT_PARSER_ITEMS$ebnf$2", "UNIT_PARSER_ITEMS$ebnf$3"],
+        symbols: [
+          /[*-]/,
+          "__",
+          "UNIT_NAME",
+          { literal: "," },
+          "UNIT_PARSER_ITEMS$ebnf$1",
+          "UNIT_PARSER_ITEMS$ebnf$2",
+          "UNIT_PARSER_ITEMS$ebnf$3"
+        ],
         postprocess: sectionUnitParser
       },
       { name: "UNIT_SECTION", symbols: ["UNIT_SECTION_ITEM"], postprocess: d => d[0] },
@@ -462,19 +479,6 @@
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCapacity },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP", { literal: "." }], postprocess: unitUpkeep },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitUpkeep },
-      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
-      {
-        name: "UNIT_NAME$ebnf$1",
-        symbols: ["UNIT_NAME$ebnf$1", /[^,():;]/],
-        postprocess: function arrpush(d) {
-          return d[0].concat([d[1]]);
-        }
-      },
-      {
-        name: "UNIT_NAME",
-        symbols: ["UNIT_NAME$ebnf$1", "__", { literal: "(" }, "INT", { literal: ")" }, { literal: "," }],
-        postprocess: unitName
-      },
       { name: "UNIT_FACTION_NAME$ebnf$1", symbols: [/[^,.():;]/] },
       {
         name: "UNIT_FACTION_NAME$ebnf$1",

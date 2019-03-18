@@ -48,6 +48,14 @@
     };
   };
 
+  const parseUnitName = d => {
+    return {
+      type: "UNIT_NAME",
+      unitName: array2String(d[0]),
+      unitId: d[3]
+    };
+  };
+
   function factionProcessor(d) {
     const faction = {
       type: "FACTION_INFO",
@@ -142,7 +150,7 @@
   const eventsProcessor = d => {
     return {
       type: "EVENTS",
-      events: d[2][0][0].map(evt => evt[0])
+      events: d[2][0].map(evt => evt[0])
     };
   };
 
@@ -287,6 +295,15 @@
         }
       },
       { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
+      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
+      {
+        name: "UNIT_NAME$ebnf$1",
+        symbols: ["UNIT_NAME$ebnf$1", /[^,():;]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "UNIT_NAME", symbols: ["UNIT_NAME$ebnf$1", "__", { literal: "(" }, "INT", { literal: ")" }], postprocess: parseUnitName },
       {
         name: "REGION_Z_LEVEL$string$1",
         symbols: [{ literal: "," }, { literal: "n" }, { literal: "e" }, { literal: "x" }, { literal: "u" }, { literal: "s" }],
@@ -1090,7 +1107,7 @@
           return d.join("");
         }
       },
-      { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"] },
+      { name: "FACTION_EVENTS", symbols: ["FACTION_EVENTS$string$1", "NL", "FACTION_EVENTS_ITEMS", "NL_"], postprocess: eventsProcessor },
       { name: "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$1", symbols: ["EVENT_SENTENCE", "NL"] },
       { name: "FACTION_EVENTS_ITEMS$ebnf$1", symbols: ["FACTION_EVENTS_ITEMS$ebnf$1$subexpression$1"] },
       { name: "FACTION_EVENTS_ITEMS$ebnf$1$subexpression$2", symbols: ["EVENT_SENTENCE", "NL"] },

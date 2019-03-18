@@ -23,7 +23,13 @@ interface IReportItemRegions extends IReportItemBase {
   readonly regions: IReportRegion[];
 }
 
-type IReportItem = IReportItemRegions | IReportItemFactionInfo | IReportItemDate | IReportItemVersions | IReportItemFactionStatus;
+type IReportItem =
+  | IReportItemRegions
+  | IReportItemFactionInfo
+  | IReportItemDate
+  | IReportItemVersions
+  | IReportItemFactionStatus
+  | IReportItemEvents;
 
 type IReport = IReportItem[];
 
@@ -35,6 +41,23 @@ interface IReportUnitFlag {
 interface IReportUnitSkills {
   readonly type: "SKILLS";
   readonly skills: IReportUnitSkill[];
+}
+
+type IReportItemGlobalEvent = string;
+
+interface IReportItemUnitEvent {
+  unit: {
+    unitId: number;
+    unitName: string;
+  };
+  eventText: string;
+}
+
+interface IReportItemEvents {
+  readonly type: "EVENTS";
+  readonly events: string[];
+  unitsEvents: IReportItemUnitEvent[];
+  globalEvents: IReportItemGlobalEvent[];
 }
 
 interface IReportUnitSkill {
@@ -58,7 +81,6 @@ interface IReportUnitWeight {
   readonly type: "WEIGHT";
   readonly weight: number;
 }
-
 interface IReportUnitCapacity {
   readonly type: "CAPACITY";
   readonly fly: number;

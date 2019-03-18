@@ -2,7 +2,7 @@
   const eventsProcessor = (d) => {
     return {
       type: "EVENTS",
-      events: d[2][0][0].map((evt) => evt[0])
+      events: d[2][0].map((evt) => evt[0])
     };
   }
 %}
@@ -14,7 +14,7 @@ FACTION_EVENTS ->
   "Events during turn:"
   NL
   FACTION_EVENTS_ITEMS
-  NL_
+  NL_ {% eventsProcessor %}
 
 
 FACTION_EVENTS_ITEMS ->

@@ -1,3 +1,1 @@
-import { ITabs } from "../../reducers/details";
-
-interface IDetailsProps {}
+export interface IDetailsProps {}

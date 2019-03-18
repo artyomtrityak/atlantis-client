@@ -41,6 +41,14 @@
       }
     };
   };
+
+  const parseUnitName = (d) => {
+    return {
+      type: "UNIT_NAME",
+      unitName: array2String(d[0]),
+      unitId: d[3]
+    };
+  }
 %}
 
 
@@ -99,6 +107,10 @@ LC_WORDS ->
 
 LC_WORD ->
   [a-z\-]:+
+
+
+UNIT_NAME ->
+  [^,():;]:+ __ "(" INT ")" {% parseUnitName %}
 
 
 REGION_Z_LEVEL ->

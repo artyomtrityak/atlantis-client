@@ -4,8 +4,8 @@
       type: "UNIT",
       unitName: d[2].unitName,
       unitId: d[2].unitId,
-      faction: d[4],
-      unitDetails: d[5]
+      faction: d[5],
+      unitDetails: d[6]
     }
   }
 
@@ -32,14 +32,6 @@
       type: "FACTION",
       factionName: array2String(d[1]),
       factionId: d[4]
-    };
-  }
-
-  const unitName = (d) => {
-    return {
-      type: "UNIT_NAME",
-      unitName: array2String(d[0]),
-      unitId: d[3]
     };
   }
 
@@ -123,7 +115,7 @@
 
 
 UNIT_PARSER_ITEMS ->
-  [*-] __ UNIT_NAME UNIT_FLAGS_ONGUARD:? UNIT_FACTION_NAME:? UNIT_SECTION:+ {% sectionUnitParser %}
+  [*-] __ UNIT_NAME "," UNIT_FLAGS_ONGUARD:? UNIT_FACTION_NAME:? UNIT_SECTION:+ {% sectionUnitParser %}
 
 
 UNIT_SECTION ->
@@ -154,10 +146,6 @@ UNIT_SECTION_ITEM ->
 
   | __ UNIT_UPKEEP "." {% unitUpkeep %}
   | __ UNIT_UPKEEP ";" UNIT_COMMENT {% unitUpkeep %}
-
-
-UNIT_NAME ->
-  [^,():;]:+ __ "(" INT ")" "," {% unitName %}
 
 
 UNIT_FACTION_NAME ->

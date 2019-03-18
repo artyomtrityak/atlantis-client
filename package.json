@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "grammar": "npm run grammar-basic && npm run grammar-unit",
+    "grammar": "npm run grammar-basic && npm run grammar-unit && npm run grammar-unit-event",
     "grammar-basic": "nearleyc static/javascript/parser/grammar-base/index.ne -o static/javascript/parser/grammar-base-compiled.js",
     "grammar-unit": "nearleyc static/javascript/parser/grammar-unit/index.ne -o static/javascript/parser/grammar-unit-compiled.js",
+    "grammar-unit-event": "nearleyc static/javascript/parser/grammar-unit-event/index.ne -o static/javascript/parser/grammar-unit-event-compiled.js",
     "test": "npm run grammar && npm run lint && npm run check-types",
     "build": "npm run grammar && NODE_ENV=production webpack --production",
     "check-types": "tsc",
