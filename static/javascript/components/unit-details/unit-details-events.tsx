@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
+import { ICombinedReducersState } from "../../reducers";
+import { IDetailsEventsProps } from "./details-unit.d";
 
-const Events = props => {
+const Events = (props: IDetailsEventsProps) => {
   return (
     <div className="card-body">
       <h5 className="card-title region-events__header">Magic Rider (502), School of Witchcraft and Wizardry (17)</h5>
@@ -15,7 +17,8 @@ const Events = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ICombinedReducersState) => {
+  // TODO: get events for user from find state.events
   return {};
 };
 

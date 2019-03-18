@@ -7,6 +7,7 @@ import UnitActionsMenu from "./unit-actions";
 import UnitTitle from "./unit-title";
 import UnitDetailsItems from "./unit-details-items";
 import UnitDetailsSkills from "./unit-details-skills";
+import UnitDetailsEvents from "./unit-details-events";
 import { IDetailsProps } from "./details-unit.d";
 
 import "./styles/index.scss";
@@ -18,7 +19,6 @@ const Unit = (props: IDetailsProps) => {
     return null;
   }
 
-  // TODO: sometimes no faction
   return (
     <div className="card-body unit-details">
       <UnitTitle unit={unit} />
@@ -33,6 +33,7 @@ const Unit = (props: IDetailsProps) => {
           <div className="card-text">Weight: 30. Capacity: 0/0/45/0.</div>
           <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">Upkeep: $30.</div>
+          <UnitDetailsEvents unit={unit} />
         </div>
         <div className="col-5">
           <textarea className="w-100per h-100per" />
