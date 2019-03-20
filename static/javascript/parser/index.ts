@@ -44,6 +44,7 @@ const parseUnits = async (item: IReportItemRegions) => {
   const grammarUnitCompiled = nearley.Grammar.fromCompiled(grammarUnit);
   item.regions.forEach(region => {
     if (!region.unitsAndObjectsRaw) {
+      region.unitsAndObjects = [];
       return;
     }
     region.unitsAndObjects = region.unitsAndObjectsRaw.map(unitOrObjectRaw => {

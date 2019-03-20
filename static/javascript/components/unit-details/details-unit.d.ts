@@ -3,5 +3,9 @@ export interface IDetailsProps {
 }
 
 export interface IDetailsEventsProps {
+  unitEvents: IUnitEvent["eventText"][];
+}
+
+export interface IDetailsEventsNativeProps {
   unit: IUnit;
 }

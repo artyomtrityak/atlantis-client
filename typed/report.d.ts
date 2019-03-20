@@ -139,6 +139,12 @@ interface IReportUnit {
   readonly unitDetails: IReportUnitDetailsType[];
 }
 
+interface IReportRegionDetailsItem {
+  type: string;
+  text: string;
+  details: string;
+}
+
 interface IReportRegion {
   readonly id: string;
   readonly title: string;
@@ -148,7 +154,7 @@ interface IReportRegion {
     readonly z: number;
   };
   readonly type: string;
-  readonly details: string[];
+  readonly details: IReportRegionDetailsItem[];
   readonly gate?: string;
   readonly exits?: {
     [key: string]: IReportRegion;

@@ -11,7 +11,7 @@ export default function renderDetails({ region }: IRegionDetailsProps) {
       <div className="dropdown-divider" />
       {region.details.map((detail, i) => (
         <div className="card-text atl-region__detail" key={`detail_${i}`}>
-          {detail}
+          {detail.text}
         </div>
       ))}
       <div className="dropdown-divider" />

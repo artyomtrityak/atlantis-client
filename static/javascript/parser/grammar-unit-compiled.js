@@ -175,7 +175,8 @@
       objectName: d[1],
       objectId: d[4],
       objectType: d[9],
-      objectUnits: d[11]
+      objectUnits: d[12],
+      objectComment: array2String(d[10])
     };
   };
 
@@ -1090,10 +1091,18 @@
       },
       { name: "UNIT_UPKEEP", symbols: ["UNIT_UPKEEP$string$1", "__", { literal: "$" }, "INT"] },
       { name: "UNIT_COMMENT", symbols: ["BLOB"], postprocess: d => ({ type: "COMMENT", comment: array2String(d) }) },
-      { name: "OBJECT_PARSER_ITEMS$ebnf$1", symbols: [] },
+      { name: "OBJECT_PARSER_ITEMS$ebnf$1", symbols: ["OBJECT_COMMENT"], postprocess: id },
       {
         name: "OBJECT_PARSER_ITEMS$ebnf$1",
-        symbols: ["OBJECT_PARSER_ITEMS$ebnf$1", "OBJECT_UNIT"],
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "OBJECT_PARSER_ITEMS$ebnf$2", symbols: [] },
+      {
+        name: "OBJECT_PARSER_ITEMS$ebnf$2",
+        symbols: ["OBJECT_PARSER_ITEMS$ebnf$2", "OBJECT_UNIT"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
@@ -1111,8 +1120,9 @@
           { literal: ":" },
           "__",
           "OBJECT_DESC",
+          "OBJECT_PARSER_ITEMS$ebnf$1",
           { literal: "." },
-          "OBJECT_PARSER_ITEMS$ebnf$1"
+          "OBJECT_PARSER_ITEMS$ebnf$2"
         ],
         postprocess: sectionObjectParser
       },
@@ -1134,6 +1144,15 @@
         }
       },
       { name: "OBJECT_DESC", symbols: ["OBJECT_DESC$ebnf$1"], postprocess: array2String },
+      { name: "OBJECT_COMMENT$ebnf$1", symbols: [/[^.;]/] },
+      {
+        name: "OBJECT_COMMENT$ebnf$1",
+        symbols: ["OBJECT_COMMENT$ebnf$1", /[^.;]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "OBJECT_COMMENT", symbols: [{ literal: ";" }, "OBJECT_COMMENT$ebnf$1"], postprocess: array2String },
       { name: "OBJECT_UNIT", symbols: ["__", "UNIT_PARSER_ITEMS"], postprocess: d => d[1] },
       { name: "PARSER", symbols: ["UNIT_PARSER_ITEMS"], postprocess: unitParser },
       { name: "PARSER", symbols: ["OBJECT_PARSER_ITEMS"], postprocess: objectParser }

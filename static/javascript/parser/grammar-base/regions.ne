@@ -1,4 +1,12 @@
 @{%
+  const regionDetailsProcessor = (d) => {
+    return {
+      type: d[2][0],
+      details: d[5],
+      text: array2String(d)
+    };
+  };
+
   const regionExitProcessor = (d) => {
     return {
       id: `${d[8].x}_${d[8].y}_${d[8].z}`,
@@ -12,19 +20,19 @@
   };
 
   const regionProcessor = (d) => {
-    const exits = d[12].reduce((result, exit) => {
+    const exits = d[13].reduce((result, exit) => {
       result[exit.direction.toLowerCase()] = exit;
       return result;
     }, {});
-
+    
     return {
       id: `${d[2].x}_${d[2].y}_${d[2].z}`,
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
-      details: d[8],
+      details: d[9],
       exits: exits,
-      gate: d[14],
-      unitsAndObjectsRaw: d[15],
+      gate: d[15],
+      unitsAndObjectsRaw: d[16],
       type: d[0][0],
       isExit: false
     };
@@ -49,6 +57,7 @@ FACTION_REGIONS ->
 FACTION_REGION ->
   TEXT _ REGION_COORDINATES _ SENTENCE NL
   "------------------------------------------------------------" NL
+  REGION_WEATHER:?
   FACTION_REGION_DETAILS:+
   NL_
   "Exits:" NL
@@ -60,7 +69,7 @@ FACTION_REGION ->
 
 
 FACTION_REGION_DETAILS ->
-  _ _:? REGION_SENTENCE NL {% array2String %}
+  _ _:? REGION_SECTION_TYPE ":" __ REGION_SENTENCE NL {% regionDetailsProcessor %}
 
 
 FACTION_REGION_EXIT ->
@@ -79,3 +88,21 @@ REGION_SENTENCE ->
   WORD [.!]
   | WORD _ REGION_SENTENCE {% array2String %}
   | WORD NL _ _ _ _:? REGION_SENTENCE {% array2String %}
+
+
+REGION_SECTION_TYPE ->
+  "Wages"
+  | "Wanted"
+  | "For Sale"
+  | "Entertainment available"
+  | "Products"
+
+
+REGION_WEATHER ->
+  _ _:? REGION_WEATHER_SENTENCE _ REGION_SENTENCE NL
+
+
+REGION_WEATHER_SENTENCE ->
+  WORD [;]
+  | WORD _ REGION_WEATHER_SENTENCE {% array2String %}
+  | WORD NL _ _ _ _:? REGION_WEATHER_SENTENCE {% array2String %}

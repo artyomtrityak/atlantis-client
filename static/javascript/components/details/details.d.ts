@@ -1,1 +1,3 @@
-export interface IDetailsProps {}
+export interface IDetailsProps {
+  height: number;
+}

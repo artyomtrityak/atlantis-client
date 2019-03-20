@@ -168,6 +168,14 @@
     };
   };
 
+  const regionDetailsProcessor = d => {
+    return {
+      type: d[2][0],
+      details: d[5],
+      text: array2String(d)
+    };
+  };
+
   const regionExitProcessor = d => {
     return {
       id: `${d[8].x}_${d[8].y}_${d[8].z}`,
@@ -181,7 +189,7 @@
   };
 
   const regionProcessor = d => {
-    const exits = d[12].reduce((result, exit) => {
+    const exits = d[13].reduce((result, exit) => {
       result[exit.direction.toLowerCase()] = exit;
       return result;
     }, {});
@@ -190,10 +198,10 @@
       id: `${d[2].x}_${d[2].y}_${d[2].z}`,
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
-      details: d[8],
+      details: d[9],
       exits: exits,
-      gate: d[14],
-      unitsAndObjectsRaw: d[15],
+      gate: d[15],
+      unitsAndObjectsRaw: d[16],
       type: d[0][0],
       isExit: false
     };
@@ -1311,10 +1319,18 @@
           return d.join("");
         }
       },
-      { name: "FACTION_REGION$ebnf$1", symbols: ["FACTION_REGION_DETAILS"] },
+      { name: "FACTION_REGION$ebnf$1", symbols: ["REGION_WEATHER"], postprocess: id },
       {
         name: "FACTION_REGION$ebnf$1",
-        symbols: ["FACTION_REGION$ebnf$1", "FACTION_REGION_DETAILS"],
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "FACTION_REGION$ebnf$2", symbols: ["FACTION_REGION_DETAILS"] },
+      {
+        name: "FACTION_REGION$ebnf$2",
+        symbols: ["FACTION_REGION$ebnf$2", "FACTION_REGION_DETAILS"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
@@ -1326,26 +1342,26 @@
           return d.join("");
         }
       },
-      { name: "FACTION_REGION$ebnf$2", symbols: ["FACTION_REGION_EXIT"] },
+      { name: "FACTION_REGION$ebnf$3", symbols: ["FACTION_REGION_EXIT"] },
       {
-        name: "FACTION_REGION$ebnf$2",
-        symbols: ["FACTION_REGION$ebnf$2", "FACTION_REGION_EXIT"],
+        name: "FACTION_REGION$ebnf$3",
+        symbols: ["FACTION_REGION$ebnf$3", "FACTION_REGION_EXIT"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
       },
-      { name: "FACTION_REGION$ebnf$3", symbols: ["FACTION_REGION_GATE"], postprocess: id },
+      { name: "FACTION_REGION$ebnf$4", symbols: ["FACTION_REGION_GATE"], postprocess: id },
       {
-        name: "FACTION_REGION$ebnf$3",
+        name: "FACTION_REGION$ebnf$4",
         symbols: [],
         postprocess: function(d) {
           return null;
         }
       },
-      { name: "FACTION_REGION$ebnf$4", symbols: [] },
+      { name: "FACTION_REGION$ebnf$5", symbols: [] },
       {
-        name: "FACTION_REGION$ebnf$4",
-        symbols: ["FACTION_REGION$ebnf$4", "FACTION_REGION_UNIT"],
+        name: "FACTION_REGION$ebnf$5",
+        symbols: ["FACTION_REGION$ebnf$5", "FACTION_REGION_UNIT"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
@@ -1362,13 +1378,14 @@
           "FACTION_REGION$string$1",
           "NL",
           "FACTION_REGION$ebnf$1",
+          "FACTION_REGION$ebnf$2",
           "NL_",
           "FACTION_REGION$string$2",
           "NL",
-          "FACTION_REGION$ebnf$2",
-          "NL_",
           "FACTION_REGION$ebnf$3",
-          "FACTION_REGION$ebnf$4"
+          "NL_",
+          "FACTION_REGION$ebnf$4",
+          "FACTION_REGION$ebnf$5"
         ],
         postprocess: regionProcessor
       },
@@ -1382,8 +1399,8 @@
       },
       {
         name: "FACTION_REGION_DETAILS",
-        symbols: ["_", "FACTION_REGION_DETAILS$ebnf$1", "REGION_SENTENCE", "NL"],
-        postprocess: array2String
+        symbols: ["_", "FACTION_REGION_DETAILS$ebnf$1", "REGION_SECTION_TYPE", { literal: ":" }, "__", "REGION_SENTENCE", "NL"],
+        postprocess: regionDetailsProcessor
       },
       { name: "FACTION_REGION_EXIT$ebnf$1", symbols: ["_"], postprocess: id },
       {
@@ -1479,6 +1496,112 @@
       {
         name: "REGION_SENTENCE",
         symbols: ["WORD", "NL", "_", "_", "_", "REGION_SENTENCE$ebnf$1", "REGION_SENTENCE"],
+        postprocess: array2String
+      },
+      {
+        name: "REGION_SECTION_TYPE$string$1",
+        symbols: [{ literal: "W" }, { literal: "a" }, { literal: "g" }, { literal: "e" }, { literal: "s" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_SECTION_TYPE", symbols: ["REGION_SECTION_TYPE$string$1"] },
+      {
+        name: "REGION_SECTION_TYPE$string$2",
+        symbols: [{ literal: "W" }, { literal: "a" }, { literal: "n" }, { literal: "t" }, { literal: "e" }, { literal: "d" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_SECTION_TYPE", symbols: ["REGION_SECTION_TYPE$string$2"] },
+      {
+        name: "REGION_SECTION_TYPE$string$3",
+        symbols: [
+          { literal: "F" },
+          { literal: "o" },
+          { literal: "r" },
+          { literal: " " },
+          { literal: "S" },
+          { literal: "a" },
+          { literal: "l" },
+          { literal: "e" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_SECTION_TYPE", symbols: ["REGION_SECTION_TYPE$string$3"] },
+      {
+        name: "REGION_SECTION_TYPE$string$4",
+        symbols: [
+          { literal: "E" },
+          { literal: "n" },
+          { literal: "t" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "t" },
+          { literal: "a" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "m" },
+          { literal: "e" },
+          { literal: "n" },
+          { literal: "t" },
+          { literal: " " },
+          { literal: "a" },
+          { literal: "v" },
+          { literal: "a" },
+          { literal: "i" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "b" },
+          { literal: "l" },
+          { literal: "e" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_SECTION_TYPE", symbols: ["REGION_SECTION_TYPE$string$4"] },
+      {
+        name: "REGION_SECTION_TYPE$string$5",
+        symbols: [
+          { literal: "P" },
+          { literal: "r" },
+          { literal: "o" },
+          { literal: "d" },
+          { literal: "u" },
+          { literal: "c" },
+          { literal: "t" },
+          { literal: "s" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "REGION_SECTION_TYPE", symbols: ["REGION_SECTION_TYPE$string$5"] },
+      { name: "REGION_WEATHER$ebnf$1", symbols: ["_"], postprocess: id },
+      {
+        name: "REGION_WEATHER$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      { name: "REGION_WEATHER", symbols: ["_", "REGION_WEATHER$ebnf$1", "REGION_WEATHER_SENTENCE", "_", "REGION_SENTENCE", "NL"] },
+      { name: "REGION_WEATHER_SENTENCE", symbols: ["WORD", /[;]/] },
+      { name: "REGION_WEATHER_SENTENCE", symbols: ["WORD", "_", "REGION_WEATHER_SENTENCE"], postprocess: array2String },
+      { name: "REGION_WEATHER_SENTENCE$ebnf$1", symbols: ["_"], postprocess: id },
+      {
+        name: "REGION_WEATHER_SENTENCE$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "REGION_WEATHER_SENTENCE",
+        symbols: ["WORD", "NL", "_", "_", "_", "REGION_WEATHER_SENTENCE$ebnf$1", "REGION_WEATHER_SENTENCE"],
         postprocess: array2String
       },
       {
