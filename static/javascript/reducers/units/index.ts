@@ -3,8 +3,8 @@ import { SELECT_UNIT, IActions as IUnitsActions } from "../../actions/units-acti
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import parseRegionUnit from "./region-units";
 import parseRegionObject from "./region-objects";
-import { IState, IStateRegionUnits } from "./units.d";
-export { IState };
+import { IState, IStateRegionUnits, IUnit, IUnitFlags, IUnitSkill, IUnitItem, IObjectStructure } from "./units.d";
+export { IState, IUnit, IUnitFlags, IUnitSkill, IUnitItem, IObjectStructure };
 
 const initialState: IState = {
   selectedUnitId: undefined,

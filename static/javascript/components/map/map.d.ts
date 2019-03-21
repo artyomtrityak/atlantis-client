@@ -1,3 +1,5 @@
+import { IRegions, IRegion } from "../../reducers/regions";
+
 export interface IMapProps {
   readonly maxX: number;
   readonly maxY: number;

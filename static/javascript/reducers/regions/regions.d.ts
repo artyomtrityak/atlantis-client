@@ -1,3 +1,14 @@
+export interface IRegion extends IReportRegion {
+  // copy same for name convention
+  readonly exits?: {
+    [key: string]: IRegion;
+  };
+}
+
+export interface IRegions {
+  readonly [key: string]: IRegion;
+}
+
 export interface ILevel {
   readonly maxX: number;
   readonly maxY: number;

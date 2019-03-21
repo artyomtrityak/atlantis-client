@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
-import { IState } from "./events.d";
-export { IState };
+import { IState, IUnitEvent } from "./events.d";
+export { IState, IUnitEvent };
 
 const initialState: IState = {
   globanEvents: [],
@@ -26,7 +26,6 @@ function eventsReducer(state: IState = initialState, action: IReportActions) {
       state = { ...state, ...parseEvents(action.payload) };
       break;
   }
-  console.log("EVENT111", state);
   return state;
 }
 

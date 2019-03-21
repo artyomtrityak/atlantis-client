@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import cn from "classnames";
 import { ICombinedReducersState } from "../../reducers";
 import { Icon } from "../utils";
+import { IUnitFlags } from "../../reducers/units";
 // Icons
 import shieldIcon from "../../../assets/svg/shield.svg";
 import moneyIcon from "../../../assets/svg/money_bag.svg";

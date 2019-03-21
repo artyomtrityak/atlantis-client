@@ -198,6 +198,7 @@
       id: `${d[2].x}_${d[2].y}_${d[2].z}`,
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
+      weather: array2String(d[8]),
       details: d[9],
       exits: exits,
       gate: d[15],
@@ -211,6 +212,13 @@
     return {
       type: "REGIONS",
       regions: d[0]
+    };
+  };
+
+  const ordersTemplateUnitProcessor = d => {
+    return {
+      unitId: d[2],
+      orders: d[4]
     };
   };
 
@@ -1745,7 +1753,8 @@
           "FACTION_ORDERS_TEMPLATE_REGION$string$2",
           "NL_",
           "FACTION_ORDERS_TEMPLATE_REGION$ebnf$2"
-        ]
+        ],
+        postprocess: d => d[10]
       },
       { name: "FACTION_ORDERS_REGION_TEXT", symbols: ["WORD"] },
       { name: "FACTION_ORDERS_REGION_TEXT", symbols: ["WORD", "__", "FACTION_ORDERS_REGION_TEXT"], postprocess: array2String },
@@ -1786,9 +1795,10 @@
           "NL_",
           "FACTION_ORDERS_TEMPLATE_UNIT$ebnf$1",
           "FACTION_ORDERS_TEMPLATE_UNIT$ebnf$2"
-        ]
+        ],
+        postprocess: ordersTemplateUnitProcessor
       },
-      { name: "FACTION_ORDERS_TEMPLATE_UNIT_DETAILS", symbols: ["BLOB", "NL"] },
+      { name: "FACTION_ORDERS_TEMPLATE_UNIT_DETAILS", symbols: ["BLOB", "NL"], postprocess: array2String },
       { name: "REPORT_PARSER$ebnf$1", symbols: ["FACTION_ORIENTATION"], postprocess: id },
       {
         name: "REPORT_PARSER$ebnf$1",

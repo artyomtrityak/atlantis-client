@@ -1,10 +1,13 @@
+import { IUnit } from "../../reducers/units";
+import { IObjectStructure } from "../../reducers/units";
+
 export interface IUnitListsProps {
   selectedUnitId?: number;
   onRowClick: (unitId: number) => void;
   width: number;
   height: number;
   units: IUnit[];
-  objects: IObjectStructure[]; // TODO: rename to IObjectStructure
+  objects: IObjectStructure[];
 }
 
 export type IDataGridObject = {

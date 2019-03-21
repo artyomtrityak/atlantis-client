@@ -1,3 +1,6 @@
+import { IUnitEvent } from "../../reducers/events";
+import { IUnit } from "../../reducers/units";
+
 export interface IDetailsProps {
   unit?: IUnit;
 }

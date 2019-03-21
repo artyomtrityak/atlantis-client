@@ -15,7 +15,7 @@
       type: d[6],
       direction: d[2],
       isExit: true,
-      details: []
+      details: []  
     };
   };
 
@@ -29,6 +29,7 @@
       id: `${d[2].x}_${d[2].y}_${d[2].z}`,
       title: array2String(d.slice(0, 5)),
       coordinates: d[2],
+      weather: array2String(d[8]),
       details: d[9],
       exits: exits,
       gate: d[15],

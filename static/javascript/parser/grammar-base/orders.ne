@@ -1,4 +1,11 @@
 @{%
+  const ordersTemplateUnitProcessor = (d) => {
+    return {
+      unitId: d[2],
+      orders: d[4]
+    };
+  }
+
   const ordersTemplateProcessor = (d) => {
     return {
       type: "ORDERS_TEMPLATE",
@@ -24,7 +31,7 @@ FACTION_ORDERS_TEMPLATE ->
 #TODO: fix FACTION_ORDERS_REGION_TEXT, make generic new line or somethng else
 FACTION_ORDERS_TEMPLATE_REGION ->
   ";***" _ TEXT _ REGION_COORDINATES _ FACTION_ORDERS_REGION_TEXT [ \n;]:+ "***" NL_
-  FACTION_ORDERS_TEMPLATE_UNIT:+
+  FACTION_ORDERS_TEMPLATE_UNIT:+ {% (d) => d[10] %}
 
 FACTION_ORDERS_REGION_TEXT ->
   WORD
@@ -35,8 +42,8 @@ FACTION_ORDERS_REGION_TEXT ->
 FACTION_ORDERS_TEMPLATE_UNIT ->
   "unit" _ INT NL_
   FACTION_ORDERS_TEMPLATE_UNIT_DETAILS:+
-  [\n]:*
+  [\n]:* {% ordersTemplateUnitProcessor %}
 
 
 FACTION_ORDERS_TEMPLATE_UNIT_DETAILS ->
-  BLOB NL
+  BLOB NL {% array2String %}

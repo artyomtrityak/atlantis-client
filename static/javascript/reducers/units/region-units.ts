@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { RACES, WEAPONS, ARMORS, FOOD, MOUNTS } from "../../config";
+import { IUnit } from "./units.d";
 
 function parseCanStudy(unit: IUnit, d: IReportUnitCanStudy) {
   unit.canStudy = d.text;

@@ -1,7 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
-import cn from "classnames";
-import { Icon } from "../utils";
+import { IUnitItem } from "../../reducers/units";
 
 interface IProps {
   items: IUnitItem[];

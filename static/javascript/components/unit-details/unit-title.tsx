@@ -1,4 +1,5 @@
 import React from "react";
+import { IUnit } from "../../reducers/units";
 
 interface IProps {
   unit: IUnit;

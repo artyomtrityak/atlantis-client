@@ -1,5 +1,6 @@
 import _ from "lodash";
 import parseRegionUnit from "./region-units";
+import { IObjectStructure, IUnit } from "./units.d";
 
 function parseObject(regionObject: IObjectStructure): [IObjectStructure, IUnit[]] {
   let units = regionObject.objectUnits.map(d => parseRegionUnit(d));
