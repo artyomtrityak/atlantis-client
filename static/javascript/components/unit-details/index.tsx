@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
 import { stateGetters } from "../utils";
 import UnitFlags from "./unit-flags";
-import UnitActionsMenu from "./unit-actions";
+import UnitActionsMenu from "../unit-actions";
 import UnitTitle from "./unit-title";
 import UnitDetailsItems from "./unit-details-items";
 import UnitDetailsSkills from "./unit-details-skills";
@@ -33,7 +33,8 @@ const Unit = (props: IDetailsProps) => {
           <UnitDetailsSkills skills={unit.skills} />
           <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">
-            <b>Weight</b>: {unit.weight}. Capacity: 0/0/45/0.
+            <b>Weight</b>: {unit.weight}.<b> Capacity</b>: {unit.capacity.fly}/{unit.capacity.ride}/{unit.capacity.walk}/
+            {unit.capacity.swim}.
           </div>
           <div className="dropdown-divider unit-details-divider" />
           <div className="card-text">

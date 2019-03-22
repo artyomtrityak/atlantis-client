@@ -35,6 +35,7 @@ const App = () => {
       </div>
 
       <Modals />
+      <div id="dropdowns" />
     </div>
   );
 };
