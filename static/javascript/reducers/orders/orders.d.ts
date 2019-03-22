@@ -1,5 +1,7 @@
+export type IOrders = IReportItemOrder["orders"];
+
 export interface IOrdersUnits {
-  [unitId: string]: IReportItemOrder["orders"];
+  [unitId: string]: IOrders;
 }
 
 export interface IState {

@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
-import { IState, IOrdersUnits } from "./orders.d";
-export { IState };
+import { IState, IOrdersUnits, IOrders } from "./orders.d";
+export { IState, IOrdersUnits, IOrders };
 
 const initialState: IState = {
   factionNumber: undefined,

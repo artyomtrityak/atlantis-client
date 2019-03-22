@@ -2,12 +2,14 @@ import React from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
+import { stateGetters } from "../utils";
 import UnitFlags from "./unit-flags";
 import UnitActionsMenu from "./unit-actions";
 import UnitTitle from "./unit-title";
 import UnitDetailsItems from "./unit-details-items";
 import UnitDetailsSkills from "./unit-details-skills";
 import UnitDetailsEvents from "./unit-details-events";
+import UnitOrders from "./unit-orders";
 import { IDetailsProps } from "./details-unit.d";
 
 import "./styles/index.scss";
@@ -30,29 +32,26 @@ const Unit = (props: IDetailsProps) => {
           <UnitDetailsItems items={unit.items} />
           <UnitDetailsSkills skills={unit.skills} />
           <div className="dropdown-divider unit-details-divider" />
-          <div className="card-text">Weight: 30. Capacity: 0/0/45/0.</div>
+          <div className="card-text">
+            <b>Weight</b>: {unit.weight}. Capacity: 0/0/45/0.
+          </div>
           <div className="dropdown-divider unit-details-divider" />
-          <div className="card-text">Upkeep: $30.</div>
+          <div className="card-text">
+            <b>Upkeep</b>: ${unit.upkeep}.
+          </div>
           <UnitDetailsEvents unit={unit} />
         </div>
-        <div className="col-5">
-          <textarea className="w-100per h-100per" />
-        </div>
+        <UnitOrders />
       </div>
     </div>
   );
 };
 
 const mapStateToProps = (state: ICombinedReducersState) => {
-  const currentLevelData = state.regions.levels[state.regions.mapLevel];
-  if (!currentLevelData) {
+  const unit = stateGetters.getSelectedUnit(state);
+  if (!unit) {
     return {};
   }
-  const region = state.units.regions[currentLevelData.selectedRegion];
-  if (!region) {
-    return {};
-  }
-  const unit = region.units.find(u => u.id === state.units.selectedUnitId);
   return {
     unit
   };
