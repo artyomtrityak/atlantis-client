@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
-import UnitActionsDropdown, { IProps as IUnitActionsDropdownProps } from "./unit-actions-dropdown";
+import UnitActionsDropdown from "./unit-actions-dropdown";
 import "./styles/index.scss";
 
 interface IProps {}
@@ -19,7 +19,7 @@ const UnitActions = (props: IProps) => {
           Actions
         </button>
       </div>
-      {dropdownShown ? <UnitActionsDropdown ref={dropdownRef} /> : null}
+      {dropdownShown ? <UnitActionsDropdown ref={dropdownRef} buttonRef={buttonRef} /> : null}
     </React.Fragment>
   );
 };

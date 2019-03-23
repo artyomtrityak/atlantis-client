@@ -79,6 +79,10 @@ export const FAST_ACTIONS = [
     icon: castIcon
   },
   {
+    name: "ENTER",
+    icon: enterIcon
+  },
+  {
     name: "FORM",
     icon: formIcon
   },
@@ -87,12 +91,12 @@ export const FAST_ACTIONS = [
     icon: giveIcon
   },
   {
-    name: "NAME",
-    icon: formIcon
+    name: "LEAVE",
+    icon: exitIcon
   },
   {
-    name: "SELL",
-    icon: sellIcon
+    name: "NAME",
+    icon: formIcon
   }
 ];
 
@@ -106,16 +110,8 @@ export const OTHER_FAST_ACTIONS = [
     icon: moneyIcon
   },
   {
-    name: "ENTER",
-    icon: enterIcon
-  },
-  {
     name: "FORGET",
     icon: studyIcon
-  },
-  {
-    name: "LEAVE",
-    icon: exitIcon
   },
   {
     name: "PROMOTE",
@@ -124,6 +120,10 @@ export const OTHER_FAST_ACTIONS = [
   {
     name: "REVEAL",
     icon: revealIcon
+  },
+  {
+    name: "SELL",
+    icon: sellIcon
   },
   {
     name: "SHOW",
