@@ -1,5 +1,3 @@
-"use strict";
-
 import cn from "classnames";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -9,11 +7,12 @@ import { ICombinedReducersState } from "../../reducers";
 import { FAST_ACTIONS, TURN_ACTIONS } from "./actions-data";
 import UnitAction from "./unit-actions-dropdown-action";
 
-interface IProps {}
+export interface IProps {}
 
-const UnitActionsDropdown = (props: IProps) => {
+const UnitActionsDropdown = (props: IProps, ref: React.Ref<HTMLDivElement>) => {
   return ReactDOM.createPortal(
     <div
+      ref={ref}
       className={cn("dropdown-menu", "unit-actions-menu__menu", "show", {
         "unit-actions-menu__menu--extended": false
       })}
@@ -52,5 +51,7 @@ const mapStateToProps = (state: ICombinedReducersState) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
-)(UnitActionsDropdown);
+  mapDispatchToProps,
+  undefined as any,
+  { forwardRef: true } as any
+)(React.forwardRef(UnitActionsDropdown));
