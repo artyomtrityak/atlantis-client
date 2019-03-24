@@ -5,7 +5,5 @@ export interface IOrdersUnits {
 }
 
 export interface IState {
-  readonly factionNumber?: number;
-  readonly factionPassword?: string;
   readonly units: IOrdersUnits;
 }

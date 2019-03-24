@@ -1,5 +1,12 @@
 interface IReportItemFactionInfo {
   readonly type: "FACTION_INFO";
+  readonly factionName: string;
+  readonly factionNumber: number;
+  readonly points: {
+    war: number;
+    trade: number;
+    magic: number;
+  };
 }
 
 interface IReportItemDate {

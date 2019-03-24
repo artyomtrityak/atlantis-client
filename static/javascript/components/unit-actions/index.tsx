@@ -1,5 +1,3 @@
-"use strict";
-
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
@@ -7,9 +5,7 @@ import { ICombinedReducersState } from "../../reducers";
 import UnitActionsDropdown from "./unit-actions-dropdown";
 import "./styles/index.scss";
 
-interface IProps {}
-
-const UnitActions = (props: IProps) => {
+const UnitActions = () => {
   const [dropdownShown, showDropdown, buttonRef, dropdownRef] = useDropdown();
 
   return (

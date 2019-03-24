@@ -4,8 +4,6 @@ import { IState, IOrdersUnits, IOrders } from "./orders.d";
 export { IState, IOrdersUnits, IOrders };
 
 const initialState: IState = {
-  factionNumber: undefined,
-  factionPassword: undefined,
   units: {}
 };
 
@@ -23,8 +21,6 @@ function parseOrders(report: IReport) {
     .value();
 
   return {
-    factionNumber: reportOrdersData.factionNumber,
-    factionPassword: reportOrdersData.factionPassword,
     units
   };
 }

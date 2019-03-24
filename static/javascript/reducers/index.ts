@@ -5,6 +5,7 @@ import regions, { IState as IRegionsState } from "./regions";
 import report, { IState as IReportState } from "./report";
 import events, { IState as IEventsState } from "./events";
 import orders, { IState as IOrdersState } from "./orders";
+import faction, { IState as IFactionState } from "./faction";
 
 export interface ICombinedReducersState {
   readonly units: IUnitsState;
@@ -13,6 +14,7 @@ export interface ICombinedReducersState {
   readonly report: IReportState;
   readonly events: IEventsState;
   readonly orders: IOrdersState;
+  readonly faction: IFactionState;
 }
 
 export default combineReducers<ICombinedReducersState>({
@@ -21,5 +23,6 @@ export default combineReducers<ICombinedReducersState>({
   regions,
   report,
   events,
-  orders
+  orders,
+  faction
 });
