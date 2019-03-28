@@ -3,10 +3,13 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
 import { IOrders } from "../../reducers/orders";
-import { stateGetters } from "../utils";
+import { changeUnitOrders } from "../../actions/units-actions";
+import { IUnit } from "../../reducers/units";
 
 interface IProps {
   orders?: IOrders;
+  changeUnitOrders: (...args: Parameters<typeof changeUnitOrders>) => void;
+  unit: IUnit;
 }
 
 const UnitDetailsOrders = (props: IProps) => {
@@ -19,8 +22,8 @@ const UnitDetailsOrders = (props: IProps) => {
   );
 };
 
-const useCommitChanges = (props: IProps) => {
-  const { orders = [] } = props;
+const useCommitChanges = (props: IProps): [string, (val: string) => void, () => void] => {
+  const { orders = [], unit } = props;
   const [newValue, setNewValue] = useState("");
 
   const value = orders.join("\n");
@@ -33,8 +36,7 @@ const useCommitChanges = (props: IProps) => {
 
   const commitChanges = useCallback(
     () => {
-      console.log("COMMIT:", newValue);
-      // TODO: push to redux
+      props.changeUnitOrders(unit.id, newValue.split("\n"));
     },
     [newValue]
   );
@@ -42,22 +44,17 @@ const useCommitChanges = (props: IProps) => {
   return [newValue, setNewValue, commitChanges];
 };
 
-const mapStateToProps = (state: ICombinedReducersState) => {
-  const unit = stateGetters.getSelectedUnit(state);
-  if (!unit) {
-    return {
-      orders: [],
-      isMyFaction: false
-    };
-  }
-  const orders = state.orders.units[unit.id];
+const mapStateToProps = (state: ICombinedReducersState, ownProps: { unit: IUnit }) => {
+  const orders = state.orders.units[ownProps.unit.id];
   return {
     orders
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {};
+  return {
+    changeUnitOrders: (unitId: number, orders: string[]) => dispatch(changeUnitOrders(unitId, orders))
+  };
 };
 
 export default connect(

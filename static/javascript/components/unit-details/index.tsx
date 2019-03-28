@@ -42,7 +42,7 @@ const Unit = (props: IDetailsProps) => {
           </div>
           <UnitDetailsEvents unit={unit} />
         </div>
-        {isMyFaction ? <UnitOrders /> : null}
+        {isMyFaction ? <UnitOrders unit={unit} /> : null}
       </div>
     </div>
   );
