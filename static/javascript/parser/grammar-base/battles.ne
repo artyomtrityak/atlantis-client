@@ -30,7 +30,7 @@
 FACTION_BATTLES ->
   "Battles during turn:"
   NL
-  FACTION_BATTLE:+
+  (FACTION_BATTLE | FACTION_ASSASINATION):+
   NL_
   {% battlesProcessor %}
   
@@ -43,6 +43,10 @@ FACTION_BATTLE ->
   "Defenders:" NL
   FACTION_BATTLE_DETAILS:+
   {% battleProcessor %}
+
+
+FACTION_ASSASINATION ->
+  TEXT __AND_NL "(" INT ")" __AND_NL "is" __AND_NL "assassinated" __AND_NL "in" __AND_NL TEXT __AND_NL REGION_COORDINATES __AND_NL TEXT "!" NL_
 
 
 FACTION_BATTLE_DETAILS ->

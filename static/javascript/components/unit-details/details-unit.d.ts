@@ -3,6 +3,7 @@ import { IUnit } from "../../reducers/units";
 
 export interface IDetailsProps {
   unit?: IUnit;
+  isMyFaction: boolean;
 }
 
 export interface IDetailsEventsProps {

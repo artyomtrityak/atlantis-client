@@ -15,7 +15,7 @@ import { IDetailsProps } from "./details-unit.d";
 import "./styles/index.scss";
 
 const Unit = (props: IDetailsProps) => {
-  const { unit } = props;
+  const { unit, isMyFaction } = props;
   console.log(unit);
   if (!unit) {
     return null;
@@ -42,7 +42,7 @@ const Unit = (props: IDetailsProps) => {
           </div>
           <UnitDetailsEvents unit={unit} />
         </div>
-        <UnitOrders />
+        {isMyFaction ? <UnitOrders /> : null}
       </div>
     </div>
   );
@@ -51,10 +51,13 @@ const Unit = (props: IDetailsProps) => {
 const mapStateToProps = (state: ICombinedReducersState) => {
   const unit = stateGetters.getSelectedUnit(state);
   if (!unit) {
-    return {};
+    return {
+      isMyFaction: false
+    };
   }
   return {
-    unit
+    unit,
+    isMyFaction: unit.faction != null && state.faction.factionId === unit.faction.factionId
   };
 };
 

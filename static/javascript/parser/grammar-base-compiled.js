@@ -939,10 +939,14 @@
           return d.join("");
         }
       },
-      { name: "FACTION_BATTLES$ebnf$1", symbols: ["FACTION_BATTLE"] },
+      { name: "FACTION_BATTLES$ebnf$1$subexpression$1", symbols: ["FACTION_BATTLE"] },
+      { name: "FACTION_BATTLES$ebnf$1$subexpression$1", symbols: ["FACTION_ASSASINATION"] },
+      { name: "FACTION_BATTLES$ebnf$1", symbols: ["FACTION_BATTLES$ebnf$1$subexpression$1"] },
+      { name: "FACTION_BATTLES$ebnf$1$subexpression$2", symbols: ["FACTION_BATTLE"] },
+      { name: "FACTION_BATTLES$ebnf$1$subexpression$2", symbols: ["FACTION_ASSASINATION"] },
       {
         name: "FACTION_BATTLES$ebnf$1",
-        symbols: ["FACTION_BATTLES$ebnf$1", "FACTION_BATTLE"],
+        symbols: ["FACTION_BATTLES$ebnf$1", "FACTION_BATTLES$ebnf$1$subexpression$2"],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
@@ -1060,6 +1064,64 @@
           "FACTION_BATTLE$ebnf$2"
         ],
         postprocess: battleProcessor
+      },
+      {
+        name: "FACTION_ASSASINATION$string$1",
+        symbols: [{ literal: "i" }, { literal: "s" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ASSASINATION$string$2",
+        symbols: [
+          { literal: "a" },
+          { literal: "s" },
+          { literal: "s" },
+          { literal: "a" },
+          { literal: "s" },
+          { literal: "s" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "a" },
+          { literal: "t" },
+          { literal: "e" },
+          { literal: "d" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ASSASINATION$string$3",
+        symbols: [{ literal: "i" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_ASSASINATION",
+        symbols: [
+          "TEXT",
+          "__AND_NL",
+          { literal: "(" },
+          "INT",
+          { literal: ")" },
+          "__AND_NL",
+          "FACTION_ASSASINATION$string$1",
+          "__AND_NL",
+          "FACTION_ASSASINATION$string$2",
+          "__AND_NL",
+          "FACTION_ASSASINATION$string$3",
+          "__AND_NL",
+          "TEXT",
+          "__AND_NL",
+          "REGION_COORDINATES",
+          "__AND_NL",
+          "TEXT",
+          { literal: "!" },
+          "NL_"
+        ]
       },
       { name: "FACTION_BATTLE_DETAILS", symbols: ["SENTENCE", "NL_"] },
       {
