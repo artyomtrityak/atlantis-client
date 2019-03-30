@@ -16,7 +16,6 @@ import "./styles/index.scss";
 
 const Unit = (props: IDetailsProps) => {
   const { unit, isMyFaction } = props;
-  console.log(unit);
   if (!unit) {
     return null;
   }

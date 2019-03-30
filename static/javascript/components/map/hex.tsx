@@ -1,9 +1,43 @@
 import React, { useRef, useEffect } from "react";
 import cn from "classnames";
 import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
-import { IHexProps, IPoint } from "./map.d";
+import { IRegion } from "../../reducers/regions";
+
+interface IHexProps {
+  readonly isSelected: boolean;
+  readonly zoom: number;
+  readonly x: number;
+  readonly y: number;
+  readonly onSelect: (regionId: string) => void;
+  readonly region: IRegion;
+}
+
+type IUseHexData = [React.RefObject<SVGPolygonElement>, ReturnType<typeof calculateHexPosition>, string];
 
 const Hex = (props: IHexProps) => {
+  const [elRef, position, pointsPath] = useHexData(props);
+  const { isSelected, region } = props;
+
+  if (isSelected) {
+    console.log("HEX:", props.region);
+  }
+
+  return (
+    <g transform={`translate(${position.x}, ${position.y})`}>
+      <polygon
+        ref={elRef}
+        points={pointsPath}
+        className={cn("hex", `hex--type-${region.type}`, {
+          "hex--selected": isSelected
+        })}
+        onClick={() => props.onSelect(props.region.id)}
+      />
+    </g>
+  );
+};
+
+const useHexData = (props: IHexProps): IUseHexData => {
+  const { x, y, zoom } = props;
   const elRef = useRef<SVGPolygonElement>(null);
   const prevProps = useRef(props);
 
@@ -19,8 +53,6 @@ const Hex = (props: IHexProps) => {
     prevProps.current = props;
   });
 
-  const { x, y, zoom, isSelected, region } = props;
-
   // TODO: use https://www.quora.com/How-can-you-find-the-coordinates-in-a-hexagon
   const points = [
     { x: 0, y: 0.5 * regionHeight },
@@ -31,20 +63,10 @@ const Hex = (props: IHexProps) => {
     { x: 0.25 * regionWidth, y: 1 * regionHeight }
   ];
 
-  const pointsPath = points.map((d: IPoint) => `${zoom * d.x},${zoom * d.y}`).join(" ");
+  const pointsPath = points.map((d: typeof points[0]) => `${zoom * d.x},${zoom * d.y}`).join(" ");
   const position = calculateHexPosition({ x, y, zoom });
 
-  return (
-    <polygon
-      ref={elRef}
-      transform={`translate(${position.x}, ${position.y})`}
-      points={pointsPath}
-      className={cn("hex", `hex--type-${region.type}`, {
-        "hex--selected": isSelected
-      })}
-      onClick={() => props.onSelect(props.region.id)}
-    />
-  );
+  return [elRef, position, pointsPath];
 };
 
 export default Hex;

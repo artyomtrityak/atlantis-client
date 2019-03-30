@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { ICombinedReducersState } from "../../reducers";
@@ -12,17 +12,24 @@ interface IProps {
   unit: IUnit;
 }
 
+type IUseCommitChanges = [string, (val: string) => void, () => void, (val: React.KeyboardEvent<HTMLTextAreaElement>) => void];
+
 const UnitDetailsOrders = (props: IProps) => {
-  const [newValue, setNewValue, commitChanges] = useCommitChanges(props);
-  // TODO: UI should commitChange also on Enter
+  const [newValue, setNewValue, commitChanges, commitOnEnter] = useCommitChanges(props);
   return (
     <div className="col-5">
-      <textarea className="w-100per h-100per" onBlur={commitChanges} value={newValue} onChange={e => setNewValue(e.target.value)} />
+      <textarea
+        className="w-100per h-100per"
+        onKeyPress={commitOnEnter}
+        onBlur={commitChanges}
+        value={newValue}
+        onChange={e => setNewValue(e.target.value)}
+      />
     </div>
   );
 };
 
-const useCommitChanges = (props: IProps): [string, (val: string) => void, () => void] => {
+const useCommitChanges = (props: IProps): IUseCommitChanges => {
   const { orders = [], unit } = props;
   const [newValue, setNewValue] = useState("");
 
@@ -41,7 +48,16 @@ const useCommitChanges = (props: IProps): [string, (val: string) => void, () => 
     [newValue]
   );
 
-  return [newValue, setNewValue, commitChanges];
+  const commitOnEnter = useCallback(
+    (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (event.key === "Enter") {
+        commitChanges();
+      }
+    },
+    [newValue]
+  );
+
+  return [newValue, setNewValue, commitChanges, commitOnEnter];
 };
 
 const mapStateToProps = (state: ICombinedReducersState, ownProps: { unit: IUnit }) => {
