@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import cn from "classnames";
-import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
 import { IRegion } from "../../reducers/regions";
+import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
+import City from "./city";
 
 interface IHexProps {
   readonly isSelected: boolean;
@@ -16,22 +17,24 @@ type IUseHexData = [React.RefObject<SVGPolygonElement>, ReturnType<typeof calcul
 
 const Hex = (props: IHexProps) => {
   const [elRef, position, pointsPath] = useHexData(props);
-  const { isSelected, region } = props;
+  const { isSelected, region, zoom } = props;
 
   if (isSelected) {
     console.log("HEX:", props.region);
   }
 
+  // TODO: roads, ships, monster lairs, gray overlay if 0 units present
+
   return (
-    <g transform={`translate(${position.x}, ${position.y})`}>
+    <g transform={`translate(${position.x}, ${position.y})`} ref={elRef}>
       <polygon
-        ref={elRef}
         points={pointsPath}
         className={cn("hex", `hex--type-${region.type}`, {
           "hex--selected": isSelected
         })}
         onClick={() => props.onSelect(props.region.id)}
       />
+      <City zoom={zoom} region={region} />
     </g>
   );
 };

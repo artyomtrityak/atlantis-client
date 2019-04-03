@@ -92,6 +92,16 @@ WORD ->
   [^\n\r ]:+ {% array2String %}
 
 
+TEXT_NO_SYMBOLS ->
+  WORD_NO_SYMBOLS
+  | WORD_NO_SYMBOLS __ TEXT_NO_SYMBOLS {% array2String %}
+  | WORD_NO_SYMBOLS NL __ TEXT_NO_SYMBOLS {% array2String %}
+
+
+WORD_NO_SYMBOLS ->
+  [^\n\r,.! ]:+ {% array2String %}
+
+
 BLOB ->
   [^\n\r]:+ {% array2String %}
 

@@ -98,7 +98,8 @@ function addShadowRegions(level: ILevel) {
         title: "Unknown",
         type: "unknown",
         details: [],
-        unitsAndObjects: []
+        unitsAndObjects: [],
+        hasCity: false
       };
     });
   }

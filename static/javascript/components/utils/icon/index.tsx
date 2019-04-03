@@ -25,7 +25,7 @@ export default (props: IProps) => {
       })}
       onClick={props.disabled ? undefined : props.onClick}
     >
-      <use xlinkHref={`#${props.id}`} />
+      <use href={`#${props.id}`} />
     </svg>
   );
 };

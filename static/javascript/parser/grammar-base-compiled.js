@@ -168,6 +168,15 @@
     };
   };
 
+  const regionHeaderProcessor = d => {
+    return {
+      type: d[0],
+      coordinates: d[2],
+      text: array2String(d),
+      hasCity: !!d[8]
+    };
+  };
+
   const regionDetailsProcessor = d => {
     return {
       type: d[2][0],
@@ -176,34 +185,36 @@
     };
   };
 
-  const regionExitProcessor = d => {
+  const regionExitProcessor = (d, hasCity) => {
     return {
       id: `${d[8].x}_${d[8].y}_${d[8].z}`,
       title: array2String(d.slice(6)),
       coordinates: d[8],
-      type: d[6],
+      type: array2String(d[6]),
       direction: d[2],
       isExit: true,
-      details: []
+      details: [],
+      hasCity
     };
   };
 
   const regionProcessor = d => {
-    const exits = d[13].reduce((result, exit) => {
+    const exits = d[8].reduce((result, exit) => {
       result[exit.direction.toLowerCase()] = exit;
       return result;
     }, {});
 
     return {
-      id: `${d[2].x}_${d[2].y}_${d[2].z}`,
-      title: array2String(d.slice(0, 5)),
-      coordinates: d[2],
-      weather: array2String(d[8]),
-      details: d[9],
+      id: `${d[0].coordinates.x}_${d[0].coordinates.y}_${d[0].coordinates.z}`,
+      title: d[0].text,
+      coordinates: d[0].coordinates,
+      weather: array2String(d[2]),
+      details: d[4],
       exits: exits,
-      gate: d[15],
-      unitsAndObjectsRaw: d[16],
-      type: d[0][0],
+      gate: d[10],
+      unitsAndObjectsRaw: d[11],
+      type: d[0].type,
+      hasCity: d[0].hasCity,
       isExit: false
     };
   };
@@ -286,6 +297,18 @@
         }
       },
       { name: "WORD", symbols: ["WORD$ebnf$1"], postprocess: array2String },
+      { name: "TEXT_NO_SYMBOLS", symbols: ["WORD_NO_SYMBOLS"] },
+      { name: "TEXT_NO_SYMBOLS", symbols: ["WORD_NO_SYMBOLS", "__", "TEXT_NO_SYMBOLS"], postprocess: array2String },
+      { name: "TEXT_NO_SYMBOLS", symbols: ["WORD_NO_SYMBOLS", "NL", "__", "TEXT_NO_SYMBOLS"], postprocess: array2String },
+      { name: "WORD_NO_SYMBOLS$ebnf$1", symbols: [/[^\n\r,.! ]/] },
+      {
+        name: "WORD_NO_SYMBOLS$ebnf$1",
+        symbols: ["WORD_NO_SYMBOLS$ebnf$1", /[^\n\r,.! ]/],
+        postprocess: function arrpush(d) {
+          return d[0].concat([d[1]]);
+        }
+      },
+      { name: "WORD_NO_SYMBOLS", symbols: ["WORD_NO_SYMBOLS$ebnf$1"], postprocess: array2String },
       { name: "BLOB$ebnf$1", symbols: [/[^\n\r]/] },
       {
         name: "BLOB$ebnf$1",
@@ -1439,12 +1462,7 @@
       {
         name: "FACTION_REGION",
         symbols: [
-          "TEXT",
-          "_",
-          "REGION_COORDINATES",
-          "_",
-          "SENTENCE",
-          "NL",
+          "FACTION_REGION_HEADER",
           "FACTION_REGION$string$1",
           "NL",
           "FACTION_REGION$ebnf$1",
@@ -1458,6 +1476,134 @@
           "FACTION_REGION$ebnf$5"
         ],
         postprocess: regionProcessor
+      },
+      {
+        name: "FACTION_REGION_HEADER$string$1",
+        symbols: [{ literal: "i" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_REGION_HEADER",
+        symbols: [
+          "TEXT_NO_SYMBOLS",
+          "_",
+          "REGION_COORDINATES",
+          "_",
+          "FACTION_REGION_HEADER$string$1",
+          "_",
+          "TEXT_NO_SYMBOLS",
+          { literal: "." },
+          "NL"
+        ],
+        postprocess: d => regionHeaderProcessor(d)
+      },
+      {
+        name: "FACTION_REGION_HEADER$string$2",
+        symbols: [{ literal: "i" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_HEADER$ebnf$1", symbols: ["FACTION_REGION_HEADER_CITY"], postprocess: id },
+      {
+        name: "FACTION_REGION_HEADER$ebnf$1",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "FACTION_REGION_HEADER",
+        symbols: [
+          "TEXT_NO_SYMBOLS",
+          "_",
+          "REGION_COORDINATES",
+          "_",
+          "FACTION_REGION_HEADER$string$2",
+          "_",
+          "TEXT_NO_SYMBOLS",
+          { literal: "," },
+          "FACTION_REGION_HEADER$ebnf$1",
+          "__AND_NL",
+          "TEXT_NO_SYMBOLS",
+          { literal: "," },
+          "__AND_NL",
+          { literal: "$" },
+          "INT",
+          { literal: "." },
+          "NL"
+        ],
+        postprocess: d => regionHeaderProcessor(d)
+      },
+      {
+        name: "FACTION_REGION_HEADER_CITY$string$1",
+        symbols: [
+          { literal: "c" },
+          { literal: "o" },
+          { literal: "n" },
+          { literal: "t" },
+          { literal: "a" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "s" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_REGION_HEADER_CITY$subexpression$1$string$1",
+        symbols: [{ literal: "c" }, { literal: "i" }, { literal: "t" }, { literal: "y" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_HEADER_CITY$subexpression$1", symbols: ["FACTION_REGION_HEADER_CITY$subexpression$1$string$1"] },
+      {
+        name: "FACTION_REGION_HEADER_CITY$subexpression$1$string$2",
+        symbols: [{ literal: "t" }, { literal: "o" }, { literal: "w" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_HEADER_CITY$subexpression$1", symbols: ["FACTION_REGION_HEADER_CITY$subexpression$1$string$2"] },
+      {
+        name: "FACTION_REGION_HEADER_CITY$subexpression$1$string$3",
+        symbols: [
+          { literal: "v" },
+          { literal: "i" },
+          { literal: "l" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "g" },
+          { literal: "e" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_HEADER_CITY$subexpression$1", symbols: ["FACTION_REGION_HEADER_CITY$subexpression$1$string$3"] },
+      {
+        name: "FACTION_REGION_HEADER_CITY$string$2",
+        symbols: [{ literal: "]" }, { literal: "," }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_REGION_HEADER_CITY",
+        symbols: [
+          "_",
+          "FACTION_REGION_HEADER_CITY$string$1",
+          "_",
+          "TEXT",
+          "_",
+          { literal: "[" },
+          "FACTION_REGION_HEADER_CITY$subexpression$1",
+          "FACTION_REGION_HEADER_CITY$string$2"
+        ]
       },
       { name: "FACTION_REGION_DETAILS$ebnf$1", symbols: ["_"], postprocess: id },
       {
@@ -1493,10 +1639,101 @@
           "_",
           "REGION_COORDINATES",
           "_",
-          "REGION_SENTENCE",
+          "TEXT_NO_SYMBOLS",
+          { literal: "." },
           "NL"
         ],
-        postprocess: regionExitProcessor
+        postprocess: d => regionExitProcessor(d, false)
+      },
+      { name: "FACTION_REGION_EXIT$ebnf$2", symbols: ["_"], postprocess: id },
+      {
+        name: "FACTION_REGION_EXIT$ebnf$2",
+        symbols: [],
+        postprocess: function(d) {
+          return null;
+        }
+      },
+      {
+        name: "FACTION_REGION_EXIT$string$1",
+        symbols: [
+          { literal: "c" },
+          { literal: "o" },
+          { literal: "n" },
+          { literal: "t" },
+          { literal: "a" },
+          { literal: "i" },
+          { literal: "n" },
+          { literal: "s" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_REGION_EXIT$subexpression$1$string$1",
+        symbols: [{ literal: "c" }, { literal: "i" }, { literal: "t" }, { literal: "y" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_EXIT$subexpression$1", symbols: ["FACTION_REGION_EXIT$subexpression$1$string$1"] },
+      {
+        name: "FACTION_REGION_EXIT$subexpression$1$string$2",
+        symbols: [{ literal: "t" }, { literal: "o" }, { literal: "w" }, { literal: "n" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_EXIT$subexpression$1", symbols: ["FACTION_REGION_EXIT$subexpression$1$string$2"] },
+      {
+        name: "FACTION_REGION_EXIT$subexpression$1$string$3",
+        symbols: [
+          { literal: "v" },
+          { literal: "i" },
+          { literal: "l" },
+          { literal: "l" },
+          { literal: "a" },
+          { literal: "g" },
+          { literal: "e" }
+        ],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      { name: "FACTION_REGION_EXIT$subexpression$1", symbols: ["FACTION_REGION_EXIT$subexpression$1$string$3"] },
+      {
+        name: "FACTION_REGION_EXIT$string$2",
+        symbols: [{ literal: "]" }, { literal: "." }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_REGION_EXIT",
+        symbols: [
+          "_",
+          "FACTION_REGION_EXIT$ebnf$2",
+          "WORD",
+          "_",
+          { literal: ":" },
+          "_",
+          "WORD",
+          "_",
+          "REGION_COORDINATES",
+          "_",
+          "TEXT_NO_SYMBOLS",
+          { literal: "," },
+          "_",
+          "FACTION_REGION_EXIT$string$1",
+          "_",
+          "TEXT_NO_SYMBOLS",
+          "_",
+          { literal: "[" },
+          "FACTION_REGION_EXIT$subexpression$1",
+          "FACTION_REGION_EXIT$string$2",
+          "NL"
+        ],
+        postprocess: d => regionExitProcessor(d, true)
       },
       {
         name: "FACTION_REGION_GATE$string$1",

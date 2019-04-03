@@ -1,4 +1,13 @@
 @{%
+  const regionHeaderProcessor = (d) => {
+    return {
+      type: d[0],
+      coordinates: d[2],
+      text: array2String(d),
+      hasCity: !!d[8]
+    };
+  }
+
   const regionDetailsProcessor = (d) => {
     return {
       type: d[2][0],
@@ -7,34 +16,36 @@
     };
   };
 
-  const regionExitProcessor = (d) => {
+  const regionExitProcessor = (d, hasCity) => {
     return {
       id: `${d[8].x}_${d[8].y}_${d[8].z}`,
       title: array2String(d.slice(6)),
       coordinates: d[8],
-      type: d[6],
+      type: array2String(d[6]),
       direction: d[2],
       isExit: true,
-      details: []  
+      details: [],
+      hasCity
     };
   };
 
   const regionProcessor = (d) => {
-    const exits = d[13].reduce((result, exit) => {
+    const exits = d[8].reduce((result, exit) => {
       result[exit.direction.toLowerCase()] = exit;
       return result;
     }, {});
     
     return {
-      id: `${d[2].x}_${d[2].y}_${d[2].z}`,
-      title: array2String(d.slice(0, 5)),
-      coordinates: d[2],
-      weather: array2String(d[8]),
-      details: d[9],
+      id: `${d[0].coordinates.x}_${d[0].coordinates.y}_${d[0].coordinates.z}`,
+      title: d[0].text,
+      coordinates: d[0].coordinates,
+      weather: array2String(d[2]),
+      details: d[4],
       exits: exits,
-      gate: d[15],
-      unitsAndObjectsRaw: d[16],
-      type: d[0][0],
+      gate: d[10],
+      unitsAndObjectsRaw: d[11],
+      type: d[0].type,
+      hasCity: d[0].hasCity,
       isExit: false
     };
   };
@@ -56,7 +67,7 @@ FACTION_REGIONS ->
 
 
 FACTION_REGION ->
-  TEXT _ REGION_COORDINATES _ SENTENCE NL
+  FACTION_REGION_HEADER
   "------------------------------------------------------------" NL
   REGION_WEATHER:?
   FACTION_REGION_DETAILS:+
@@ -69,12 +80,24 @@ FACTION_REGION ->
   {% regionProcessor %}
 
 
+FACTION_REGION_HEADER ->
+  TEXT_NO_SYMBOLS _ REGION_COORDINATES _ "in" _ TEXT_NO_SYMBOLS "." NL {% (d) => regionHeaderProcessor(d) %}
+  | TEXT_NO_SYMBOLS _ REGION_COORDINATES _ "in" _ TEXT_NO_SYMBOLS "," FACTION_REGION_HEADER_CITY:? __AND_NL TEXT_NO_SYMBOLS "," __AND_NL "$" INT "." NL {% (d) => regionHeaderProcessor(d) %}
+  
+
+
+FACTION_REGION_HEADER_CITY ->
+  _ "contains" _ TEXT _ "[" ("city"|"town"|"village") "],"
+
+
 FACTION_REGION_DETAILS ->
   _ _:? REGION_SECTION_TYPE ":" __ REGION_SENTENCE NL {% regionDetailsProcessor %}
 
 
 FACTION_REGION_EXIT ->
-  _ _:? WORD _ ":" _ WORD _ REGION_COORDINATES _ REGION_SENTENCE NL {% regionExitProcessor  %}
+  _ _:? WORD _ ":" _ WORD _ REGION_COORDINATES _ TEXT_NO_SYMBOLS "." NL {% (d) => regionExitProcessor(d, false)  %}
+  | _ _:? WORD _ ":" _ WORD _ REGION_COORDINATES _ TEXT_NO_SYMBOLS ","
+    _ "contains" _ TEXT_NO_SYMBOLS _ "[" ("city"|"town"|"village") "]."  NL {% (d) => regionExitProcessor(d, true)  %}
 
 
 FACTION_REGION_GATE ->

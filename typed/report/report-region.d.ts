@@ -19,6 +19,7 @@ interface IReportRegion {
   readonly exits?: {
     [key: string]: IReportRegion;
   };
+  readonly hasCity: boolean;
   readonly unitsAndObjectsRaw?: string[];
   unitsAndObjects: Array<IReportObjectStructure | IReportUnit>;
 }
