@@ -3,17 +3,14 @@ import cityIcon from "../../../assets/svg/city3.svg";
 import { IRegion } from "../../reducers/regions";
 import { regionWidth, regionHeight } from "./utils";
 
-interface ICityProps {
+interface ILairProps {
   readonly zoom: number;
   readonly region: IRegion;
 }
 
-const HexCity = (props: ICityProps) => {
+const HexLair = (props: ILairProps) => {
   const { zoom, region } = props;
-
-  if (!region.hasCity) {
-    return null;
-  }
+  // TODO: check lair in regions objects
 
   if (zoom < 0.3) {
     return null;
@@ -26,4 +23,4 @@ const HexCity = (props: ICityProps) => {
   );
 };
 
-export default HexCity;
+export default HexLair;

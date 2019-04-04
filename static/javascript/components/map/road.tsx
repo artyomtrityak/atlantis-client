@@ -3,17 +3,18 @@ import cityIcon from "../../../assets/svg/city3.svg";
 import { IRegion } from "../../reducers/regions";
 import { regionWidth, regionHeight } from "./utils";
 
-interface ICityProps {
+interface IRoadProps {
   readonly zoom: number;
   readonly region: IRegion;
 }
 
-const HexCity = (props: ICityProps) => {
+const HexRoad = (props: IRoadProps) => {
   const { zoom, region } = props;
+  // TODO: check roads and roads direction, then render all roads for region
 
-  if (!region.hasCity) {
-    return null;
-  }
+  // if (!region.hasCity) {
+  //   return null;
+  // }
 
   if (zoom < 0.3) {
     return null;
@@ -26,4 +27,4 @@ const HexCity = (props: ICityProps) => {
   );
 };
 
-export default HexCity;
+export default HexRoad;

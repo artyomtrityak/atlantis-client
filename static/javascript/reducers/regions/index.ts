@@ -13,6 +13,8 @@ const initialState: IState = {
 function parseRegion(result: ILevel[], region: IRegion) {
   const { x, y, z } = region.coordinates;
 
+  console.log("PARSE:", region.details);
+
   if (!result[z]) {
     result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z, selectedRegion: `${x}_${y}_${z}` };
   }

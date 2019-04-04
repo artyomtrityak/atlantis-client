@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useLayoutEffect } from "react";
 import cn from "classnames";
 import { IRegion } from "../../reducers/regions";
 import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
@@ -44,7 +44,7 @@ const useHexData = (props: IHexProps): IUseHexData => {
   const elRef = useRef<SVGPolygonElement>(null);
   const prevProps = useRef(props);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (props.isSelected && !prevProps.current.isSelected && elRef.current && elRef.current.parentNode) {
       const parent = elRef.current.parentNode;
       parent.removeChild(elRef.current);
