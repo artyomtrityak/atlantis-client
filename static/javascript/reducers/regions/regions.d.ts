@@ -5,13 +5,13 @@ export interface IRegion extends IReportRegion {
   };
 
   // Reducer calculations
-  readonly hasLair: boolean;
-  readonly hasRoadN: boolean;
-  readonly hasRoadNE: boolean;
-  readonly hasRoadNW: boolean;
-  readonly hasRoadS: boolean;
-  readonly hasRoadSE: boolean;
-  readonly hasRoadSW: boolean;
+  readonly hasLair?: boolean;
+  readonly hasRoadN?: boolean;
+  readonly hasRoadNE?: boolean;
+  readonly hasRoadNW?: boolean;
+  readonly hasRoadS?: boolean;
+  readonly hasRoadSE?: boolean;
+  readonly hasRoadSW?: boolean;
 }
 
 export interface IRegions {

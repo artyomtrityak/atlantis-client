@@ -492,10 +492,10 @@
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_CAPACITY", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitCapacity },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP", { literal: "." }], postprocess: unitUpkeep },
       { name: "UNIT_SECTION_ITEM", symbols: ["__", "UNIT_UPKEEP", { literal: ";" }, "UNIT_COMMENT"], postprocess: unitUpkeep },
-      { name: "UNIT_FACTION_NAME$ebnf$1", symbols: [/[^,.():;]/] },
+      { name: "UNIT_FACTION_NAME$ebnf$1", symbols: [/[^,():;]/] },
       {
         name: "UNIT_FACTION_NAME$ebnf$1",
-        symbols: ["UNIT_FACTION_NAME$ebnf$1", /[^,.():;]/],
+        symbols: ["UNIT_FACTION_NAME$ebnf$1", /[^,():;]/],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }

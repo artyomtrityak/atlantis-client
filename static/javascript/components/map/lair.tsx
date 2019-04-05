@@ -1,5 +1,5 @@
 import React from "react";
-import cityIcon from "../../../assets/svg/city3.svg";
+import warningIcon from "../../../assets/svg/warning2.svg";
 import { IRegion } from "../../reducers/regions";
 import { regionWidth, regionHeight } from "./utils";
 
@@ -10,15 +10,24 @@ interface ILairProps {
 
 const HexLair = (props: ILairProps) => {
   const { zoom, region } = props;
-  // TODO: check lair in regions objects
+
+  if (!region.hasLair) {
+    return null;
+  }
 
   if (zoom < 0.3) {
     return null;
   }
 
   return (
-    <svg width={10} height={10} x={(regionWidth * zoom) / 2 - 5} y={(regionHeight * zoom) / 2 - 5} viewBox={cityIcon.viewBox}>
-      <use href={`#${cityIcon.id}`} />
+    <svg
+      width={20 * zoom}
+      height={20 * zoom}
+      x={(regionWidth * zoom) / 2 - 20 * zoom}
+      y={(regionHeight * zoom) / 2 + 15 * zoom}
+      viewBox={warningIcon.viewBox}
+    >
+      <use href={`#${warningIcon.id}`} />
     </svg>
   );
 };

@@ -149,7 +149,7 @@ UNIT_SECTION_ITEM ->
 
 
 UNIT_FACTION_NAME ->
-  __ [^,.():;]:+ __ "(" INT ")" "," {% unitFaction %}
+  __ [^,():;]:+ __ "(" INT ")" "," {% unitFaction %}
 
 
 UNIT_FLAGS ->

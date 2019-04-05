@@ -20,7 +20,13 @@ const HexCity = (props: ICityProps) => {
   }
 
   return (
-    <svg width={10} height={10} x={(regionWidth * zoom) / 2 - 5} y={(regionHeight * zoom) / 2 - 5} viewBox={cityIcon.viewBox}>
+    <svg
+      width={30 * zoom}
+      height={30 * zoom}
+      x={(regionWidth * zoom) / 2 - 15 * zoom}
+      y={(regionHeight * zoom) / 2 - 15 * zoom}
+      viewBox={cityIcon.viewBox}
+    >
       <use href={`#${cityIcon.id}`} />
     </svg>
   );

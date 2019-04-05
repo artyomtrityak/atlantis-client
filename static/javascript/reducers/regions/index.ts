@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
+import { hasLair } from "./region-objects";
 import { IState, ILevel, IRegion, IRegions } from "./regions.d";
 export { IState, ILevel, IRegion, IRegions };
 
@@ -13,7 +14,11 @@ const initialState: IState = {
 function parseRegion(result: ILevel[], region: IRegion) {
   const { x, y, z } = region.coordinates;
 
-  console.log("PARSE:", region.details);
+  // TODO: optimize lookup to iterate over units and objects only once
+  region = {
+    ...region,
+    hasLair: hasLair(region)
+  };
 
   if (!result[z]) {
     result[z] = { regions: {}, maxX: 0, maxY: 0, isWrap: false, level: z, selectedRegion: `${x}_${y}_${z}` };
