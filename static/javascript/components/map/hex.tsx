@@ -4,6 +4,7 @@ import { IRegion } from "../../reducers/regions";
 import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
 import City from "./city";
 import Lair from "./lair";
+import Roads from "./roads";
 
 interface IHexProps {
   readonly isSelected: boolean;
@@ -24,7 +25,7 @@ const Hex = (props: IHexProps) => {
     console.log("HEX:", props.region);
   }
 
-  // TODO: roads, ships, shafts gray overlay if 0 units present
+  // TODO: ships, shafts gray overlay if 0 units present
 
   return (
     <g transform={`translate(${position.x}, ${position.y})`} ref={elRef}>
@@ -35,6 +36,7 @@ const Hex = (props: IHexProps) => {
         })}
         onClick={() => props.onSelect(props.region.id)}
       />
+      <Roads zoom={zoom} region={region} />
       <City zoom={zoom} region={region} />
       <Lair zoom={zoom} region={region} />
     </g>

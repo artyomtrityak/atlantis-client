@@ -8,12 +8,61 @@ const LAIRS = [
   "Dark Mage Tower, closed to player units"
 ];
 
-export const hasLair = (region: IRegion): boolean => {
-  const lair = region.unitsAndObjects.find(d => {
-    if (d.type === "OBJECT" && LAIRS.includes(d.objectType)) {
-      return true;
+const SHAFTS = ["Shaft, contains an inner location"];
+
+const ROADS = ["Road S", "Road SE", "Road SW", "Road N", "Road NE", "Road NW"];
+
+const SHIPS = ["Longboat", "Galleon", "Armored Galleon"];
+
+export const getObjects = (region: IRegion): typeof flags => {
+  const flags = {
+    hasLair: false,
+    hasRoadS: false,
+    hasRoadSW: false,
+    hasRoadSE: false,
+    hasRoadN: false,
+    hasRoadNE: false,
+    hasRoadNW: false
+  };
+
+  region.unitsAndObjects.forEach(d => {
+    if (d.type !== "OBJECT") {
+      return;
     }
-    return false;
+
+    // Lairs
+    if (LAIRS.includes(d.objectType)) {
+      flags.hasLair = true;
+    }
+
+    // Roads
+    if (d.objectType === "Road S") {
+      flags.hasRoadS = true;
+    }
+
+    if (d.objectType === "Road SW") {
+      flags.hasRoadSW = true;
+    }
+
+    if (d.objectType === "Road SE") {
+      flags.hasRoadSE = true;
+    }
+
+    if (d.objectType === "Road N") {
+      flags.hasRoadN = true;
+    }
+
+    if (d.objectType === "Road NE") {
+      flags.hasRoadNE = true;
+    }
+
+    if (d.objectType === "Road NW") {
+      flags.hasRoadNW = true;
+    }
+
+    // Ships
+
+    console.log(d.objectType);
   });
-  return !!lair;
+  return flags;
 };

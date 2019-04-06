@@ -26,6 +26,7 @@ const HexLair = (props: ILairProps) => {
       x={(regionWidth * zoom) / 2 - 20 * zoom}
       y={(regionHeight * zoom) / 2 + 15 * zoom}
       viewBox={warningIcon.viewBox}
+      className="hex-object--lair"
     >
       <use href={`#${warningIcon.id}`} />
     </svg>

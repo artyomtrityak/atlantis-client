@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
 import { SELECT_REGION, ZOOM_IN, ZOOM_OUT, LEVEL_DOWN, LEVEL_UP, IActions as IRegionActions } from "../../actions/regions-actions";
-import { hasLair } from "./region-objects";
+import { getObjects } from "./region-objects";
 import { IState, ILevel, IRegion, IRegions } from "./regions.d";
 export { IState, ILevel, IRegion, IRegions };
 
@@ -17,7 +17,7 @@ function parseRegion(result: ILevel[], region: IRegion) {
   // TODO: optimize lookup to iterate over units and objects only once
   region = {
     ...region,
-    hasLair: hasLair(region)
+    ...getObjects(region)
   };
 
   if (!result[z]) {
