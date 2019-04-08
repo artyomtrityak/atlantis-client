@@ -26,6 +26,7 @@ const HexCity = (props: ICityProps) => {
       x={(regionWidth * zoom) / 2 - 15 * zoom}
       y={(regionHeight * zoom) / 2 - 15 * zoom}
       viewBox={cityIcon.viewBox}
+      className="hex-object--city"
     >
       <use href={`#${cityIcon.id}`} />
     </svg>
