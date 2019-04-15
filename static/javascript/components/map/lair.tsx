@@ -23,7 +23,7 @@ const HexLair = (props: ILairProps) => {
     <svg
       width={20 * zoom}
       height={20 * zoom}
-      x={(regionWidth * zoom) / 2 - 20 * zoom}
+      x={(regionWidth * zoom) / 2 - 25 * zoom}
       y={(regionHeight * zoom) / 2 + 15 * zoom}
       viewBox={warningIcon.viewBox}
       className="hex-object--lair"

@@ -194,6 +194,7 @@
       direction: d[2],
       isExit: true,
       details: [],
+      unitsAndObjectsRaw: [],
       hasCity
     };
   };

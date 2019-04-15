@@ -5,6 +5,7 @@ import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
 import City from "./city";
 import Lair from "./lair";
 import Roads from "./roads";
+import UnitsFlag from "./units-flag";
 
 interface IHexProps {
   readonly isSelected: boolean;
@@ -28,17 +29,17 @@ const Hex = (props: IHexProps) => {
   // TODO: ships, shafts gray overlay if 0 units present
 
   return (
-    <g transform={`translate(${position.x}, ${position.y})`} ref={elRef}>
+    <g transform={`translate(${position.x}, ${position.y})`} ref={elRef} onClick={() => props.onSelect(props.region.id)}>
       <polygon
         points={pointsPath}
         className={cn("hex", `hex--type-${region.type}`, {
           "hex--selected": isSelected
         })}
-        onClick={() => props.onSelect(props.region.id)}
       />
       <Roads zoom={zoom} region={region} />
       <City zoom={zoom} region={region} />
       <Lair zoom={zoom} region={region} />
+      <UnitsFlag zoom={zoom} region={region} />
     </g>
   );
 };

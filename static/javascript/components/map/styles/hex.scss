@@ -12,6 +12,11 @@
   stroke-width: 2px;
 }
 
+.hex--empty {
+  opacity: 0.3;
+  fill: black;
+}
+
 .hex--type-unknown {
   fill: lightgray;
 }
