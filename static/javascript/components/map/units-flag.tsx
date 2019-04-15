@@ -19,6 +19,8 @@ const HexUnitsFlag = (props: IHexUnitsFlagProps) => {
     return null;
   }
 
+  // TODO: make flag green if all month long orders in region are done
+
   return (
     <circle
       cx={(regionWidth * zoom) / 2 + 17 * zoom}

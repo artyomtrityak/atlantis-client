@@ -98,7 +98,7 @@ FACTION_REGION_DETAILS ->
 FACTION_REGION_EXIT ->
   _ _:? WORD _ ":" _ WORD _ REGION_COORDINATES _ TEXT_NO_SYMBOLS "." NL {% (d) => regionExitProcessor(d, false)  %}
   | _ _:? WORD _ ":" _ WORD _ REGION_COORDINATES _ TEXT_NO_SYMBOLS ","
-    _ "contains" _ TEXT_NO_SYMBOLS _ "[" ("city"|"town"|"village") "]."  NL {% (d) => regionExitProcessor(d, true)  %}
+    _ "contains" __AND_NL TEXT_NO_SYMBOLS __AND_NL "[" ("city"|"town"|"village") "]."  NL {% (d) => regionExitProcessor(d, true)  %}
 
 
 FACTION_REGION_GATE ->
