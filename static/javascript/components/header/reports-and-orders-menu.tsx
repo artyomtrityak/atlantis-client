@@ -3,12 +3,13 @@ import React from "react";
 
 interface IProps {
   showLoadReport: () => void;
+  downloadOrders: () => void;
   onOpen: () => void;
   isOpen: boolean;
 }
 
 export default function ReportsAndOrdersMenuItem(props: IProps) {
-  const { isOpen, showLoadReport, onOpen } = props;
+  const { isOpen, showLoadReport, downloadOrders, onOpen } = props;
   return (
     <li className="nav-item dropdown">
       <a className="nav-link dropdown-toggle header__link" href="#" role="button" onClick={() => onOpen()}>
@@ -18,8 +19,11 @@ export default function ReportsAndOrdersMenuItem(props: IProps) {
         <a className="dropdown-item" href="#" onClick={() => showLoadReport()}>
           Load Turn Report
         </a>
-        <a className="dropdown-item" href="#">
+        <a className="dropdown-item" href="#" onClick={() => downloadOrders()}>
           Download Turn Orders
+        </a>
+        <a className="dropdown-item" href="#">
+          Load Turn Orders
         </a>
         <a className="dropdown-item" href="#">
           Reset Turn Orders

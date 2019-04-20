@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { REPORT_LOADED, IActions as IReportActions } from "../../actions/report-actions";
+import { DOWNLOAD_ORDERS, IActions as INavigationActions } from "../../actions/navigation-actions";
 import { IState, IOrdersUnits, IOrders } from "./orders.d";
 export { IState, IOrdersUnits, IOrders };
 
@@ -29,10 +30,14 @@ function parseOrders(report: IReport) {
 // Events Reducer
 // -------------------
 
-function ordersReducer(state: IState = initialState, action: IReportActions) {
+function ordersReducer(state: IState = initialState, action: IReportActions | INavigationActions) {
   switch (action.type) {
     case REPORT_LOADED:
+      // TODO: Store password and faction name for report generation
       state = { ...state, ...parseOrders(action.payload) };
+      break;
+    case DOWNLOAD_ORDERS:
+      console.log("DOWNLOAD!!!", state);
       break;
   }
   return state;

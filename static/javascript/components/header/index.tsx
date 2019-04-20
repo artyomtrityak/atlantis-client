@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, RefObject } from "react";
 import { Dispatch } from "redux";
 import { connect } from "react-redux";
-import { showLoadReportModal } from "../../actions/navigation-actions";
+import { showLoadReportModal, downloadOrders } from "../../actions/navigation-actions";
 import { ICombinedReducersState } from "../../reducers";
 import ReportsAndOrdersMenu from "./reports-and-orders-menu";
 import UserMenu from "./user-menu";
@@ -60,6 +60,10 @@ function Header(props: IHeaderProps) {
             setOpenDropdownName(null);
             props.showLoadReport();
           }}
+          downloadOrders={() => {
+            setOpenDropdownName(null);
+            props.downloadOrders();
+          }}
         />
 
         <li className="nav-item">
@@ -91,7 +95,8 @@ const mapStateToProps = (state: ICombinedReducersState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    showLoadReport: () => dispatch(showLoadReportModal())
+    showLoadReport: () => dispatch(showLoadReportModal()),
+    downloadOrders: () => dispatch(downloadOrders())
   };
 };
 

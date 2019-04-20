@@ -91,8 +91,6 @@ export const useRowFactory = ({ units }: IUnitListsProps) => {
       return null;
     }
 
-    console.log("UNIT:", units[i]);
-
     const { id, faction, name, items, inStructure, inStructureName, ownsStructure } = units[i];
 
     const silverCount = items.reduce((total, it) => {
@@ -136,7 +134,7 @@ export const useRowFactory = ({ units }: IUnitListsProps) => {
       armor: armorCount ? armorCount : undefined,
       mounts: mountsCount ? mountsCount : undefined,
       items: items.length,
-      struct: inStructure ? `${inStructureName} [${inStructure}]` : "", // TODO: change to name
+      struct: inStructure ? `${inStructureName} [${inStructure}]` : "",
       ownsStruct: ownsStructure ? "yes" : ""
     };
   };

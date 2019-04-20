@@ -4,7 +4,8 @@ type IShowLoaderModalAction = IAction<"SHOW_LOAD_REPORT_MODAL">;
 type ICloseModalAction = IAction<"CLOSE_MODAL">;
 type IShowLoaderAction = IAction<"SHOW_LOADER">;
 type IHideLoaderAction = IAction<"HIDE_LOADER">;
-export type IActions = IShowLoaderModalAction | ICloseModalAction | IShowLoaderAction | IHideLoaderAction;
+type IDownloadOrdersAction = IAction<"DOWNLOAD_ORDERS">;
+export type IActions = IShowLoaderModalAction | ICloseModalAction | IShowLoaderAction | IHideLoaderAction | IDownloadOrdersAction;
 
 /**
  * Navigation actions and action creators
@@ -14,6 +15,7 @@ export const SHOW_LOAD_REPORT_MODAL = "SHOW_LOAD_REPORT_MODAL"; // TODO: make gl
 export const CLOSE_MODAL = "CLOSE_MODAL";
 export const SHOW_LOADER = "SHOW_LOADER";
 export const HIDE_LOADER = "HIDE_LOADER";
+export const DOWNLOAD_ORDERS = "DOWNLOAD_ORDERS";
 
 export function showLoadReportModal(): IShowLoaderModalAction {
   return { type: SHOW_LOAD_REPORT_MODAL };
@@ -29,4 +31,8 @@ export function showLoader(): IShowLoaderAction {
 
 export function hideLoader(): IHideLoaderAction {
   return { type: HIDE_LOADER };
+}
+
+export function downloadOrders(): IDownloadOrdersAction {
+  return { type: DOWNLOAD_ORDERS };
 }
