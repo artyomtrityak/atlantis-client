@@ -50,7 +50,9 @@ export interface IUnit {
   flags: IUnitFlags;
   items: IUnitItem[];
   skills: IUnitSkill[];
-  inObject?: number;
+  inStructure?: number;
+  ownsStructure?: boolean;
+  inStructureName?: string;
   canStudy?: string; // TODO: parse it later
 }
 

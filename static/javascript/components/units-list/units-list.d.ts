@@ -20,4 +20,6 @@ export type IDataGridObject = {
   armor?: number;
   mounts?: number;
   items?: number;
+  struct?: string;
+  ownsStruct?: string;
 } | null;

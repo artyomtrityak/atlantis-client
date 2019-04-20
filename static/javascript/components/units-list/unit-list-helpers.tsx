@@ -1,7 +1,7 @@
 import { IUnitListsProps, IDataGridObject } from "./units-list.d";
 
 export const getColumns = (width: number) => {
-  const dynamicWidth = width - 80 * 7;
+  const dynamicWidth = width - 80 * 8 - 200;
 
   return [
     {
@@ -66,6 +66,20 @@ export const getColumns = (width: number) => {
       width: 80,
       sortable: true,
       filterable: true
+    },
+    {
+      key: "struct",
+      name: "Struct",
+      width: 200,
+      sortable: true,
+      filterable: true
+    },
+    {
+      key: "ownsStruct",
+      name: "Own",
+      width: 80,
+      sortable: true,
+      filterable: true
     }
   ];
 };
@@ -76,7 +90,10 @@ export const useRowFactory = ({ units }: IUnitListsProps) => {
     if (i < 0 || !units || !units[i]) {
       return null;
     }
-    const { id, faction, name, items } = units[i];
+
+    console.log("UNIT:", units[i]);
+
+    const { id, faction, name, items, inStructure, inStructureName, ownsStructure } = units[i];
 
     const silverCount = items.reduce((total, it) => {
       if (it.itemKey === "SILV") {
@@ -118,7 +135,9 @@ export const useRowFactory = ({ units }: IUnitListsProps) => {
       weapons: weaponCount ? weaponCount : undefined,
       armor: armorCount ? armorCount : undefined,
       mounts: mountsCount ? mountsCount : undefined,
-      items: items.length
+      items: items.length,
+      struct: inStructure ? `${inStructureName} [${inStructure}]` : "", // TODO: change to name
+      ownsStruct: ownsStructure ? "yes" : ""
     };
   };
   return [rowGetter];

@@ -5,9 +5,8 @@ import { IObjectStructure, IUnit } from "./units.d";
 function parseObject(regionObject: IObjectStructure): [IObjectStructure, IUnit[]] {
   let units = regionObject.objectUnits.map(d => parseRegionUnit(d));
   // Add units from objects to region units list
-  units = units.map(unit => {
-    return { ...unit, inObject: regionObject.objectId };
-    // region.units.push(unit as IParsedRegionUnit);
+  units = units.map((unit, i) => {
+    return { ...unit, inStructure: regionObject.objectId, ownsStructure: i === 0, inStructureName: regionObject.objectName };
   });
   return [regionObject, units];
 }
