@@ -1,87 +1,88 @@
 import { IUnitListsProps, IDataGridObject } from "./units-list.d";
 
 export const getColumns = (width: number) => {
-  const dynamicWidth = width - 80 * 8 - 200;
+  const dynamicWidth = width - 80 * 9 - 100;
 
-  return [
+  const COLUMNS = [
     {
-      key: "id",
-      name: "Unit ID",
-      width: 80,
+      field: "id",
+      headerName: "Unit ID",
       sortable: true,
-      filterable: true
+      filter: true,
+      width: 100
     },
     {
-      key: "faction",
-      name: "Faction",
-      width: (dynamicWidth * 40) / 100,
+      field: "faction",
+      headerName: "Faction",
       sortable: true,
-      filterable: true
+      filter: true,
+      width: dynamicWidth / 3
     },
     {
-      key: "unit_name",
-      name: "Unit",
-      width: (dynamicWidth * 50) / 100,
+      field: "unit_name",
+      headerName: "Unit",
       sortable: true,
-      filterable: true
+      filter: true,
+      width: dynamicWidth / 3
     },
     {
-      key: "men",
-      name: "Men",
-      width: 80,
+      field: "men",
+      headerName: "Men",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "silver",
-      name: "Silver",
-      width: 80,
+      field: "skills",
+      headerName: "Skills",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "weapons",
-      name: "Weapons",
-      width: 80,
+      field: "silver",
+      headerName: "Silver",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "armor",
-      name: "Armor",
-      width: 80,
+      field: "weapons",
+      headerName: "Weapons",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "mounts",
-      name: "Mounts",
-      width: 80,
+      field: "armor",
+      headerName: "Armor",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "items",
-      name: "Items",
-      width: 80,
+      field: "mounts",
+      headerName: "Mounts",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "struct",
-      name: "Struct",
-      width: 200,
+      field: "items",
+      headerName: "Items",
       sortable: true,
-      filterable: true
+      width: 80
     },
     {
-      key: "ownsStruct",
-      name: "Own",
-      width: 80,
+      field: "struct",
+      headerName: "Struct",
       sortable: true,
-      filterable: true
+      filter: true,
+      width: dynamicWidth / 3
+    },
+    {
+      field: "ownsStruct",
+      headerName: "Own",
+      sortable: true,
+      width: 80
     }
   ];
+
+  return COLUMNS;
 };
 
 export const useRowFactory = ({ units }: IUnitListsProps) => {

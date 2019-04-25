@@ -9,7 +9,7 @@ export default function renderDetails({ region }: IRegionDetailsProps) {
   return (
     <React.Fragment>
       <div className="dropdown-divider" />
-      {region.weather}
+      {region.weather ? region.weather : null}
       {region.details.map((detail, i) => (
         <div className="card-text atl-region__detail" key={`detail_${i}`}>
           <b>{detail.type}</b>: {detail.details}

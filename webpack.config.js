@@ -28,8 +28,8 @@ module.exports = {
         loader: "babel-loader"
       },
       {
-        test: /\.scss$/,
-        exclude: /node_modules/,
+        test: /\.s?css$/,
+        // exclude: /node_modules/,
         use: [
           {
             loader: "style-loader"
