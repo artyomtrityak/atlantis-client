@@ -86,14 +86,11 @@ export const getColumns = (width: number) => {
 };
 
 export const useRowFactory = ({ units }: IUnitListsProps) => {
-  // TODO: add useMemo if works slow
-  const rowGetter = (i: number): IDataGridObject => {
-    if (i < 0 || !units || !units[i]) {
-      return null;
-    }
-
-    const { id, faction, name, items, inStructure, inStructureName, ownsStructure } = units[i];
-
+  if (!units) {
+    return [];
+  }
+  return units.map(unit => {
+    const { id, faction, name, items, inStructure, inStructureName, ownsStructure } = unit;
     const silverCount = items.reduce((total, it) => {
       if (it.itemKey === "SILV") {
         return total + it.amount;
@@ -133,15 +130,11 @@ export const useRowFactory = ({ units }: IUnitListsProps) => {
       silver: silverCount ? silverCount : undefined,
       weapons: weaponCount ? weaponCount : undefined,
       armor: armorCount ? armorCount : undefined,
+      // skills: TODO
       mounts: mountsCount ? mountsCount : undefined,
       items: items.length,
       struct: inStructure ? `${inStructureName} [${inStructure}]` : "",
       ownsStruct: ownsStructure ? "yes" : ""
     };
-  };
-  return [rowGetter];
-};
-
-export const onGridSort = () => {
-  console.log("SORT");
+  });
 };

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import React from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { AgGridReact } from "ag-grid-react";
@@ -10,32 +10,42 @@ import { ICombinedReducersState } from "../../reducers";
 import { selectUnit } from "../../actions/units-actions";
 import { withSize } from "../utils";
 import { IUnitListsProps } from "./units-list.d";
-import { getColumns } from "./unit-list-helpers";
+import { getColumns, useRowFactory } from "./unit-list-helpers";
 import "./styles/index.scss";
+import { GridReadyEvent, GridApi } from "ag-grid-community";
 
 const UnitsList = (props: IUnitListsProps) => {
-  const { onRowClick, selectedUnitId, units } = props;
-  // const [rowGetter] = useRowFactory(props);
+  const { onRowClick, selectedUnitId } = props;
+  const [onGridReady] = useAgGrid(props);
+  const rowData = useRowFactory(props);
 
   return (
     <div className="units-list ag-theme-balham" style={{ height: props.height }}>
       <AgGridReact
         columnDefs={getColumns(props.width)}
-        rowData={[]}
+        rowData={rowData}
         rowSelection="single"
-        onSelectionChanged={a => {
-          console.log(a);
-        }}
-        onGridReady={params => {
-          const gridApi = params.api;
-          console.log(params, gridApi);
-        }}
+        // onSelectionChanged={a => {
+        //   console.log(a);
+        // }}
+        onGridReady={onGridReady}
         onRowSelected={event => {
-          console.log(event.node.data);
+          onRowClick(event.node.data.id);
         }}
       />
     </div>
   );
+};
+
+const useAgGrid = (props: IUnitListsProps) => {
+  const gridAip = useRef<GridApi | null>(null);
+
+  const onGridReady = (params: GridReadyEvent) => {
+    console.log("GRID READY", params);
+    gridAip.current = params.api;
+  };
+
+  return [onGridReady];
 };
 
 const mapStateToProps = (state: ICombinedReducersState) => {
