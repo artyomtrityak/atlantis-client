@@ -3,6 +3,7 @@ import cn from "classnames";
 import { IRegion } from "../../reducers/regions";
 import { calculateHexPosition, regionWidth, regionHeight } from "./utils";
 import City from "./city";
+import CityName from "./city-name";
 import Lair from "./lair";
 import Roads from "./roads";
 import UnitsFlag from "./units-flag";
@@ -38,6 +39,7 @@ const Hex = (props: IHexProps) => {
       />
       <Roads zoom={zoom} region={region} />
       <City zoom={zoom} region={region} />
+      <CityName zoom={zoom} region={region} />
       <Lair zoom={zoom} region={region} />
       <UnitsFlag zoom={zoom} region={region} />
     </g>
