@@ -4,7 +4,8 @@
       type: d[0],
       coordinates: d[2],
       text: array2String(d),
-      hasCity: !!d[8]
+      hasCity: !!d[8],
+      cityName: !!d[8] && array2String(d[8][3])
     };
   }
 
@@ -35,7 +36,7 @@
       result[exit.direction.toLowerCase()] = exit;
       return result;
     }, {});
-    
+
     return {
       id: `${d[0].coordinates.x}_${d[0].coordinates.y}_${d[0].coordinates.z}`,
       title: d[0].text,
@@ -47,6 +48,7 @@
       unitsAndObjectsRaw: d[11],
       type: d[0].type,
       hasCity: d[0].hasCity,
+      cityName: d[0].cityName,
       isExit: false
     };
   };
@@ -84,7 +86,7 @@ FACTION_REGION ->
 FACTION_REGION_HEADER ->
   TEXT_NO_SYMBOLS _ REGION_COORDINATES _ "in" _ TEXT_NO_SYMBOLS "." NL {% (d) => regionHeaderProcessor(d) %}
   | TEXT_NO_SYMBOLS _ REGION_COORDINATES _ "in" _ TEXT_NO_SYMBOLS "," FACTION_REGION_HEADER_CITY:? __AND_NL TEXT_NO_SYMBOLS "," __AND_NL "$" INT "." NL {% (d) => regionHeaderProcessor(d) %}
-  
+
 
 
 FACTION_REGION_HEADER_CITY ->
