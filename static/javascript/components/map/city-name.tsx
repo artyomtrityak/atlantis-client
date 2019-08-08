@@ -21,7 +21,7 @@ const HexCityName = (props: ICityNameProps) => {
   return (
     <svg width={regionWidth} height={regionHeight} x={0} y={(regionHeight * zoom) / 2 - (12 * zoom) / 2} className="hex-object--city-name">
       <g>
-        <text x="0" y={12 * zoom} width={regionWidth * zoom} fontSize={12 * zoom} fill="black">
+        <text x={(regionWidth * zoom) / 2} y={12 * zoom} width={regionWidth * zoom} fontSize={12 * zoom} textAnchor="middle" fill="white">
           {region.cityName}
         </text>
       </g>
