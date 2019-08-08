@@ -5,7 +5,7 @@
       coordinates: d[2],
       text: array2String(d),
       hasCity: !!d[8],
-      cityName: d[8]
+      cityName: !!d[8] && array2String(d[8][3])
     };
   }
 
@@ -48,7 +48,7 @@
       unitsAndObjectsRaw: d[11],
       type: d[0].type,
       hasCity: d[0].hasCity,
-      cityName: !!d[0].hasCity && d[0].cityName[3],
+      cityName: d[0].cityName,
       isExit: false
     };
   };
