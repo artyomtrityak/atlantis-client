@@ -15,6 +15,8 @@ const parseReport = async (reportData: string): Promise<IReport | undefined> => 
         // debug only
         if (parser.results && parser.results.length > 1) {
           console.log(diff(parser.results[0], parser.results[1]));
+          console.log(diff(parser.results[1], parser.results[2]));
+          console.log(diff(parser.results[2], parser.results[3]));
         }
         console.log("RESULTS:", parser.results);
 

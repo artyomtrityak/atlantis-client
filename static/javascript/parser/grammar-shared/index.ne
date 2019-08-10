@@ -120,7 +120,7 @@ LC_WORD ->
 
 
 UNIT_NAME ->
-  [^,():;]:+ __ "(" INT ")" {% parseUnitName %}
+  [^():;]:+ __ "(" INT ")" {% parseUnitName %}
 
 
 REGION_Z_LEVEL ->
