@@ -77,12 +77,12 @@ REPORT_DATE ->
 
 
 ATL_VERSION ->
-  "Atlantis Engine Version:" _ VERSION NL
-  TEXT ", Version:" _ VERSION NL_ {% versionProcessor %}
+  "Atlantis Engine Version:" _ BLOB NL
+  BLOB ", Version:" _ BLOB NL_ {% versionProcessor %}
 
 
 VERSION ->
-  INT | INT "." VERSION {% array2String %}
+  BLOB {% array2String %}
 
 
 FACTION_STATUS ->

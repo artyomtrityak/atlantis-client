@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.15.1
+// Generated automatically by nearley, version 2.18.0
 // http://github.com/Hardmath123/nearley
 (function() {
   function id(x) {
@@ -173,7 +173,8 @@
       type: d[0],
       coordinates: d[2],
       text: array2String(d),
-      hasCity: !!d[8]
+      hasCity: !!d[8],
+      cityName: !!d[8] && array2String(d[8][3])
     };
   };
 
@@ -216,6 +217,7 @@
       unitsAndObjectsRaw: d[11],
       type: d[0].type,
       hasCity: d[0].hasCity,
+      cityName: d[0].cityName,
       isExit: false
     };
   };
@@ -335,10 +337,10 @@
         }
       },
       { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
-      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
+      { name: "UNIT_NAME$ebnf$1", symbols: [/[^():;]/] },
       {
         name: "UNIT_NAME$ebnf$1",
-        symbols: ["UNIT_NAME$ebnf$1", /[^,():;]/],
+        symbols: ["UNIT_NAME$ebnf$1", /[^():;]/],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
@@ -653,11 +655,10 @@
       },
       {
         name: "ATL_VERSION",
-        symbols: ["ATL_VERSION$string$1", "_", "VERSION", "NL", "TEXT", "ATL_VERSION$string$2", "_", "VERSION", "NL_"],
+        symbols: ["ATL_VERSION$string$1", "_", "BLOB", "NL", "BLOB", "ATL_VERSION$string$2", "_", "BLOB", "NL_"],
         postprocess: versionProcessor
       },
-      { name: "VERSION", symbols: ["INT"] },
-      { name: "VERSION", symbols: ["INT", { literal: "." }, "VERSION"], postprocess: array2String },
+      { name: "VERSION", symbols: ["BLOB"], postprocess: array2String },
       {
         name: "FACTION_STATUS$string$1",
         symbols: [
@@ -1302,7 +1303,9 @@
         }
       },
       { name: "FACTION_ITEMS", symbols: ["FACTION_ITEMS$string$1", "NL", "NL", "FACTION_ITEMS$ebnf$1"] },
-      { name: "FACTION_ITEM", symbols: ["TEXT", { literal: "." }, "NL", "NL"] },
+      { name: "FACTION_ITEM", symbols: ["FACTION_ITEM_TEXT", "NL", "NL"] },
+      { name: "FACTION_ITEM_TEXT", symbols: ["TEXT"] },
+      { name: "FACTION_ITEM_TEXT", symbols: [{ literal: "." }] },
       {
         name: "FACTION_OBJECTS$string$1",
         symbols: [

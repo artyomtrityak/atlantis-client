@@ -13,5 +13,7 @@ FACTION_ITEMS ->
   FACTION_ITEM:+
 
 FACTION_ITEM ->
-  TEXT "." NL NL
-  # SENTENCE __ TEXT NL_ {% (d) => ({ itemTitle: d[0], description: d[2] }) %}
+  FACTION_ITEM_TEXT NL NL
+
+FACTION_ITEM_TEXT ->
+  TEXT | "."

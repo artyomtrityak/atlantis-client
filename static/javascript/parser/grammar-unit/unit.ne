@@ -168,6 +168,7 @@ UNIT_FLAGS ->
   | "riding" __ "battle" __ "spoils" {% () => ({ type: "FLAG", name: "spoils_riding" }) %}
   | "flying" __ "battle" __ "spoils" {% () => ({ type: "FLAG", name: "spoils_flying" }) %}
   | "receiving" __ "no" __ "aid" {% () => ({ type: "FLAG", name: "noaid" }) %}
+  | "won't" __ "cross" __ "water" {% () => ({ type: "FLAG", name: "no_cross_water" }) %}
 
 
 UNIT_FLAGS_ONGUARD ->

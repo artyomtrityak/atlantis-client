@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.15.1
+// Generated automatically by nearley, version 2.18.0
 // http://github.com/Hardmath123/nearley
 (function() {
   function id(x) {
@@ -155,10 +155,10 @@
         }
       },
       { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
-      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
+      { name: "UNIT_NAME$ebnf$1", symbols: [/[^():;]/] },
       {
         name: "UNIT_NAME$ebnf$1",
-        symbols: ["UNIT_NAME$ebnf$1", /[^,():;]/],
+        symbols: ["UNIT_NAME$ebnf$1", /[^():;]/],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }

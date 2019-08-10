@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.15.1
+// Generated automatically by nearley, version 2.18.0
 // http://github.com/Hardmath123/nearley
 (function() {
   function id(x) {
@@ -280,10 +280,10 @@
         }
       },
       { name: "LC_WORD", symbols: ["LC_WORD$ebnf$1"] },
-      { name: "UNIT_NAME$ebnf$1", symbols: [/[^,():;]/] },
+      { name: "UNIT_NAME$ebnf$1", symbols: [/[^():;]/] },
       {
         name: "UNIT_NAME$ebnf$1",
-        symbols: ["UNIT_NAME$ebnf$1", /[^,():;]/],
+        symbols: ["UNIT_NAME$ebnf$1", /[^():;]/],
         postprocess: function arrpush(d) {
           return d[0].concat([d[1]]);
         }
@@ -895,6 +895,32 @@
         name: "UNIT_FLAGS",
         symbols: ["UNIT_FLAGS$string$30", "__", "UNIT_FLAGS$string$31", "__", "UNIT_FLAGS$string$32"],
         postprocess: () => ({ type: "FLAG", name: "noaid" })
+      },
+      {
+        name: "UNIT_FLAGS$string$33",
+        symbols: [{ literal: "w" }, { literal: "o" }, { literal: "n" }, { literal: "'" }, { literal: "t" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS$string$34",
+        symbols: [{ literal: "c" }, { literal: "r" }, { literal: "o" }, { literal: "s" }, { literal: "s" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS$string$35",
+        symbols: [{ literal: "w" }, { literal: "a" }, { literal: "t" }, { literal: "e" }, { literal: "r" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "UNIT_FLAGS",
+        symbols: ["UNIT_FLAGS$string$33", "__", "UNIT_FLAGS$string$34", "__", "UNIT_FLAGS$string$35"],
+        postprocess: () => ({ type: "FLAG", name: "no_cross_water" })
       },
       {
         name: "UNIT_FLAGS_ONGUARD$string$1",
