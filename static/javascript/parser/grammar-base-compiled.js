@@ -1,4 +1,4 @@
-// Generated automatically by nearley, version 2.18.0
+// Generated automatically by nearley, version 2.19.1
 // http://github.com/Hardmath123/nearley
 (function() {
   function id(x) {
@@ -749,7 +749,23 @@
       },
       {
         name: "FACTION_STATUS_DETAILS$string$3",
-        symbols: [{ literal: "M" }, { literal: "a" }, { literal: "g" }, { literal: "e" }, { literal: "s" }, { literal: ":" }],
+        symbols: [
+          { literal: "Q" },
+          { literal: "u" },
+          { literal: "a" },
+          { literal: "r" },
+          { literal: "t" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "m" },
+          { literal: "a" },
+          { literal: "s" },
+          { literal: "t" },
+          { literal: "e" },
+          { literal: "r" },
+          { literal: "s" },
+          { literal: ":" }
+        ],
         postprocess: function joiner(d) {
           return d.join("");
         }
@@ -757,10 +773,22 @@
       {
         name: "FACTION_STATUS_DETAILS",
         symbols: ["FACTION_STATUS_DETAILS$string$3", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
-        postprocess: d => ({ mages: d[2], magesMax: d[5] })
+        postprocess: d => ({ quartermasters: d[2], quartermastersMax: d[5] })
       },
       {
         name: "FACTION_STATUS_DETAILS$string$4",
+        symbols: [{ literal: "M" }, { literal: "a" }, { literal: "g" }, { literal: "e" }, { literal: "s" }, { literal: ":" }],
+        postprocess: function joiner(d) {
+          return d.join("");
+        }
+      },
+      {
+        name: "FACTION_STATUS_DETAILS",
+        symbols: ["FACTION_STATUS_DETAILS$string$4", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
+        postprocess: d => ({ mages: d[2], magesMax: d[5] })
+      },
+      {
+        name: "FACTION_STATUS_DETAILS$string$5",
         symbols: [
           { literal: "A" },
           { literal: "p" },
@@ -781,7 +809,7 @@
       },
       {
         name: "FACTION_STATUS_DETAILS",
-        symbols: ["FACTION_STATUS_DETAILS$string$4", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
+        symbols: ["FACTION_STATUS_DETAILS$string$5", "_", "INT", "_", { literal: "(" }, "INT", { literal: ")" }, "NL"],
         postprocess: d => ({ apprentices: d[2], apprenticesMax: d[5] })
       },
       {

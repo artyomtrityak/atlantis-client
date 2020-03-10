@@ -95,6 +95,7 @@ FACTION_STATUS ->
 FACTION_STATUS_DETAILS ->
   "Tax Regions:" _ INT _ "(" INT ")" NL {% (d) => ({ tax: d[2], taxMax: d[5] }) %}
   | "Trade Regions:" _ INT _ "(" INT ")" NL {% (d) => ({ trade: d[2], tradeMax: d[5] }) %}
+  | "Quartermasters:" _ INT _ "(" INT ")" NL {% (d) => ({ quartermasters: d[2], quartermastersMax: d[5] }) %}
   | "Mages:" _ INT _ "(" INT ")" NL {% (d) => ({ mages: d[2], magesMax: d[5] }) %}
   | "Apprentices:" _ INT _ "(" INT ")" NL {% (d) => ({ apprentices: d[2], apprenticesMax: d[5] }) %}
 
